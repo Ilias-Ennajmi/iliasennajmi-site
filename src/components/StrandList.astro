@@ -1,0 +1,159 @@
+---
+interface Post {
+  id: string;
+  tag: string;
+  read: string;
+  date: string;
+  title: string;
+  standfirst: string;
+  href: string;
+}
+interface Props {
+  strand: 'ulysses' | 'ilias';
+  accent: 'tide' | 'ember';
+  roman: string;
+  title: string;
+  kicker: string;
+  lede: string;
+  watermark: string;
+  watermarkPos: string;
+  otherCard: { heading: string; blurb: string; ctaLabel: string; ctaHref: string; ctaAccent: 'tide' | 'ember' };
+  posts: Post[];
+}
+const { strand, accent, roman, title, kicker, lede, watermark, watermarkPos, otherCard, posts } = Astro.props;
+const accentVar = `var(--${accent})`;
+---
+<main style={`--acc:${accentVar};`}>
+
+  <!-- HEADER -->
+  <header data-cursor-light style="position:relative;overflow:hidden;padding:clamp(8rem,16vh,12rem) clamp(22px,6vw,64px) clamp(3.5rem,7vw,6rem);">
+    <div style="position:absolute;inset:0;z-index:0;background:radial-gradient(120% 90% at 18% 8%, rgba(120,108,86,0.10), transparent 56%), linear-gradient(180deg,#efe9db 0%,#e9e2d2 60%,var(--coal) 100%);"></div>
+    <div data-pll="0.10" data-watermark style={`position:absolute;top:6%;${watermarkPos};z-index:0;font-family:var(--display);font-weight:800;font-size:clamp(7rem,30vw,24rem);line-height:0.7;color:rgba(93,71,49,0.11);pointer-events:none;letter-spacing:-0.04em;transition:color .6s ease;`}>{watermark}</div>
+    <div style="position:relative;z-index:1;max-width:1180px;margin:0 auto;animation:cc-rise .9s ease both;">
+      <div style="display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:0.68rem;letter-spacing:0.24em;text-transform:uppercase;color:var(--acc);margin-bottom:clamp(1.6rem,3vw,2.4rem);">
+        <span style="width:28px;height:1px;background:var(--acc);"></span>{kicker}
+      </div>
+      <h1 style="margin:0;font-family:var(--display);font-weight:500;font-size:clamp(3.4rem,11vw,8.5rem);line-height:0.9;letter-spacing:-0.015em;">{title}<span style="color:var(--acc);">.</span></h1>
+      <p style="font-family:var(--body);font-weight:300;font-style:italic;font-size:clamp(1.2rem,2.4vw,1.7rem);color:var(--bone);opacity:0.82;max-width:46ch;margin:1.6rem 0 0;line-height:1.45;text-wrap:pretty;">{lede}</p>
+    </div>
+  </header>
+
+  <!-- ESSAY LIST -->
+  <section style="max-width:1180px;margin:0 auto;padding:0 clamp(22px,6vw,64px) clamp(4rem,8vw,7rem);">
+    <div data-reveal style="display:flex;align-items:baseline;gap:16px;margin-bottom:clamp(1.6rem,3vw,2.2rem);font-family:var(--mono);font-size:0.66rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ash);">
+      <span>Writing</span>
+      <span class="cc-rule" style="flex:1;height:1px;background:var(--coal-line);transform:scaleX(0);transform-origin:left center;transition:transform 1s cubic-bezier(.2,.7,.2,1);"></span>
+      <span id="count-label">{posts.length} essays</span>
+    </div>
+    <div data-reveal id="tag-bar" style="display:flex;flex-wrap:wrap;gap:clamp(16px,3vw,30px);margin-bottom:clamp(2.4rem,4.5vw,3.6rem);"></div>
+
+    <div id="list-root"></div>
+
+    <div data-reveal style="margin-top:clamp(3rem,6vw,5rem);padding:clamp(2rem,4vw,3rem);border:1px solid var(--coal-line);background:var(--coal-soft);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px;">
+      <div>
+        <div style="font-family:var(--display);font-weight:500;font-size:clamp(1.4rem,2.6vw,2rem);line-height:1.1;">{otherCard.heading}</div>
+        <p style="font-family:var(--body);font-weight:300;font-style:italic;color:var(--ash);margin:0.6rem 0 0;font-size:1.05rem;">{otherCard.blurb}</p>
+      </div>
+      <a href={otherCard.ctaHref} class={`charge other-cta other-cta-${otherCard.ctaAccent}`} style="font-family:var(--mono);font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--other-acc);border:1px solid var(--coal-line);border-radius:40px;padding:14px 26px;transition:border-color .3s,letter-spacing .3s;">{otherCard.ctaLabel}</a>
+    </div>
+  </section>
+</main>
+
+<script type="application/json" id="posts-data" set:html={JSON.stringify(posts).replace(/</g, '\\u003c')} />
+<script define:vars={{ strand, accentVar }}>
+  const posts = JSON.parse(document.getElementById('posts-data').textContent);
+  let activeTag = 'All';
+
+  function renderTags() {
+    const uniq = [];
+    posts.forEach((p) => { if (!uniq.includes(p.tag)) uniq.push(p.tag); });
+    const names = ['All', ...uniq];
+    const bar = document.getElementById('tag-bar');
+    bar.innerHTML = '';
+    names.forEach((name) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = name;
+      const active = name === activeTag;
+      btn.style.cssText = 'font-family:var(--mono);font-size:0.6rem;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;background:none;border:none;cursor:pointer;padding:6px 0;transition:color .25s,border-color .25s;border-bottom:1.5px solid transparent;'
+        + (active ? `color:var(--coal);background:${accentVar};border-radius:40px;padding:6px 15px;` : 'color:var(--ash);');
+      btn.addEventListener('click', () => { activeTag = name; renderTags(); renderList(); });
+      bar.appendChild(btn);
+    });
+  }
+
+  function esc(s) {
+    const d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  function renderList() {
+    const filtered = activeTag === 'All' ? posts : posts.filter((p) => p.tag === activeTag);
+    document.getElementById('count-label').textContent = activeTag === 'All' ? `${posts.length} essays` : `${filtered.length} of ${posts.length}`;
+    const root = document.getElementById('list-root');
+    const lead = filtered[0];
+    const rest = filtered.slice(1);
+    let html = '';
+    if (lead) {
+      html += `<a href="${lead.href}" class="charge lead-card" data-reveal style="position:relative;display:block;border-top:1px solid var(--coal-line);border-bottom:1px solid var(--coal-line);padding:clamp(2rem,4vw,3.4rem) 0;transition:padding-left .4s cubic-bezier(.2,.7,.2,1);">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:13px;margin-bottom:clamp(1rem,2vw,1.5rem);font-family:var(--mono);font-size:0.58rem;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--ash);">
+          <span style="color:var(--acc);">Latest</span>
+          <span style="width:16px;height:1px;background:var(--coal-line);"></span>
+          <span>${esc(lead.tag)}</span>
+          <span style="width:3px;height:3px;border-radius:50%;background:var(--coal-line);"></span>
+          <span>${esc(lead.read)}</span>
+          <span style="width:3px;height:3px;border-radius:50%;background:var(--coal-line);"></span>
+          <span>${esc(lead.date)}</span>
+        </div>
+        <div class="lead-title" style="font-family:var(--display);font-weight:500;font-size:clamp(2.4rem,6vw,4.6rem);line-height:0.98;letter-spacing:-0.015em;transition:color .35s;text-wrap:balance;">${esc(lead.title)}</div>
+        <p style="font-family:var(--body);font-weight:400;font-size:clamp(1.1rem,1.8vw,1.35rem);color:var(--acc);margin:clamp(1rem,2vw,1.4rem) 0 0;max-width:64ch;line-height:1.5;text-wrap:pretty;">${esc(lead.standfirst)}</p>
+        <span style="display:inline-block;margin-top:clamp(1.2rem,2vw,1.8rem);font-family:var(--mono);font-size:0.62rem;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--acc);">Read essay →</span>
+      </a>`;
+    }
+    rest.forEach((p) => {
+      html += `<a href="${p.href}" class="charge js-row" data-reveal style="position:relative;display:grid;grid-template-columns:64px 1fr auto;gap:clamp(16px,3vw,40px);align-items:baseline;padding:clamp(1.5rem,3vw,2.2rem) 0;border-bottom:1px solid var(--coal-line);transition:padding-left .4s cubic-bezier(.2,.7,.2,1);"><span class="row-tick"></span>
+        <span style="font-family:var(--mono);font-size:0.66rem;letter-spacing:0.04em;color:var(--acc);padding-top:0.4rem;">${esc(p.no)}</span>
+        <div>
+          <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:14px;margin-bottom:0.55rem;font-family:var(--mono);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);">
+            <span style="color:var(--acc);">${esc(p.tag)}</span>
+            <span>${esc(p.read)}</span>
+          </div>
+          <div class="row-title" style="font-family:var(--display);font-weight:500;font-size:clamp(1.5rem,3.2vw,2.5rem);line-height:1.04;letter-spacing:-0.01em;transition:color .35s;">${esc(p.title)}</div>
+        </div>
+        <span style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.06em;color:var(--ash);white-space:nowrap;padding-top:0.4rem;">${esc(p.date)}</span>
+      </a>`;
+    });
+    root.innerHTML = html;
+    if (window.SiteFX) window.SiteFX.refresh();
+  }
+
+  posts.forEach((p, i) => { p.no = '№ 0' + (i + 1); });
+  renderTags();
+  renderList();
+
+  function motionOK() { return !window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+  function initFx() {
+    const go = () => { if (window.SiteFX) window.SiteFX.init({ strand, motion: motionOK(), progress: 'page' }); else setTimeout(go, 60); };
+    go();
+  }
+  initFx();
+</script>
+
+<style define:vars={{ acc: accentVar }}>
+  main { --acc: var(--acc); }
+  .lead-card:hover { padding-left: 14px; }
+  .lead-card:hover .lead-title { color: var(--acc); }
+  .js-row:hover { padding-left: 14px; }
+  .js-row:hover .row-title { color: var(--acc); }
+  .js-row .row-tick { position: absolute; left: 0; top: 18%; bottom: 18%; width: 2px; background: var(--acc); transform: scaleY(0); transform-origin: center; transition: transform .4s cubic-bezier(.2,.7,.2,1); }
+  .js-row:hover .row-tick { transform: scaleY(1); }
+  .other-cta-tide { color: var(--tide); }
+  .other-cta-ember { color: var(--ember); }
+  .other-cta-tide:hover { border-color: var(--tide); letter-spacing: 0.24em; }
+  .other-cta-ember:hover { border-color: var(--ember); letter-spacing: 0.24em; }
+  @media (max-width: 680px) {
+    .js-row { grid-template-columns: 44px 1fr !important; }
+    .js-row > span:last-child { display: none !important; }
+  }
+</style>

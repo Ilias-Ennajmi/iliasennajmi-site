@@ -1,0 +1,42 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import StrandList from '../components/StrandList.astro';
+
+const entries = (await getCollection('ulysses')).sort((a, b) => a.data.order - b.data.order);
+const posts = entries.map((e) => ({
+  id: e.data.id,
+  tag: e.data.tag,
+  read: e.data.read,
+  date: e.data.date,
+  title: e.data.title,
+  standfirst: e.data.standfirst,
+  href: `/essays/${e.data.id}/`,
+}));
+---
+<BaseLayout
+  title="Ulysses — Why people act · Ilias Ennajmi"
+  description="Essays on why people act the way they do — the psychology, habits, and quiet nudges behind everyday decisions."
+  active="ulysses"
+  accent="var(--tide)"
+  siteFx
+>
+  <StrandList
+    strand="ulysses"
+    accent="tide"
+    roman="I"
+    title="Ulysses"
+    kicker="I — Why people act"
+    lede="Notes on psychology, behavior and philosophy — the slow questions about why we do the things we do, named after the man who took the long way home."
+    watermark="I"
+    watermarkPos="right:-4%"
+    otherCard={{
+      heading: 'The other half is louder.',
+      blurb: "If you've read why people act, go see who profits.",
+      ctaLabel: 'Read Ilias →',
+      ctaHref: '/ilias/',
+      ctaAccent: 'ember',
+    }}
+    posts={posts}
+  />
+</BaseLayout>

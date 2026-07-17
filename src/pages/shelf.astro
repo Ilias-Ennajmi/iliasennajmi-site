@@ -1,0 +1,113 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const shelves = [
+  { label: 'Reading now', meta: '3 open', items: [
+    { title: 'Seeing Like a State', by: 'Scott', note: 'On why top-down plans flatten the things that made them work.' },
+    { title: 'The Status Game', by: 'Storr', note: 'Most behavior, re-read as a fight for rank.' },
+    { title: 'Trust', by: 'Diaz (fiction)', note: 'A novel about money told four unreliable ways.' },
+  ] },
+  { label: 'Recently finished', meta: '2026', items: [
+    { title: 'Influence', by: 'Cialdini' },
+    { title: 'Thinking, Fast and Slow', by: 'Kahneman' },
+    { title: 'The Paradox of Choice', by: 'Schwartz' },
+    { title: 'Ways of Seeing', by: 'Berger' },
+  ] },
+  { label: 'Books I keep returning to', meta: 'The canon', items: [
+    { title: 'Ulysses', by: 'Joyce' },
+    { title: 'Meditations', by: 'Aurelius' },
+    { title: 'The Brothers Karamazov', by: 'Dostoevsky' },
+    { title: 'Letters to a Young Poet', by: 'Rilke' },
+  ] },
+  { label: 'On repeat', meta: 'Sound', items: [
+    { title: 'In Rainbows', by: 'Radiohead' },
+    { title: 'Blonde', by: 'Frank Ocean' },
+    { title: 'At the Vanguard', by: 'Bill Evans' },
+    { title: 'Pastel Blues', by: 'Nina Simone' },
+  ] },
+  { label: 'Tools I trust', meta: 'Daily', items: [
+    { title: 'Obsidian', by: 'Notes', note: 'Plain text that outlives every app I’ve owned.' },
+    { title: 'A paper notebook', by: 'Analog', note: 'Slow on purpose. Nothing syncs, which is the point.' },
+    { title: 'Readwise', by: 'Recall' },
+  ] },
+  { label: 'Rabbit holes', meta: 'Lately', items: [
+    { title: 'Behavioral game theory', by: 'Topic' },
+    { title: 'The history of pricing', by: 'Topic' },
+    { title: 'Why menus are designed the way they are', by: 'Topic' },
+  ] },
+];
+
+shelves.forEach((c) => c.items.forEach((it: any) => {
+  it.url = it.url || `https://www.google.com/search?q=${encodeURIComponent(it.title + ' ' + it.by)}`;
+}));
+---
+<BaseLayout
+  title="The Shelf — Ilias Ennajmi"
+  description="Books, essays, and other things that shaped how I think about why people act and who profits."
+  active="shelf"
+  siteFx
+>
+<main>
+
+  <!-- HEADER -->
+  <header data-cursor-light style="position:relative;overflow:hidden;padding:clamp(8rem,16vh,12rem) clamp(22px,6vw,64px) clamp(3rem,6vw,5rem);">
+    <div style="position:absolute;inset:0;z-index:0;background:radial-gradient(120% 90% at 82% 6%, rgba(93,71,49,0.09), transparent 56%), linear-gradient(180deg,#efe9db 0%,var(--coal) 70%);"></div>
+    <div data-pll="0.10" data-watermark style="position:absolute;top:8%;left:-2%;z-index:0;font-family:var(--display);font-weight:800;font-size:clamp(5rem,20vw,17rem);line-height:0.7;color:rgba(28,26,20,0.06);pointer-events:none;letter-spacing:-0.04em;transition:color .6s ease;">04</div>
+    <div style="position:relative;z-index:1;max-width:1180px;margin:0 auto;animation:cc-rise .9s ease both;">
+      <div style="display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:0.68rem;letter-spacing:0.24em;text-transform:uppercase;color:var(--ash);margin-bottom:clamp(1.6rem,3vw,2.4rem);">
+        <span style="width:28px;height:1px;background:var(--ember);"></span><span class="cc-num" data-to="4">04</span> — The Shelf
+      </div>
+      <h1 style="margin:0;font-family:var(--display);font-weight:500;font-size:clamp(3.4rem,11vw,8.5rem);line-height:0.9;letter-spacing:-0.015em;">The Shelf<span style="color:var(--ember);">.</span></h1>
+      <p style="font-family:var(--body);font-weight:300;font-style:italic;font-size:clamp(1.2rem,2.4vw,1.7rem);color:var(--bone);opacity:0.82;max-width:48ch;margin:1.6rem 0 0;line-height:1.45;text-wrap:pretty;">Everything currently feeding the work — books, sound, tools and a few rabbit holes. Updated whenever something earns its place. Last touched June 2026.</p>
+    </div>
+  </header>
+
+  <!-- NOW PLAYING strip -->
+  <section style="border-top:1px solid var(--coal-line);border-bottom:1px solid var(--coal-line);background:var(--coal-soft);">
+    <div data-reveal style="max-width:1180px;margin:0 auto;padding:clamp(1.4rem,3vw,2.2rem) clamp(22px,6vw,64px);display:flex;flex-wrap:wrap;align-items:center;gap:clamp(18px,4vw,48px);">
+      <span style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ember);display:flex;align-items:center;gap:9px;"><span style="width:7px;height:7px;border-radius:50%;background:var(--ember);display:inline-block;"></span>Right now</span>
+      <span style="font-family:var(--body);font-weight:300;font-style:italic;font-size:clamp(1.1rem,2vw,1.45rem);color:var(--bone);">Reading <span style="font-style:normal;">Seeing Like a State</span> · re-watching <span style="font-style:normal;">The Bear</span> · stuck on <span style="font-style:normal;">one Nina Simone record</span></span>
+    </div>
+  </section>
+
+  <!-- SHELVES -->
+  <section style="max-width:1180px;margin:0 auto;padding:clamp(3.5rem,7vw,6rem) clamp(22px,6vw,64px) clamp(4rem,8vw,7rem);">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:clamp(2.4rem,4vw,4rem) clamp(2.4rem,5vw,5rem);">
+      {shelves.map((col) => (
+        <div data-reveal>
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding-bottom:1rem;margin-bottom:0.4rem;border-bottom:1px solid var(--coal-line);">
+            <span style="display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:0.64rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--ash);"><span style="width:6px;height:6px;background:var(--ember);display:inline-block;"></span>{col.label}</span>
+            <span style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.06em;color:var(--ash);opacity:0.7;">{col.meta}</span>
+          </div>
+          {col.items.map((it) => (
+            <div class="shelf-item" style="padding:1rem 0;border-bottom:1px solid var(--coal-line);">
+              <a href={it.url} target="_blank" rel="noopener" class="charge shelf-link" style="display:flex;align-items:baseline;justify-content:space-between;gap:14px;text-decoration:none;transition:color .25s;">
+                <span style="font-family:var(--body);font-size:1.18rem;line-height:1.2;">{it.title}</span>
+                <span style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.03em;color:var(--ash);white-space:nowrap;">{it.by}</span>
+              </a>
+              {it.note && (
+                <p class="shelf-note" style="font-family:var(--body);font-weight:300;font-style:italic;font-size:0.96rem;color:var(--ash);margin:0.4rem 0 0;line-height:1.4;text-wrap:pretty;">{it.note}</p>
+              )}
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+
+    <p data-reveal style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ash);margin:clamp(3rem,6vw,5rem) 0 0;opacity:0.7;">Nothing here is sponsored. Most of it I'd defend in an argument.</p>
+  </section>
+</main>
+</BaseLayout>
+
+<style>
+  .shelf-link:hover { color: var(--ember); }
+</style>
+
+<script>
+  function motionOK() { return !window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+  function initFx() {
+    const go = () => { if (window.SiteFX) window.SiteFX.init({ strand: null, motion: motionOK(), progress: 'page' }); else setTimeout(go, 60); };
+    go();
+  }
+  initFx();
+</script>

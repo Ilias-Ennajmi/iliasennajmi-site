@@ -1,0 +1,33 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+collections:
+  - name: "ulysses"
+    label: "Ulysses — Why people act"
+    label_singular: "Ulysses essay"
+    folder: "src/content/ulysses"
+    create: true
+    slug: "{{fields.id}}"
+    sortable_fields: ["order", "title"]
+    fields: &essay_fields
+      - { label: "URL slug", name: "id", widget: "string", hint: "lowercase-with-dashes — the essay lives at /essays/this/" }
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Topic tag", name: "tag", widget: "string", hint: "e.g. On Choice" }
+      - { label: "Read time", name: "read", widget: "string", hint: "e.g. 8 min" }
+      - { label: "Date", name: "date", widget: "string", hint: "e.g. May 2026" }
+      - { label: "Order", name: "order", widget: "number", value_type: "int", default: 1, hint: "1 = top of the list (newest)" }
+      - { label: "Standfirst", name: "standfirst", widget: "text", hint: "The one-paragraph teaser under the title" }
+      - { label: "Body", name: "body", widget: "markdown", buttons: ["quote", "heading-two"], editor_components: [], hint: "Plain paragraphs. Use “quote” for a pull-quote, “H2” for a section heading." }
+
+  - name: "ilias"
+    label: "Ilias — Who profits"
+    label_singular: "Ilias essay"
+    folder: "src/content/ilias"
+    create: true
+    slug: "{{fields.id}}"
+    sortable_fields: ["order", "title"]
+    fields: *essay_fields

@@ -1,0 +1,31 @@
+---
+import '../styles/global.css';
+const favicon = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23e7e0d0'/%3E%3Cpath d='M16 6l10 10-10 10L6 16z' fill='%239c2f24'/%3E%3C/svg%3E";
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Page not found — Ilias Ennajmi</title>
+  <link rel="icon" href={favicon} />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div style="min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:clamp(24px,6vw,64px);background:linear-gradient(180deg,#efe9db 0%,#e7e0d0 100%);">
+    <div style="animation:cc-rise .8s ease both;display:flex;flex-direction:column;align-items:center;">
+      <span style="width:9px;height:9px;transform:rotate(45deg);border:1px solid var(--ash);background:var(--coal);animation:cc-spin 14s linear infinite;margin-bottom:clamp(1.6rem,4vh,2.6rem);"></span>
+      <p style="margin:0 0 1.1rem;font-family:var(--mono);font-size:0.66rem;letter-spacing:0.24em;text-transform:uppercase;color:var(--ash);">№ 404</p>
+      <h1 style="margin:0;font-family:var(--display);font-weight:500;font-size:clamp(2rem,5vw,3.6rem);line-height:1.06;letter-spacing:-0.015em;max-width:18ch;text-wrap:balance;">This page was never written.<br><span style="font-style:italic;color:var(--ember);">Or never chosen.</span></h1>
+      <p style="margin:clamp(1.6rem,4vh,2.4rem) 0 0;font-size:clamp(1.05rem,2vw,1.25rem);color:var(--bone);opacity:0.72;max-width:38ch;line-height:1.55;text-wrap:pretty;">Either way, the essays are elsewhere — on why people act, and who profits when they do.</p>
+      <div style="display:flex;gap:clamp(18px,3vw,32px);margin-top:clamp(2rem,5vh,3rem);font-family:var(--mono);font-size:0.66rem;letter-spacing:0.2em;text-transform:uppercase;">
+        <a href="/" style="color:var(--ember);border-bottom:1px solid rgba(156,47,36,0.4);padding-bottom:4px;">Back home</a>
+        <a href="/ulysses/" style="color:var(--tide);border-bottom:1px solid rgba(43,36,25,0.18);padding-bottom:4px;">Ulysses</a>
+        <a href="/ilias/" style="color:var(--tide);border-bottom:1px solid rgba(43,36,25,0.18);padding-bottom:4px;">Ilias</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

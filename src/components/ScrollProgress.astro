@@ -1,0 +1,9 @@
+---
+interface Props {
+  accent?: string;
+}
+const { accent = 'var(--ember)' } = Astro.props;
+---
+<div style="position:fixed;left:0;top:0;bottom:0;width:1px;background:var(--coal-line);z-index:7100;pointer-events:none;">
+  <div id="cc-prog" style={`position:absolute;top:0;left:0;width:1px;height:0;background:${accent};`}></div>
+</div>

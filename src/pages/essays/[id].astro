@@ -1,0 +1,170 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+type Strand = 'ulysses' | 'ilias';
+interface Enriched {
+  entry: CollectionEntry<'ulysses'> | CollectionEntry<'ilias'>;
+  strand: Strand;
+  accent: 'tide' | 'ember';
+  strandLabel: string;
+  strandHref: string;
+}
+
+export async function getStaticPaths() {
+  const ulysses = (await getCollection('ulysses')).sort((a, b) => a.data.order - b.data.order);
+  const ilias = (await getCollection('ilias')).sort((a, b) => a.data.order - b.data.order);
+
+  const uly: Enriched[] = ulysses.map((entry) => ({ entry, strand: 'ulysses', accent: 'tide', strandLabel: 'Ulysses', strandHref: '/ulysses/' }));
+  const il: Enriched[] = ilias.map((entry) => ({ entry, strand: 'ilias', accent: 'ember', strandLabel: 'Ilias', strandHref: '/ilias/' }));
+
+  const build = (list: Enriched[]) => list.map((item, i) => {
+    const prev = list[(i - 1 + list.length) % list.length];
+    const next = list[(i + 1) % list.length];
+    return {
+      params: { id: item.entry.data.id },
+      props: { item, prev, next },
+    };
+  });
+
+  return [...build(uly), ...build(il)];
+}
+
+const { item, prev, next } = Astro.props;
+const { entry, strand, accent, strandLabel, strandHref } = item;
+const accentVar = accent === 'ember' ? 'var(--ember)' : 'var(--tide)';
+
+function parseBlocks(raw: string) {
+  return raw.split(/\r?\n\s*\r?\n/).map((s) => s.trim()).filter(Boolean).map((block) => {
+    if (block.startsWith('## ')) return { t: 'h', x: block.slice(3).trim() };
+    if (block.startsWith('#')) return { t: 'h', x: block.replace(/^#+\s*/, '') };
+    if (block.startsWith('>')) return { t: 'quote', x: block.replace(/^>\s?/gm, '').replace(/\s*\n\s*/g, ' ').trim() };
+    return { t: 'p', x: block.replace(/\s*\n\s*/g, ' ') };
+  });
+}
+
+const blocks = parseBlocks(entry.body ?? '');
+const lead = blocks[0] || { t: 'p', x: '' };
+const leadX = lead.x || '';
+const leadCap = leadX.charAt(0) || 'T';
+const leadRest = leadX.slice(1);
+const restBlocks = blocks.slice(1);
+const readMinutes = parseInt(entry.data.read, 10) || 0;
+const endLabel = `Ilias Ennajmi · ${strandLabel}`;
+const prevHref = `/essays/${prev.entry.data.id}/`;
+const nextHref = `/essays/${next.entry.data.id}/`;
+---
+<BaseLayout
+  title={`${entry.data.title} — Ilias Ennajmi`}
+  description={entry.data.standfirst}
+  active="essay"
+  ogType="article"
+  accent={accentVar}
+  siteFx
+>
+<div style={`--acc:${accentVar};`}>
+  <div data-reading-meter data-minutes={readMinutes} style="position:fixed;left:clamp(14px,2vw,26px);bottom:clamp(14px,2.4vh,24px);z-index:7200;opacity:0;transition:opacity .5s ease;pointer-events:none;font-family:var(--mono);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--acc);display:flex;align-items:center;gap:9px;">
+    <span style="width:5px;height:5px;background:var(--acc);transform:rotate(45deg);"></span>
+    <span data-meter-label>—</span>
+  </div>
+
+  <main>
+    <!-- ARTICLE HEADER -->
+    <header data-cursor-light style="position:relative;overflow:hidden;padding:clamp(8rem,16vh,12rem) clamp(22px,6vw,64px) clamp(2.5rem,5vw,4rem);">
+      <div style="position:absolute;inset:0;z-index:0;background:radial-gradient(110% 80% at 18% 6%, rgba(93,71,49,0.10), transparent 56%),linear-gradient(180deg,#efe9db 0%,var(--coal) 70%);"></div>
+      <div style="position:relative;z-index:1;max-width:760px;margin:0 auto;animation:cc-rise .9s ease both;">
+        <a href={strandHref} class="charge back-link" style="display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:0.62rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--acc);margin-bottom:clamp(2rem,4vw,3rem);transition:gap .3s;">← {strandLabel}</a>
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:13px;margin-bottom:clamp(1.4rem,2.5vw,2rem);font-family:var(--mono);font-size:0.6rem;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--ash);">
+          <span style="color:var(--acc);">{entry.data.tag}</span>
+          <span style="width:16px;height:1px;background:var(--coal-line);"></span>
+          <span>{entry.data.read} read</span>
+          <span style="width:3px;height:3px;border-radius:50%;background:var(--coal-line);"></span>
+          <span>{entry.data.date}</span>
+        </div>
+        <h1 style="margin:0;font-family:var(--display);font-weight:500;font-size:clamp(2.5rem,6.4vw,4.6rem);line-height:1.0;letter-spacing:-0.018em;text-wrap:balance;">{entry.data.title}</h1>
+        <p style="font-family:var(--body);font-weight:400;font-style:italic;font-size:clamp(1.25rem,2.4vw,1.7rem);line-height:1.42;color:var(--tide);margin:clamp(1.6rem,3vw,2.2rem) 0 0;text-wrap:pretty;">{entry.data.standfirst}</p>
+      </div>
+    </header>
+
+    <!-- AUTHOR / SEAM -->
+    <div style="max-width:760px;margin:0 auto;padding:0 clamp(22px,6vw,64px);">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:18px;padding:clamp(1.4rem,2.5vw,1.8rem) 0;border-top:1px solid var(--coal-line);border-bottom:1px solid var(--coal-line);">
+        <span style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);">By <span style="color:var(--bone);">Ilias Ennajmi</span></span>
+        <div style="display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);">
+          <span>Share</span>
+          <span style="width:3px;height:3px;border-radius:50%;background:var(--acc);"></span>
+          <a href="https://x.com" class="charge share-link">X</a>
+          <a href="https://www.linkedin.com" class="charge share-link">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- BODY -->
+    <article class="essay-body" style="max-width:680px;margin:0 auto;padding:clamp(3rem,6vw,5rem) clamp(22px,6vw,64px) clamp(4rem,7vw,6rem);">
+      <p data-reveal style="margin:0 0 1.6rem;font-family:var(--body);font-weight:400;font-size:clamp(1.18rem,1.9vw,1.36rem);line-height:1.66;color:var(--bone);text-wrap:pretty;"><span style="float:left;font-family:var(--display);font-weight:500;font-size:clamp(3.6rem,8vw,5.2rem);line-height:0.74;padding:0.32rem 0.7rem 0 0;color:var(--acc);">{leadCap}</span>{leadRest}</p>
+
+      {restBlocks.map((b) => (
+        b.t === 'p' ? (
+          <p data-reveal style="margin:0 0 1.6rem;font-family:var(--body);font-weight:400;font-size:clamp(1.18rem,1.9vw,1.36rem);line-height:1.66;color:var(--bone);text-wrap:pretty;">{b.x}</p>
+        ) : b.t === 'quote' ? (
+          <blockquote data-reveal class="essay-quote" style="margin:clamp(2.4rem,5vw,3.6rem) 0;padding-left:clamp(20px,4vw,34px);border-left:2px solid var(--acc);">
+            <p style="margin:0;font-family:var(--display);font-weight:400;font-style:italic;font-size:clamp(1.6rem,3.4vw,2.5rem);line-height:1.22;letter-spacing:-0.01em;color:var(--bone);text-wrap:pretty;">{b.x}</p>
+          </blockquote>
+        ) : (
+          <Fragment>
+            <div data-reveal style="display:flex;justify-content:center;margin:clamp(2.8rem,5vw,4rem) 0 0;"><span style="width:8px;height:8px;background:var(--acc);transform:rotate(45deg);opacity:0.55;"></span></div>
+            <h2 data-reveal style="margin:clamp(1.6rem,3vw,2.2rem) 0 1.1rem;font-family:var(--mono);font-size:0.68rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--ash);">{b.x}</h2>
+          </Fragment>
+        )
+      ))}
+
+      <div data-reveal style="display:flex;align-items:center;gap:14px;margin-top:clamp(2.4rem,4vw,3.4rem);font-family:var(--mono);font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--ash);">
+        <span style="width:8px;height:8px;background:var(--acc);transform:rotate(45deg);display:inline-block;"></span>
+        <span>{endLabel}</span>
+      </div>
+    </article>
+
+    <!-- PREV / NEXT -->
+    <nav aria-label="More essays" style="border-top:1px solid var(--coal-line);">
+      <div class="kb-hint" style="max-width:1180px;margin:0 auto;padding:1.1rem clamp(22px,6vw,64px) 0;text-align:center;font-family:var(--mono);font-size:0.56rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ash);opacity:0.7;">Navigate with <span style="color:var(--acc);">←</span> <span style="color:var(--acc);">→</span></div>
+      <div style="max-width:1180px;margin:0 auto;padding:0 clamp(22px,6vw,64px);display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--coal-line);">
+        <a href={prevHref} data-prev-link class="charge prevnext-link" style="background:var(--coal);display:flex;flex-direction:column;gap:0.8rem;padding:clamp(2.2rem,4vw,3.4rem) clamp(1.4rem,3vw,2.6rem);transition:background .4s;">
+          <span style="font-family:var(--mono);font-size:0.6rem;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--ash);">← Previous</span>
+          <span style="font-family:var(--display);font-weight:500;font-size:clamp(1.3rem,2.4vw,1.9rem);line-height:1.08;letter-spacing:-0.01em;text-wrap:balance;">{prev.entry.data.title}</span>
+          <span style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ash);">{prev.entry.data.tag}</span>
+        </a>
+        <a href={nextHref} data-next-link class="charge prevnext-link" style="background:var(--coal);display:flex;flex-direction:column;gap:0.8rem;padding:clamp(2.2rem,4vw,3.4rem) clamp(1.4rem,3vw,2.6rem);text-align:right;align-items:flex-end;transition:background .4s;">
+          <span style="font-family:var(--mono);font-size:0.6rem;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--acc);">Next →</span>
+          <span style="font-family:var(--display);font-weight:500;font-size:clamp(1.3rem,2.4vw,1.9rem);line-height:1.08;letter-spacing:-0.01em;text-wrap:balance;">{next.entry.data.title}</span>
+          <span style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ash);">{next.entry.data.tag}</span>
+        </a>
+      </div>
+    </nav>
+  </main>
+</div>
+</BaseLayout>
+
+<style>
+  .back-link:hover { gap: 15px; }
+  .share-link { transition: color .25s; }
+  .share-link:hover { color: var(--bone); }
+  .prevnext-link:hover { background: var(--coal-soft); }
+</style>
+
+<script define:vars={{ strand, prevHref, nextHref }}>
+  function motionOK() { return !window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+  function initFx() {
+    const go = () => { if (window.SiteFX) window.SiteFX.init({ strand, motion: motionOK(), progress: 'article' }); else setTimeout(go, 60); };
+    go();
+  }
+  initFx();
+
+  window.scrollTo(0, 0);
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const t = e.target;
+    if (t && /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return;
+    if (e.key === 'ArrowLeft') window.location.href = prevHref;
+    else if (e.key === 'ArrowRight') window.location.href = nextHref;
+  });
+</script>
