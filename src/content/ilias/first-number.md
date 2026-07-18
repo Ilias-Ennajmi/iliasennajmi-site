@@ -5,6 +5,7 @@ tag: "On Pricing"
 read: "8 min"
 date: "May 2026"
 order: 1
+pairsWith: "rational"
 standfirst: "Every price after the first is read in relation to it. How anchoring quietly decides what a thing is worth before anyone does the math."
 ---
 Show someone a price and you have not just made an offer — you have set a reference point that every later number will be measured against. The first figure does not describe the value of the thing. It manufactures the scale on which the thing will be judged.

@@ -1,6 +1,8 @@
 ---
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getPublishedCollection, readMinutesOf, readTimeOf, getPairedEssay } from '../../lib/essays';
+import { wordCount } from '../../lib/readTime';
 
 type Strand = 'ulysses' | 'ilias';
 interface Enriched {
@@ -12,47 +14,55 @@ interface Enriched {
 }
 
 export async function getStaticPaths() {
-  const ulysses = (await getCollection('ulysses')).sort((a, b) => a.data.order - b.data.order);
-  const ilias = (await getCollection('ilias')).sort((a, b) => a.data.order - b.data.order);
+  const ulysses = await getPublishedCollection('ulysses');
+  const ilias = await getPublishedCollection('ilias');
 
   const uly: Enriched[] = ulysses.map((entry) => ({ entry, strand: 'ulysses', accent: 'tide', strandLabel: 'Ulysses', strandHref: '/ulysses/' }));
   const il: Enriched[] = ilias.map((entry) => ({ entry, strand: 'ilias', accent: 'ember', strandLabel: 'Ilias', strandHref: '/ilias/' }));
 
-  const build = (list: Enriched[]) => list.map((item, i) => {
+  const build = (list: Enriched[], oppositeList: Enriched[]) => list.map((item, i) => {
     const prev = list[(i - 1 + list.length) % list.length];
     const next = list[(i + 1) % list.length];
+    const pairedRaw = getPairedEssay(item.entry, oppositeList.map((o) => o.entry));
+    const paired = pairedRaw ? oppositeList.find((o) => o.entry.data.id === pairedRaw.data.id) ?? null : null;
     return {
       params: { id: item.entry.data.id },
-      props: { item, prev, next },
+      props: { item, prev, next, paired },
     };
   });
 
-  return [...build(uly), ...build(il)];
+  return [...build(uly, il), ...build(il, uly)];
 }
 
-const { item, prev, next } = Astro.props;
+const { item, prev, next, paired } = Astro.props;
 const { entry, strand, accent, strandLabel, strandHref } = item;
 const accentVar = accent === 'ember' ? 'var(--ember)' : 'var(--tide)';
 
-function parseBlocks(raw: string) {
-  return raw.split(/\r?\n\s*\r?\n/).map((s) => s.trim()).filter(Boolean).map((block) => {
-    if (block.startsWith('## ')) return { t: 'h', x: block.slice(3).trim() };
-    if (block.startsWith('#')) return { t: 'h', x: block.replace(/^#+\s*/, '') };
-    if (block.startsWith('>')) return { t: 'quote', x: block.replace(/^>\s?/gm, '').replace(/\s*\n\s*/g, ' ').trim() };
-    return { t: 'p', x: block.replace(/\s*\n\s*/g, ' ') };
-  });
-}
-
-const blocks = parseBlocks(entry.body ?? '');
-const lead = blocks[0] || { t: 'p', x: '' };
-const leadX = lead.x || '';
-const leadCap = leadX.charAt(0) || 'T';
-const leadRest = leadX.slice(1);
-const restBlocks = blocks.slice(1);
-const readMinutes = parseInt(entry.data.read, 10) || 0;
+const { Content } = await render(entry);
+const readMinutes = readMinutesOf(entry);
+const readLabel = entry.data.read ?? `${readMinutes} min`;
 const endLabel = `Ilias Ennajmi · ${strandLabel}`;
 const prevHref = `/essays/${prev.entry.data.id}/`;
 const nextHref = `/essays/${next.entry.data.id}/`;
+const ogImage = `/og/${entry.data.id}.png`;
+
+const publishedDate = new Date(entry.data.date);
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: entry.data.title,
+  description: entry.data.standfirst,
+  author: { '@type': 'Person', name: 'Ilias Ennajmi' },
+  ...(isNaN(publishedDate.getTime()) ? {} : { datePublished: publishedDate.toISOString() }),
+  wordCount: wordCount(entry.body ?? ''),
+  articleSection: strandLabel,
+  keywords: entry.data.tag,
+  mainEntityOfPage: { '@type': 'WebPage', '@id': `/essays/${entry.data.id}/` },
+  image: ogImage,
+};
+
+const canonicalUrl = new URL(`/essays/${entry.data.id}/`, Astro.site).toString();
+const citation = `Ennajmi, Ilias. "${entry.data.title}." Ilias Ennajmi, ${entry.data.date}. ${canonicalUrl}.`;
 ---
 <BaseLayout
   title={`${entry.data.title} — Ilias Ennajmi`}
@@ -60,12 +70,21 @@ const nextHref = `/essays/${next.entry.data.id}/`;
   active="essay"
   ogType="article"
   accent={accentVar}
+  ogImage={ogImage}
+  jsonLd={jsonLd}
   siteFx
 >
 <div style={`--acc:${accentVar};`}>
   <div data-reading-meter data-minutes={readMinutes} style="position:fixed;left:clamp(14px,2vw,26px);bottom:clamp(14px,2.4vh,24px);z-index:7200;opacity:0;transition:opacity .5s ease;pointer-events:none;font-family:var(--mono);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--acc);display:flex;align-items:center;gap:9px;">
     <span style="width:5px;height:5px;background:var(--acc);transform:rotate(45deg);"></span>
     <span data-meter-label>—</span>
+  </div>
+
+  <div id="highlight-popover" class="no-print" style="position:absolute;display:none;z-index:9000;transform:translate(-50%,-100%);margin-top:-10px;">
+    <button type="button" id="highlight-copy-btn" style="background:var(--bone);color:var(--coal);font-family:var(--mono);font-size:0.64rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;border:none;padding:9px 16px;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:8px;">
+      <span style={`width:6px;height:6px;background:${accentVar};transform:rotate(45deg);display:inline-block;`}></span>
+      Copy quote
+    </button>
   </div>
 
   <main id="main-content">
@@ -77,7 +96,7 @@ const nextHref = `/essays/${next.entry.data.id}/`;
         <div style="display:flex;flex-wrap:wrap;align-items:center;gap:13px;margin-bottom:clamp(1.4rem,2.5vw,2rem);font-family:var(--mono);font-size:0.6rem;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--ash);">
           <span style="color:var(--acc);">{entry.data.tag}</span>
           <span style="width:16px;height:1px;background:var(--coal-line);"></span>
-          <span>{entry.data.read} read</span>
+          <span>{readLabel} read</span>
           <span style="width:3px;height:3px;border-radius:50%;background:var(--coal-line);"></span>
           <span>{entry.data.date}</span>
         </div>
@@ -90,33 +109,20 @@ const nextHref = `/essays/${next.entry.data.id}/`;
     <div style="max-width:760px;margin:0 auto;padding:0 clamp(22px,6vw,64px);">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:18px;padding:clamp(1.4rem,2.5vw,1.8rem) 0;border-top:1px solid var(--coal-line);border-bottom:1px solid var(--coal-line);">
         <span style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);">By <span style="color:var(--bone);">Ilias Ennajmi</span></span>
-        <div style="display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);">
+        <div class="no-print" style="display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);">
           <span>Share</span>
           <span style="width:3px;height:3px;border-radius:50%;background:var(--acc);"></span>
           <a href="https://x.com" class="charge share-link">X</a>
           <a href="https://www.linkedin.com" class="charge share-link">LinkedIn</a>
+          <span style="width:3px;height:3px;border-radius:50%;background:var(--acc);"></span>
+          <button type="button" class="charge share-link cite-btn" data-citation={citation} style="background:none;border:none;padding:0;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;cursor:pointer;">Cite</button>
         </div>
       </div>
     </div>
 
     <!-- BODY -->
     <article class="essay-body" style="max-width:680px;margin:0 auto;padding:clamp(3rem,6vw,5rem) clamp(22px,6vw,64px) clamp(4rem,7vw,6rem);">
-      <p data-reveal style="margin:0 0 1.6rem;font-family:var(--body);font-weight:400;font-size:clamp(1.18rem,1.9vw,1.36rem);line-height:1.66;color:var(--bone);text-wrap:pretty;"><span style="float:left;font-family:var(--display);font-weight:500;font-size:clamp(3.6rem,8vw,5.2rem);line-height:0.74;padding:0.32rem 0.7rem 0 0;color:var(--acc);">{leadCap}</span>{leadRest}</p>
-
-      {restBlocks.map((b) => (
-        b.t === 'p' ? (
-          <p data-reveal style="margin:0 0 1.6rem;font-family:var(--body);font-weight:400;font-size:clamp(1.18rem,1.9vw,1.36rem);line-height:1.66;color:var(--bone);text-wrap:pretty;">{b.x}</p>
-        ) : b.t === 'quote' ? (
-          <blockquote data-reveal class="essay-quote" style="margin:clamp(2.4rem,5vw,3.6rem) 0;padding-left:clamp(20px,4vw,34px);border-left:2px solid var(--acc);">
-            <p style="margin:0;font-family:var(--display);font-weight:400;font-style:italic;font-size:clamp(1.6rem,3.4vw,2.5rem);line-height:1.22;letter-spacing:-0.01em;color:var(--bone);text-wrap:pretty;">{b.x}</p>
-          </blockquote>
-        ) : (
-          <Fragment>
-            <div data-reveal style="display:flex;justify-content:center;margin:clamp(2.8rem,5vw,4rem) 0 0;"><span style="width:8px;height:8px;background:var(--acc);transform:rotate(45deg);opacity:0.55;"></span></div>
-            <h2 data-reveal style="margin:clamp(1.6rem,3vw,2.2rem) 0 1.1rem;font-family:var(--mono);font-size:0.68rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--ash);">{b.x}</h2>
-          </Fragment>
-        )
-      ))}
+      <Content />
 
       <div data-reveal style="display:flex;align-items:center;gap:14px;margin-top:clamp(2.4rem,4vw,3.4rem);font-family:var(--mono);font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--ash);">
         <span style="width:8px;height:8px;background:var(--acc);transform:rotate(45deg);display:inline-block;"></span>
@@ -124,8 +130,24 @@ const nextHref = `/essays/${next.entry.data.id}/`;
       </div>
     </article>
 
+    {paired && (
+      <section class="no-print" style="border-top:1px solid var(--coal-line);background:var(--coal-soft);">
+        <div style="max-width:760px;margin:0 auto;padding:clamp(2.6rem,5vw,4rem) clamp(22px,6vw,64px);">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.1rem;font-family:var(--mono);font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ash);">
+            <span style={`width:7px;height:7px;transform:rotate(45deg);display:inline-block;background:${paired.accent === 'ember' ? 'var(--ember)' : 'var(--tide)'};`}></span>
+            {strand === 'ulysses' ? 'Now see who profits' : 'Now ask why people act'}
+          </div>
+          <a href={`/essays/${paired.entry.data.id}/`} class="charge paired-link" data-accent={paired.accent} style="display:block;">
+            <div class="paired-title" style="font-family:var(--display);font-weight:500;font-size:clamp(1.7rem,3.4vw,2.6rem);line-height:1.08;letter-spacing:-0.01em;transition:color .3s;text-wrap:balance;">{paired.entry.data.title}</div>
+            <p style="font-family:var(--body);font-weight:300;font-style:italic;color:var(--ash);font-size:clamp(1rem,1.6vw,1.15rem);margin:0.8rem 0 0;line-height:1.45;text-wrap:pretty;">{paired.entry.data.standfirst}</p>
+            <span style={`display:inline-flex;align-items:center;gap:8px;margin-top:1.2rem;font-family:var(--mono);font-size:0.64rem;letter-spacing:0.16em;text-transform:uppercase;color:${paired.accent === 'ember' ? 'var(--ember)' : 'var(--tide)'};`}>Read the {paired.strandLabel} counterpart →</span>
+          </a>
+        </div>
+      </section>
+    )}
+
     <!-- PREV / NEXT -->
-    <nav aria-label="More essays" style="border-top:1px solid var(--coal-line);">
+    <nav aria-label="More essays" class="no-print" style="border-top:1px solid var(--coal-line);">
       <div class="kb-hint" style="max-width:1180px;margin:0 auto;padding:1.1rem clamp(22px,6vw,64px) 0;text-align:center;font-family:var(--mono);font-size:0.56rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ash);opacity:0.7;">Navigate with <span style="color:var(--acc);">←</span> <span style="color:var(--acc);">→</span></div>
       <div style="max-width:1180px;margin:0 auto;padding:0 clamp(22px,6vw,64px);display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--coal-line);">
         <a href={prevHref} data-prev-link class="charge prevnext-link" style="background:var(--coal);display:flex;flex-direction:column;gap:0.8rem;padding:clamp(2.2rem,4vw,3.4rem) clamp(1.4rem,3vw,2.6rem);transition:background .4s;">
@@ -149,14 +171,97 @@ const nextHref = `/essays/${next.entry.data.id}/`;
   .share-link { transition: color .25s; }
   .share-link:hover { color: var(--bone); }
   .prevnext-link:hover { background: var(--coal-soft); }
+  .paired-link[data-accent="tide"]:hover .paired-title { color: var(--tide); }
+  .paired-link[data-accent="ember"]:hover .paired-title { color: var(--ember); }
 </style>
 
-<script define:vars={{ strand, prevHref, nextHref }}>
+<script define:vars={{ strand, prevHref, nextHref, essayTitle: entry.data.title, canonicalUrl }}>
   let cleanupKeydown = null;
+  let cleanupHighlight = null;
+  let cleanupSidenotes = null;
+  let cleanupSidenoteResize = null;
+
+  // Footnotes ([^1] syntax, supported by Astro's default GFM markdown)
+  // render as a numbered ref + a list at the bottom. This rebuilds them
+  // as Tufte-style margin notes on wide screens, or tap-to-reveal inline
+  // notes on narrow ones — the native bottom list is always hidden (CSS).
+  function setupSidenotes() {
+    if (cleanupSidenotes) cleanupSidenotes();
+    const article = document.querySelector('.essay-body');
+    const footnotesSection = article && article.querySelector('.footnotes');
+    if (!article || !footnotesSection) { cleanupSidenotes = null; return; }
+
+    const notes = {};
+    footnotesSection.querySelectorAll('li[id]').forEach((li) => {
+      const clone = li.cloneNode(true);
+      clone.querySelectorAll('[data-footnote-backref]').forEach((a) => a.remove());
+      notes[li.id] = clone.innerHTML.trim();
+    });
+
+    const refs = Array.from(article.querySelectorAll('a[data-footnote-ref]'));
+    const created = [];
+    const wide = window.matchMedia('(min-width: 1280px)').matches;
+
+    if (wide) {
+      const artRect = article.getBoundingClientRect();
+      refs.forEach((ref) => {
+        const id = ref.getAttribute('href').slice(1);
+        const content = notes[id];
+        const sup = ref.closest('sup');
+        if (!content || !sup) return;
+        const note = document.createElement('span');
+        note.className = 'sidenote';
+        note.innerHTML = content;
+        note.style.top = (sup.getBoundingClientRect().top - artRect.top) + 'px';
+        article.appendChild(note);
+        created.push(note);
+        const onClick = (e) => e.preventDefault();
+        ref.addEventListener('click', onClick);
+        created.push({ remove: () => ref.removeEventListener('click', onClick) });
+      });
+    } else {
+      refs.forEach((ref) => {
+        const id = ref.getAttribute('href').slice(1);
+        const content = notes[id];
+        const sup = ref.closest('sup');
+        if (!content || !sup) return;
+        const onClick = (e) => {
+          e.preventDefault();
+          const existing = sup.parentElement.querySelector(':scope > .sidenote-inline[data-for="' + id + '"]');
+          if (existing) { existing.remove(); return; }
+          const note = document.createElement('span');
+          note.className = 'sidenote-inline';
+          note.dataset.for = id;
+          note.innerHTML = content;
+          sup.insertAdjacentElement('afterend', note);
+        };
+        ref.addEventListener('click', onClick);
+        ref.classList.add('footnote-toggle');
+        created.push({ remove: () => { ref.removeEventListener('click', onClick); ref.classList.remove('footnote-toggle'); } });
+      });
+    }
+
+    cleanupSidenotes = () => {
+      created.forEach((el) => { if (el.remove) el.remove(); });
+      article.querySelectorAll('.sidenote, .sidenote-inline').forEach((el) => el.remove());
+    };
+  }
 
   document.addEventListener('astro:page-load', () => {
+    // <Content /> renders as opaque HTML (real markdown, not hand-built
+    // JSX per block), so each top-level element needs data-reveal added
+    // here instead of in the template, to keep the same staggered
+    // scroll-reveal per paragraph/quote/heading as before.
+    document.querySelectorAll('.essay-body > *').forEach((el) => el.setAttribute('data-reveal', ''));
     window.pageBoot({ strand, progress: 'article' });
     window.scrollTo(0, 0);
+
+    setupSidenotes();
+    if (cleanupSidenoteResize) cleanupSidenoteResize();
+    let resizeTimer;
+    const onResize = () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(setupSidenotes, 150); };
+    window.addEventListener('resize', onResize, { passive: true });
+    cleanupSidenoteResize = () => { clearTimeout(resizeTimer); window.removeEventListener('resize', onResize); };
 
     if (cleanupKeydown) cleanupKeydown();
     const onKeydown = (e) => {
@@ -168,5 +273,61 @@ const nextHref = `/essays/${next.entry.data.id}/`;
     };
     document.addEventListener('keydown', onKeydown);
     cleanupKeydown = () => document.removeEventListener('keydown', onKeydown);
+
+    const citeBtn = document.querySelector('.cite-btn');
+    if (citeBtn && !citeBtn.dataset.bound) {
+      citeBtn.dataset.bound = '1';
+      citeBtn.addEventListener('click', async () => {
+        const citation = citeBtn.getAttribute('data-citation');
+        try {
+          await navigator.clipboard.writeText(citation);
+          const original = citeBtn.textContent;
+          citeBtn.textContent = 'Copied';
+          setTimeout(() => { citeBtn.textContent = original; }, 1600);
+        } catch (e) {
+          window.prompt('Copy this citation:', citation);
+        }
+      });
+    }
+
+    if (cleanupHighlight) cleanupHighlight();
+    const popover = document.getElementById('highlight-popover');
+    const copyBtn = document.getElementById('highlight-copy-btn');
+    const body = document.querySelector('.essay-body');
+    if (popover && copyBtn && body) {
+      const hide = () => { popover.style.display = 'none'; };
+      const onSelectionEnd = () => {
+        const sel = window.getSelection();
+        const text = sel ? sel.toString().trim() : '';
+        if (!text || sel.rangeCount === 0 || !body.contains(sel.anchorNode)) { hide(); return; }
+        const rect = sel.getRangeAt(0).getBoundingClientRect();
+        if (!rect.width && !rect.height) { hide(); return; }
+        popover.style.left = (rect.left + rect.width / 2 + window.scrollX) + 'px';
+        popover.style.top = (rect.top + window.scrollY) + 'px';
+        popover.style.display = 'block';
+        copyBtn.dataset.quote = text;
+      };
+      const onCopyClick = async () => {
+        const quote = copyBtn.dataset.quote || '';
+        const text = `"${quote}" — Ilias Ennajmi, "${essayTitle}"\n${canonicalUrl}`;
+        try {
+          await navigator.clipboard.writeText(text);
+          copyBtn.lastChild.textContent = ' Copied';
+          setTimeout(() => { copyBtn.lastChild.textContent = ' Copy quote'; hide(); }, 1200);
+        } catch (e) {
+          window.prompt('Copy this quote:', text);
+          hide();
+        }
+      };
+      document.addEventListener('mouseup', onSelectionEnd);
+      document.addEventListener('touchend', onSelectionEnd);
+      document.addEventListener('scroll', hide, { passive: true });
+      copyBtn.addEventListener('click', onCopyClick);
+      cleanupHighlight = () => {
+        document.removeEventListener('mouseup', onSelectionEnd);
+        document.removeEventListener('touchend', onSelectionEnd);
+        document.removeEventListener('scroll', hide);
+      };
+    }
   });
 </script>

@@ -5,6 +5,8 @@ tag: "On Attention"
 read: "10 min"
 date: "Mar 2026"
 order: 3
+pairsWith: "open-tab"
+startHereOrder: 2
 standfirst: "The market for eyeballs is a lease with rising rent. Why every channel eventually turns against the people who depend on it."
 ---
 There is a comforting fiction in marketing that attention can be acquired — bought once, owned thereafter, banked like a customer list. It cannot. Attention is rented, the lease is short, and the landlord raises the rent precisely as you come to depend on the address.

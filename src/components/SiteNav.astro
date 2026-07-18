@@ -1,6 +1,6 @@
 ---
 interface Props {
-  active: 'home' | 'about' | 'ulysses' | 'ilias' | 'shelf' | 'essay';
+  active: 'home' | 'about' | 'ulysses' | 'ilias' | 'shelf' | 'essay' | 'topics';
 }
 const { active } = Astro.props;
 const on = 'var(--ember)';
@@ -10,7 +10,8 @@ const links = [
   { href: '/about/', label: 'About', key: 'about', num: '02' },
   { href: '/ulysses/', label: 'Ulysses', key: 'ulysses', num: '03' },
   { href: '/ilias/', label: 'Ilias', key: 'ilias', num: '04' },
-  { href: '/shelf/', label: 'The Shelf', key: 'shelf', num: '05' },
+  { href: '/topics/', label: 'Topics', key: 'topics', num: '05' },
+  { href: '/shelf/', label: 'The Shelf', key: 'shelf', num: '06' },
 ];
 ---
 
@@ -26,13 +27,19 @@ const links = [
     ))}
   </div>
 
-  <button id="sn-burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="sn-drawer" style="display:none;align-items:center;gap:10px;background:none;border:none;cursor:pointer;font-family:var(--mono);font-size:0.64rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--bone);padding:11px 0;min-height:44px;-webkit-tap-highlight-color:transparent;">
-    <span style="display:flex;flex-direction:column;gap:5px;width:24px;">
-      <span style="height:1.5px;background:var(--bone);width:100%;"></span>
-      <span style="height:1.5px;background:var(--bone);width:100%;"></span>
-    </span>
-    Menu
-  </button>
+  <div style="display:flex;align-items:center;gap:clamp(14px,2vw,24px);">
+    <button id="sn-search-btn" type="button" aria-label="Search essays" style="display:flex;align-items:center;gap:8px;background:none;border:1px solid var(--coal-line);cursor:pointer;font-family:var(--mono);font-size:0.6rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--ash);padding:8px 12px;min-height:36px;-webkit-tap-highlight-color:transparent;">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <span class="sn-search-label" style="display:none;">⌘K</span>
+    </button>
+    <button id="sn-burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="sn-drawer" style="display:none;align-items:center;gap:10px;background:none;border:none;cursor:pointer;font-family:var(--mono);font-size:0.64rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--bone);padding:11px 0;min-height:44px;-webkit-tap-highlight-color:transparent;">
+      <span style="display:flex;flex-direction:column;gap:5px;width:24px;">
+        <span style="height:1.5px;background:var(--bone);width:100%;"></span>
+        <span style="height:1.5px;background:var(--bone);width:100%;"></span>
+      </span>
+      Menu
+    </button>
+  </div>
 </nav>
 
 <div id="sn-drawer" aria-hidden="true" style="position:fixed;inset:0;z-index:8000;background:var(--coal);display:flex;flex-direction:column;font-family:var(--mono);">
@@ -56,6 +63,8 @@ const links = [
 
 <style>
   .sn-link:hover { color: var(--bone); }
+  #sn-search-btn:hover { color: var(--bone); border-color: var(--ash); }
+  @media (min-width: 640px) { .sn-search-label { display: inline !important; } }
 </style>
 
 <script>
@@ -84,6 +93,15 @@ const links = [
     };
     burger.addEventListener('click', open);
     drawer.querySelectorAll('[data-close]').forEach((el) => el.addEventListener('click', close));
+
+    const searchBtn = document.getElementById('sn-search-btn');
+    if (searchBtn) {
+      searchBtn.addEventListener('click', () => {
+        const w = window as unknown as { openCommandPalette?: () => void };
+        if (w.openCommandPalette) w.openCommandPalette();
+      });
+    }
+
     const onKeydown = (e: KeyboardEvent) => { if (e.key === 'Escape') close(); };
     document.addEventListener('keydown', onKeydown);
     cleanupKeydown = () => document.removeEventListener('keydown', onKeydown);

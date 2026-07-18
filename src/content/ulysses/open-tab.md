@@ -5,6 +5,8 @@ tag: "On Choice"
 read: "9 min"
 date: "May 2026"
 order: 1
+pairsWith: "attention-rent"
+startHereOrder: 1
 standfirst: "We mistake having options for having freedom. A look at why more choices reliably make us less happy — and what the brain is actually optimizing for when it stalls."
 ---
 We like to believe a choice is the moment we feel most ourselves — weighing options, sovereign, free. But the more carefully you watch the moment of deciding, the more it dissolves. The options were chosen for you. Their order was chosen for you. The version of you doing the choosing was, to a degree that should bother you, arranged in advance.

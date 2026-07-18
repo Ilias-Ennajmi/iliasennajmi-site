@@ -20,14 +20,17 @@ collections:
     slug: "{{fields.id}}"
     sortable_fields: ["order", "title"]
     fields: &essay_fields
+      - { label: "Draft", name: "draft", widget: "boolean", default: true, hint: "Keep on while you're still writing — flip off to publish live." }
       - { label: "URL slug", name: "id", widget: "string", hint: "lowercase-with-dashes — the essay lives at /essays/this/" }
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Topic tag", name: "tag", widget: "string", hint: "e.g. On Choice" }
-      - { label: "Read time", name: "read", widget: "string", hint: "e.g. 8 min" }
+      - { label: "Read time", name: "read", widget: "string", required: false, hint: "e.g. 8 min — leave blank to auto-calculate from word count" }
       - { label: "Date", name: "date", widget: "string", hint: "e.g. May 2026" }
       - { label: "Order", name: "order", widget: "number", value_type: "int", default: 1, hint: "1 = top of the list (newest)" }
       - { label: "Standfirst", name: "standfirst", widget: "text", hint: "The one-paragraph teaser under the title" }
-      - { label: "Body", name: "body", widget: "markdown", buttons: ["quote", "heading-two"], editor_components: [], hint: "Plain paragraphs. Use “quote” for a pull-quote, “H2” for a section heading." }
+      - { label: "Pairs with (other strand)", name: "pairsWith", widget: "string", required: false, hint: "URL slug of the best-matching essay in the OTHER strand — powers the cross-strand 'read next' suggestion" }
+      - { label: "Start Here order", name: "startHereOrder", widget: "number", value_type: "int", required: false, hint: "Set 1-4 to include this essay in the curated 'Start Here' path, in this order. Leave blank otherwise." }
+      - { label: "Body", name: "body", widget: "markdown", buttons: ["bold", "italic", "link", "quote", "heading-two", "bulleted-list", "numbered-list", "code", "image"], hint: "Plain paragraphs. Use “quote” for a pull-quote, “H2” for a section heading. For a margin/sidenote, type it manually as text[^1] plus a [^1]: note line at the end of the essay." }
 
   - name: "ilias"
     label: "Ilias — Who profits"

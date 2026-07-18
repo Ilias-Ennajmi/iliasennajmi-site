@@ -1,0 +1,174 @@
+---
+---
+<div id="cmdk-backdrop" style="position:fixed;inset:0;z-index:9500;background:rgba(28,26,20,0.55);display:none;">
+  <div id="cmdk-panel" role="dialog" aria-modal="true" aria-label="Search" style="max-width:600px;margin:12vh auto 0;background:var(--coal-soft);border:1px solid var(--coal-line);max-height:70vh;display:flex;flex-direction:column;">
+    <div style="display:flex;align-items:center;gap:12px;padding:18px 20px;border-bottom:1px solid var(--coal-line);">
+      <span style="width:7px;height:7px;background:var(--ember);transform:rotate(45deg);flex:none;"></span>
+      <input id="cmdk-input" type="text" placeholder="Search essays…" autocomplete="off" spellcheck="false"
+        style="flex:1;background:none;border:none;outline:none;font-family:var(--display);font-size:1.2rem;color:var(--bone);" />
+      <kbd style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;color:var(--ash);border:1px solid var(--coal-line);padding:3px 6px;">ESC</kbd>
+    </div>
+    <div id="cmdk-results" style="overflow-y:auto;flex:1;"></div>
+    <div style="padding:10px 20px;border-top:1px solid var(--coal-line);font-family:var(--mono);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);display:flex;gap:16px;">
+      <span>↑↓ Navigate</span>
+      <span>↵ Open</span>
+      <span style="margin-left:auto;">⌘K / Ctrl+K</span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .cmdk-item { display: block; padding: 14px 20px; border-bottom: 1px solid var(--coal-line); text-decoration: none; cursor: pointer; }
+  .cmdk-item[data-active="1"] { background: var(--coal-line); }
+  .cmdk-item-title { font-family: var(--display); font-weight: 500; font-size: 1.1rem; color: var(--bone); }
+  .cmdk-item-meta { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ash); margin-top: 4px; }
+  .cmdk-empty { padding: 30px 20px; font-family: var(--body); font-style: italic; color: var(--ash); text-align: center; }
+</style>
+
+<script>
+  type SearchItem = { title: string; tag: string; standfirst: string; strand: string; read: string; href: string };
+
+  let items: SearchItem[] | null = null;
+  let activeIndex = 0;
+  let filtered: SearchItem[] = [];
+  let cleanupPalette: (() => void) | null = null;
+
+  async function loadIndex(): Promise<SearchItem[]> {
+    if (items) return items;
+    const res = await fetch('/search-index.json');
+    items = await res.json();
+    return items ?? [];
+  }
+
+  function score(item: SearchItem, q: string): number {
+    const query = q.toLowerCase();
+    const title = item.title.toLowerCase();
+    if (title.startsWith(query)) return 3;
+    if (title.includes(query)) return 2;
+    if (item.tag.toLowerCase().includes(query) || item.standfirst.toLowerCase().includes(query)) return 1;
+    return 0;
+  }
+
+  function render() {
+    const results = document.getElementById('cmdk-results');
+    if (!results) return;
+    if (!filtered.length) {
+      results.innerHTML = '<div class="cmdk-empty">No matches — try another word.</div>';
+      return;
+    }
+    results.innerHTML = filtered.map((item, i) => `
+      <a href="${item.href}" class="cmdk-item" data-index="${i}" data-active="${i === activeIndex ? '1' : '0'}">
+        <div class="cmdk-item-title">${escapeHtml(item.title)}</div>
+        <div class="cmdk-item-meta">${escapeHtml(item.strand)} · ${escapeHtml(item.tag)}${item.read ? ' · ' + escapeHtml(item.read) : ''}</div>
+      </a>
+    `).join('');
+  }
+
+  function escapeHtml(s: string): string {
+    const d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  async function onInput(e: Event) {
+    const q = (e.target as HTMLInputElement).value.trim();
+    const all = await loadIndex();
+    if (!q) {
+      filtered = all.slice(0, 8);
+    } else {
+      filtered = all
+        .map((item) => ({ item, s: score(item, q) }))
+        .filter((x) => x.s > 0)
+        .sort((a, b) => b.s - a.s)
+        .map((x) => x.item)
+        .slice(0, 8);
+    }
+    activeIndex = 0;
+    render();
+  }
+
+  function openPalette() {
+    const backdrop = document.getElementById('cmdk-backdrop');
+    const input = document.getElementById('cmdk-input') as HTMLInputElement | null;
+    if (!backdrop || !input) return;
+    backdrop.style.display = 'block';
+    input.value = '';
+    input.focus();
+    onInput({ target: input } as unknown as Event);
+  }
+
+  function closePalette() {
+    const backdrop = document.getElementById('cmdk-backdrop');
+    if (backdrop) backdrop.style.display = 'none';
+  }
+
+  function isOpen() {
+    const backdrop = document.getElementById('cmdk-backdrop');
+    return !!backdrop && backdrop.style.display !== 'none';
+  }
+
+  function setup() {
+    if (cleanupPalette) cleanupPalette();
+    const backdrop = document.getElementById('cmdk-backdrop');
+    const panel = document.getElementById('cmdk-panel');
+    const input = document.getElementById('cmdk-input');
+    const results = document.getElementById('cmdk-results');
+    if (!backdrop || !panel || !input || !results) return;
+
+    const onGlobalKeydown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        isOpen() ? closePalette() : openPalette();
+        return;
+      }
+      if (e.key === 'Escape' && isOpen()) closePalette();
+    };
+
+    const onInputKeydown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        activeIndex = Math.min(filtered.length - 1, activeIndex + 1);
+        render();
+        results.querySelector('[data-active="1"]')?.scrollIntoView({ block: 'nearest' });
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        activeIndex = Math.max(0, activeIndex - 1);
+        render();
+        results.querySelector('[data-active="1"]')?.scrollIntoView({ block: 'nearest' });
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        const target = filtered[activeIndex];
+        if (target) window.location.href = target.href;
+      }
+    };
+
+    const onBackdropClick = (e: MouseEvent) => {
+      if (e.target === backdrop) closePalette();
+    };
+
+    const onResultsMouseover = (e: MouseEvent) => {
+      const el = (e.target as HTMLElement).closest('.cmdk-item') as HTMLElement | null;
+      if (!el) return;
+      activeIndex = parseInt(el.dataset.index || '0', 10);
+      render();
+    };
+
+    document.addEventListener('keydown', onGlobalKeydown);
+    input.addEventListener('input', onInput);
+    input.addEventListener('keydown', onInputKeydown);
+    backdrop.addEventListener('click', onBackdropClick);
+    results.addEventListener('mouseover', onResultsMouseover);
+
+    cleanupPalette = () => {
+      document.removeEventListener('keydown', onGlobalKeydown);
+      input.removeEventListener('input', onInput);
+      input.removeEventListener('keydown', onInputKeydown);
+      backdrop.removeEventListener('click', onBackdropClick);
+      results.removeEventListener('mouseover', onResultsMouseover);
+      closePalette();
+    };
+  }
+
+  document.addEventListener('astro:page-load', setup);
+  (window as any).openCommandPalette = openPalette;
+</script>

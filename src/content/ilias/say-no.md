@@ -5,6 +5,7 @@ tag: "On Strategy"
 read: "11 min"
 date: "Dec 2025"
 order: 6
+pairsWith: "belief"
 standfirst: "A plan that excludes nothing is a wish list. The discipline of deciding, on purpose, who you are not for."
 ---
 Most documents called strategy are inventories of ambition — every market, every segment, every opportunity, pursued at once. That is not a strategy. It is a list of things you would like to be true, and lists do not force the hard part: choosing what to give up.

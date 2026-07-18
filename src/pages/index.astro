@@ -1,12 +1,11 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PortraitPlaceholder from '../components/PortraitPlaceholder.astro';
 import ContactLinks from '../components/ContactLinks.astro';
+import { getPublishedCollection } from '../lib/essays';
 
-const ulyssesEntries = (await getCollection('ulysses')).sort((a, b) => a.data.order - b.data.order);
-const iliasEntries = (await getCollection('ilias')).sort((a, b) => a.data.order - b.data.order);
-const featured = ulyssesEntries[0];
+const ulyssesEntries = await getPublishedCollection('ulysses');
+const iliasEntries = await getPublishedCollection('ilias');
 const latestU = ulyssesEntries[0];
 const latestI = iliasEntries[0];
 
@@ -108,16 +107,14 @@ const threads = [
     </div>
     <p data-reveal style="font-family:var(--body);font-weight:300;font-size:clamp(1.1rem,2vw,1.35rem);line-height:1.5;color:var(--bone);opacity:0.82;max-width:46ch;margin:0 0 clamp(2.2rem,4vw,3.2rem);text-wrap:pretty;">The writing splits in two. One side asks <span style="font-style:italic;">why</span> people act. The other asks <span style="position:relative;white-space:nowrap;font-style:italic;color:var(--ember);">who profits<span class="cc-uline" style="position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--ember);transform:scaleX(0);transform-origin:left center;transition:transform .85s cubic-bezier(.2,.7,.2,1);"></span></span> when they do. Pick a door.</p>
 
-    {featured && (
-      <a href={`/essays/${featured.data.id}/`} class="charge featured-card" data-reveal style="position:relative;display:block;background:var(--coal-soft);border:1px solid var(--coal-line);padding:clamp(24px,3.5vw,42px) clamp(24px,4vw,48px);margin:0 0 clamp(2.2rem,4vw,3.2rem);transition:background .45s ease;">
-        <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;margin-bottom:clamp(1rem,2vw,1.5rem);font-family:var(--mono);font-size:0.62rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;">
-          <span style="display:inline-flex;align-items:center;gap:10px;color:var(--tide);"><span style="width:7px;height:7px;background:var(--tide);transform:rotate(45deg);"></span>New here? Start with this one</span>
-          <span style="color:var(--ash);">{featured.data.read} · {featured.data.tag}</span>
-        </div>
-        <div class="featured-title" style="font-family:var(--display);font-weight:500;font-size:clamp(1.7rem,3.6vw,2.8rem);line-height:1.02;letter-spacing:-0.012em;text-wrap:balance;transition:color .4s ease;">{featured.data.title}</div>
-        <p style="font-family:var(--body);font-weight:300;font-style:italic;color:var(--ash);font-size:clamp(1rem,1.6vw,1.2rem);line-height:1.45;margin:0.9rem 0 0;max-width:62ch;text-wrap:pretty;">{featured.data.standfirst}</p>
-      </a>
-    )}
+    <a href="/start/" class="charge featured-card" data-reveal style="position:relative;display:block;background:var(--coal-soft);border:1px solid var(--coal-line);padding:clamp(24px,3.5vw,42px) clamp(24px,4vw,48px);margin:0 0 clamp(2.2rem,4vw,3.2rem);transition:background .45s ease;">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;margin-bottom:clamp(1rem,2vw,1.5rem);font-family:var(--mono);font-size:0.62rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;">
+        <span style="display:inline-flex;align-items:center;gap:10px;color:var(--tide);"><span style="width:7px;height:7px;background:var(--tide);transform:rotate(45deg);"></span>New here?</span>
+        <span style="color:var(--ash);">4 essays · ~30 min</span>
+      </div>
+      <div class="featured-title" style="font-family:var(--display);font-weight:500;font-size:clamp(1.7rem,3.6vw,2.8rem);line-height:1.02;letter-spacing:-0.012em;text-wrap:balance;transition:color .4s ease;">Start Here</div>
+      <p style="font-family:var(--body);font-weight:300;font-style:italic;color:var(--ash);font-size:clamp(1rem,1.6vw,1.2rem);line-height:1.45;margin:0.9rem 0 0;max-width:62ch;text-wrap:pretty;">Four essays, in a deliberate order, that show the whole idea in miniature — why people act, and who profits when they do.</p>
+    </a>
 
     <div class="cc-fork" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1px;background:var(--coal-line);border-top:1px solid var(--coal-line);border-bottom:1px solid var(--coal-line);">
       <a href="/ulysses/" class="js-ulysses charge" data-reveal style="position:relative;overflow:hidden;background:var(--coal);display:flex;flex-direction:column;justify-content:space-between;gap:clamp(2.4rem,6vw,4.5rem);min-height:clamp(300px,33vw,440px);padding:clamp(28px,3.5vw,48px);transition:background .45s ease,opacity .45s ease,filter .45s ease;">

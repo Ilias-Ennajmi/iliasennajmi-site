@@ -5,6 +5,7 @@ tag: "On Positioning"
 read: "7 min"
 date: "Feb 2026"
 order: 4
+pairsWith: "defaults"
 standfirst: "They want the version of themselves the product implies. On selling identity, and why the best positioning never mentions features."
 ---
 Nobody wants a drill, the old line goes, they want a hole. It is truer to say nobody wants the hole either — they want the shelf, and the kind of person who has the sort of home where the shelf is up. The product is the last, least interesting link in a chain that starts with who someone is trying to become.

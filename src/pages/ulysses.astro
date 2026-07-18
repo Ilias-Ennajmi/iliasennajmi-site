@@ -1,13 +1,13 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import StrandList from '../components/StrandList.astro';
+import { getPublishedCollection, readTimeOf } from '../lib/essays';
 
-const entries = (await getCollection('ulysses')).sort((a, b) => a.data.order - b.data.order);
+const entries = await getPublishedCollection('ulysses');
 const posts = entries.map((e) => ({
   id: e.data.id,
   tag: e.data.tag,
-  read: e.data.read,
+  read: readTimeOf(e),
   date: e.data.date,
   title: e.data.title,
   standfirst: e.data.standfirst,

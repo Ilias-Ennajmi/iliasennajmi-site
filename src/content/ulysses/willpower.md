@@ -5,6 +5,8 @@ tag: "On Willpower"
 read: "6 min"
 date: "Feb 2026"
 order: 4
+pairsWith: "friction"
+startHereOrder: 3
 standfirst: "Self-control runs out like cash, and everyone selling to you knows exactly when your balance hits zero."
 ---
 We talk about willpower as if it were character — something you either have or lack, a verdict on the kind of person you are. It behaves much more like a budget: finite, spent through the day on a thousand small refusals, and emptiest exactly when the day has asked the most of you.

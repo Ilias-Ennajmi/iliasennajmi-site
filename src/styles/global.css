@@ -120,7 +120,7 @@ a:focus-visible, [tabindex]:focus-visible {
 .contact-link.contact-tide:hover { border-color: var(--tide); color: var(--tide); }
 
 /* essay pull-quote breakout */
-@media (min-width: 1040px) { .essay-quote { width: calc(100% + 130px) !important; margin-left: -130px !important; } }
+@media (min-width: 1040px) { .essay-body blockquote { width: calc(100% + 130px) !important; margin-left: -130px !important; } }
 .kb-hint { display: none; }
 @media (min-width: 900px) and (hover: hover) { .kb-hint { display: block; } }
 
@@ -130,7 +130,47 @@ a:focus-visible, [tabindex]:focus-visible {
 @media (hover: none) { .shelf-note { max-height: 120px; opacity: 1; margin-top: 0.4rem !important; } }
 
 /* rendered markdown body (essay reader) */
+.essay-body { position: relative; }
 .essay-body p { margin: 0 0 1.6rem; font-family: var(--body); font-weight: 400; font-size: clamp(1.18rem, 1.9vw, 1.36rem); line-height: 1.66; color: var(--bone); text-wrap: pretty; }
+
+/* footnotes -> sidenotes (Tufte/Gwern-style margin notes on wide screens,
+   tap-to-reveal inline on narrow ones). The native footnote list at the
+   bottom is always hidden; JS in essays/[id].astro rebuilds the notes
+   either into the margin or as inline toggles. */
+.essay-body .footnotes { display: none !important; }
+.essay-body sup a[data-footnote-ref] {
+  color: var(--acc, var(--ember));
+  font-family: var(--mono);
+  text-decoration: none;
+  font-size: 0.85em;
+  padding: 0 0.1em;
+}
+.essay-body sup a[data-footnote-ref]:hover { text-decoration: underline; }
+.sidenote {
+  position: absolute;
+  left: 100%;
+  margin-left: 36px;
+  width: 200px;
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: var(--ash);
+}
+.sidenote p { margin: 0; font-size: inherit; color: inherit; font-family: inherit; font-style: inherit; line-height: inherit; }
+.sidenote-inline {
+  display: block;
+  margin: -0.8rem 0 1.6rem;
+  padding-left: clamp(16px, 3vw, 24px);
+  border-left: 2px solid var(--coal-line);
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 0.92em;
+  line-height: 1.5;
+  color: var(--ash);
+}
+.sidenote-inline p { margin: 0; font-size: inherit; color: inherit; font-family: inherit; font-style: inherit; }
+.footnote-toggle { cursor: pointer; }
 .essay-body blockquote {
   margin: clamp(2.4rem, 5vw, 3.6rem) 0;
   padding-left: clamp(20px, 4vw, 34px);
@@ -167,4 +207,71 @@ a:focus-visible, [tabindex]:focus-visible {
   height: 8px;
   background: var(--acc, var(--ember));
   opacity: 0.55;
+}
+/* drop cap on the essay's opening letter */
+.essay-body > p:first-of-type::first-letter {
+  float: left;
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: clamp(3.6rem, 8vw, 5.2rem);
+  line-height: 0.74;
+  padding: 0.32rem 0.7rem 0 0;
+  color: var(--acc, var(--ember));
+}
+.essay-body strong { font-weight: 600; color: var(--bone); }
+.essay-body em { font-style: italic; }
+.essay-body a { color: var(--acc, var(--ember)); text-decoration: underline; text-decoration-color: var(--coal-line); text-underline-offset: 3px; transition: text-decoration-color .25s; }
+.essay-body a:hover { text-decoration-color: var(--acc, var(--ember)); }
+.essay-body img { display: block; width: 100%; height: auto; margin: clamp(2.4rem, 5vw, 3.6rem) 0; border: 1px solid var(--coal-line); }
+.essay-body ul, .essay-body ol { margin: 0 0 1.6rem; padding-left: 1.4em; }
+.essay-body li { margin: 0 0 0.6rem; line-height: 1.6; }
+.essay-body ul { list-style: none; padding-left: 1.2em; }
+.essay-body ul li { position: relative; }
+.essay-body ul li::before {
+  content: '';
+  position: absolute;
+  left: -1.2em;
+  top: 0.5em;
+  width: 6px;
+  height: 6px;
+  background: var(--acc, var(--ember));
+  transform: rotate(45deg);
+}
+.essay-body code { font-family: var(--mono); font-size: 0.85em; background: var(--coal-soft); padding: 0.15em 0.4em; }
+.essay-body pre { font-family: var(--mono); font-size: 0.85em; background: var(--coal-soft); padding: 1.2em; overflow-x: auto; margin: 0 0 1.6rem; }
+.essay-body pre code { background: none; padding: 0; }
+
+/* print: clean, ad-free single-column essay view */
+@media print {
+  .skip-link, .scroll-progress-rail, .grain-overlay, .no-print,
+  #sn-bar, #sn-drawer, #sn-burger, footer, [data-reading-meter],
+  .kb-hint {
+    display: none !important;
+  }
+  html, body { background: #fff !important; color: #000 !important; }
+  * { animation: none !important; transition: none !important; box-shadow: none !important; }
+  main, article { max-width: 100% !important; }
+  .essay-body {
+    max-width: 640px !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    color: #000 !important;
+  }
+  .essay-body p, .essay-body li { color: #000 !important; orphans: 3; widows: 3; }
+  .essay-body h2 { color: #000 !important; }
+  .essay-body blockquote { border-left-color: #000 !important; }
+  .essay-body blockquote p { color: #000 !important; }
+  .essay-body a { color: #000 !important; text-decoration: underline; }
+  .essay-body img { border: none !important; }
+  header[data-cursor-light] {
+    padding: 0 0 1.5rem !important;
+    background: none !important;
+  }
+  header[data-cursor-light] > div:first-child { display: none !important; }
+  header[data-cursor-light] h1, header[data-cursor-light] p { color: #000 !important; }
+  a[href]:not(.back-link)::after {
+    content: " (" attr(href) ")";
+    font-size: 0.75em;
+    color: #555;
+  }
 }
