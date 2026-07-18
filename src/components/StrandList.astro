@@ -23,7 +23,7 @@ interface Props {
 const { strand, accent, roman, title, kicker, lede, watermark, watermarkPos, otherCard, posts } = Astro.props;
 const accentVar = `var(--${accent})`;
 ---
-<main style={`--acc:${accentVar};`}>
+<main id="main-content" style={`--acc:${accentVar};`}>
 
   <!-- HEADER -->
   <header data-cursor-light style="position:relative;overflow:hidden;padding:clamp(8rem,16vh,12rem) clamp(22px,6vw,64px) clamp(3.5rem,7vw,6rem);">
@@ -42,7 +42,7 @@ const accentVar = `var(--${accent})`;
   <section style="max-width:1180px;margin:0 auto;padding:0 clamp(22px,6vw,64px) clamp(4rem,8vw,7rem);">
     <div data-reveal style="display:flex;align-items:baseline;gap:16px;margin-bottom:clamp(1.6rem,3vw,2.2rem);font-family:var(--mono);font-size:0.66rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ash);">
       <span>Writing</span>
-      <span class="cc-rule" style="flex:1;height:1px;background:var(--coal-line);transform:scaleX(0);transform-origin:left center;transition:transform 1s cubic-bezier(.2,.7,.2,1);"></span>
+      <span class="cc-rule"></span>
       <span id="count-label">{posts.length} essays</span>
     </div>
     <div data-reveal id="tag-bar" style="display:flex;flex-wrap:wrap;gap:clamp(16px,3vw,30px);margin-bottom:clamp(2.4rem,4.5vw,3.6rem);"></div>
@@ -61,6 +61,7 @@ const accentVar = `var(--${accent})`;
 
 <script type="application/json" id="posts-data" set:html={JSON.stringify(posts).replace(/</g, '\\u003c')} />
 <script define:vars={{ strand, accentVar }}>
+function boot() {
   const posts = JSON.parse(document.getElementById('posts-data').textContent);
   let activeTag = 'All';
 
@@ -132,16 +133,19 @@ const accentVar = `var(--${accent})`;
   renderTags();
   renderList();
 
-  function motionOK() { return !window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
-  function initFx() {
-    const go = () => { if (window.SiteFX) window.SiteFX.init({ strand, motion: motionOK(), progress: 'page' }); else setTimeout(go, 60); };
-    go();
-  }
-  initFx();
+  window.pageBoot({ strand, progress: 'page' });
+}
+
+document.addEventListener('astro:page-load', boot);
 </script>
 
-<style define:vars={{ acc: accentVar }}>
-  main { --acc: var(--acc); }
+<style is:global>
+  /* These rules must be global: .lead-card/.js-row/.other-cta-* are injected
+     at runtime via innerHTML by the tag-filter script (see <script> above),
+     so they never receive Astro's scoped data-astro-cid-* attribute and a
+     scoped <style> block would silently never match them. --acc itself
+     still comes from the inline style on <main>, inherited via normal CSS
+     custom-property cascade (unrelated to Astro's scoping). */
   .lead-card:hover { padding-left: 14px; }
   .lead-card:hover .lead-title { color: var(--acc); }
   .js-row:hover { padding-left: 14px; }

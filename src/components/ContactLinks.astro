@@ -1,0 +1,10 @@
+---
+interface Props {
+  size?: 'default' | 'lg';
+}
+const { size = 'default' } = Astro.props;
+const style = size === 'lg' ? 'font-size:clamp(1.6rem,3.5vw,2.6rem);' : undefined;
+---
+<a href="mailto:hello@iliasennajmi.com" class="charge contact-link contact-ember" style={style}>Email <span style="font-family:var(--mono);font-size:0.5em;vertical-align:0.4em;">↗</span></a>
+<a href="https://www.linkedin.com" class="charge contact-link contact-tide" style={style}>LinkedIn <span style="font-family:var(--mono);font-size:0.5em;vertical-align:0.4em;">↗</span></a>
+<a href="https://substack.com" class="charge contact-link contact-ember" style={style}>Substack <span style="font-family:var(--mono);font-size:0.5em;vertical-align:0.4em;">↗</span></a>

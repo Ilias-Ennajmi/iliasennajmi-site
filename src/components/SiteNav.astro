@@ -59,11 +59,17 @@ const links = [
 </style>
 
 <script>
+  // Module-scope (not re-declared per initNav call) so each navigation's
+  // fresh nav bar tears down the *previous* page's Escape-key listener
+  // before adding a new one — otherwise soft navigation (view transitions)
+  // would stack up one document-level keydown listener per page visited.
+  let cleanupKeydown: (() => void) | null = null;
+
   function initNav() {
+    if (cleanupKeydown) { cleanupKeydown(); cleanupKeydown = null; }
     const burger = document.getElementById('sn-burger');
     const drawer = document.getElementById('sn-drawer');
-    if (!burger || !drawer || (burger as HTMLElement).dataset.bound) return;
-    (burger as HTMLElement).dataset.bound = '1';
+    if (!burger || !drawer) return;
     const open = () => {
       drawer.setAttribute('data-open', '1');
       drawer.setAttribute('aria-hidden', 'false');
@@ -78,8 +84,9 @@ const links = [
     };
     burger.addEventListener('click', open);
     drawer.querySelectorAll('[data-close]').forEach((el) => el.addEventListener('click', close));
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+    const onKeydown = (e: KeyboardEvent) => { if (e.key === 'Escape') close(); };
+    document.addEventListener('keydown', onKeydown);
+    cleanupKeydown = () => document.removeEventListener('keydown', onKeydown);
   }
-  initNav();
   document.addEventListener('astro:page-load', initNav);
 </script>

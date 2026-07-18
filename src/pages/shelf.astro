@@ -47,7 +47,7 @@ shelves.forEach((c) => c.items.forEach((it: any) => {
   active="shelf"
   siteFx
 >
-<main>
+<main id="main-content">
 
   <!-- HEADER -->
   <header data-cursor-light style="position:relative;overflow:hidden;padding:clamp(8rem,16vh,12rem) clamp(22px,6vw,64px) clamp(3rem,6vw,5rem);">
@@ -104,10 +104,7 @@ shelves.forEach((c) => c.items.forEach((it: any) => {
 </style>
 
 <script>
-  function motionOK() { return !window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
-  function initFx() {
-    const go = () => { if (window.SiteFX) window.SiteFX.init({ strand: null, motion: motionOK(), progress: 'page' }); else setTimeout(go, 60); };
-    go();
-  }
-  initFx();
+  document.addEventListener('astro:page-load', () => {
+    window.pageBoot({ strand: null, progress: 'page' });
+  });
 </script>

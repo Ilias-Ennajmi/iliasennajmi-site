@@ -116,7 +116,16 @@
     },
 
     // ---- essay "X min left" chip ----
+    // Re-bound on every init() (each page navigation), so the previous
+    // page's listener (closed over its own meter/article nodes) is torn
+    // down first \u2014 otherwise soft navigation (view transitions) would
+    // stack up one stale scroll/resize listener per essay visited.
     _readingMeter: function () {
+      if (this._meterUpd) {
+        window.removeEventListener('scroll', this._meterUpd);
+        window.removeEventListener('resize', this._meterUpd);
+        this._meterUpd = null;
+      }
       var meter = document.querySelector('[data-reading-meter]');
       if (!meter) return;
       var total = parseFloat(meter.getAttribute('data-minutes')) || 0;
@@ -137,6 +146,7 @@
         }
         meter.style.opacity = (p > 0.015 && p < 0.999) ? '1' : (p >= 0.999 ? '0.55' : '0');
       };
+      this._meterUpd = upd;
       window.addEventListener('scroll', upd, { passive: true });
       window.addEventListener('resize', upd, { passive: true });
       upd();
@@ -177,8 +187,11 @@
     },
 
     // ---- unified scroll handler: reveal-check + parallax + progress rail ----
+    // Rebuilt on every init() — each page navigation has its own progress
+    // rail/parallax layers/progressMode, so the previous page's handler
+    // (and its captured references) must be torn down first.
     _scroll: function () {
-      if (this._onScroll) return;
+      if (this._onScroll) window.removeEventListener('scroll', this._onScroll);
       var self = this;
       var prog = this.progressMode ? document.getElementById('cc-prog') : null;
       var layers = this.motion ? [].slice.call(document.querySelectorAll('[data-pll]')) : [];

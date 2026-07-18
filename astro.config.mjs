@@ -7,4 +7,8 @@ export default defineConfig({
   site: process.env.SITE_URL || 'https://iliasennajmi.com',
   trailingSlash: 'always',
   integrations: [sitemap()],
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: 'hover',
+  },
 });
