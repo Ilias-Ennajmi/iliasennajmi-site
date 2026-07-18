@@ -1,6 +1,12 @@
 backend:
   name: git-gateway
+  repo: Ilias-Ennajmi/iliasennajmi-site
   branch: main
+  auth_type: pkce
+  base_url: https://auth.decapbridge.com
+  auth_endpoint: /sites/ede897d1-8b8d-4981-b104-47b08b03bc19/pkce
+  auth_token_endpoint: /sites/ede897d1-8b8d-4981-b104-47b08b03bc19/token
+  gateway_url: https://gateway.decapbridge.com
 
 media_folder: "public/uploads"
 public_folder: "/uploads"
