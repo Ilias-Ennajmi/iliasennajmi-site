@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PortraitPlaceholder from '../components/PortraitPlaceholder.astro';
 import ContactLinks from '../components/ContactLinks.astro';
+import HeroTitlePage from '../components/HeroTitlePage.astro';
 import { getPublishedCollection } from '../lib/essays';
 
 const ulyssesEntries = await getPublishedCollection('ulysses');
@@ -42,29 +43,7 @@ const threads = [
 >
 <main id="main-content">
 
-  <!-- ============ HERO (typographic) ============ -->
-  <section style="position:relative;min-height:100svh;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:clamp(7rem,12vh,9rem) clamp(20px,5vw,40px) clamp(5rem,10vh,7.5rem);">
-    <div style="position:absolute;inset:0;z-index:0;background:radial-gradient(80% 90% at 0% 24%, rgba(120,108,86,0.07), transparent 56%),radial-gradient(80% 90% at 100% 76%, rgba(93,71,49,0.06), transparent 56%),linear-gradient(180deg,#efe9db 0%,#e9e2d2 56%,var(--coal) 100%);"></div>
-    <div id="cc-seam-tint" style="position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;transition:opacity .6s ease,background .6s ease;"></div>
-
-    <div style="position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;text-align:center;max-width:1000px;animation:cc-rise .9s ease both;">
-      <div style="display:flex;align-items:center;justify-content:center;margin-bottom:clamp(1.8rem,4.5vh,3rem);font-family:var(--mono);font-size:clamp(0.56rem,1vw,0.68rem);letter-spacing:0.22em;text-transform:uppercase;white-space:nowrap;">
-        <a href="/ulysses/" class="js-seam-why charge" style="color:var(--tide);text-align:right;padding:17px clamp(16px,2.2vw,28px) 17px 0;margin:-17px 0;text-decoration:none;">Why people act</a>
-        <span style="width:7px;height:7px;flex:none;transform:rotate(45deg);border:1px solid var(--ash);background:var(--coal);animation:cc-spin 14s linear infinite;"></span>
-        <a href="/ilias/" class="js-seam-who charge" style="color:var(--ember);padding:17px 0 17px clamp(16px,2.2vw,28px);margin:-17px 0;text-decoration:none;">Who profits</a>
-      </div>
-      <h1 style="position:relative;z-index:5;margin:0;font-family:var(--display);font-weight:500;font-size:clamp(2.3rem,5.6vw,4.3rem);line-height:1.04;letter-spacing:-0.015em;text-wrap:balance;">
-        Most decisions feel free.<br>
-        <span style="font-weight:500;font-style:italic;color:var(--ember);">None of them are.</span>
-      </h1>
-      <p style="font-family:var(--body);font-weight:400;font-size:clamp(1.2rem,2.4vw,1.65rem);color:var(--bone);opacity:0.74;max-width:42ch;margin:clamp(3rem,6.5vh,4.4rem) 0 0;line-height:1.5;text-wrap:pretty;">I spend most of my time wondering why people do what they do. Occasionally, I write it down.</p>
-      <p style="font-family:var(--mono);font-size:clamp(0.6rem,1.2vw,0.7rem);letter-spacing:0.22em;text-transform:uppercase;color:var(--ash);margin:1.5rem 0 0;line-height:1.9;">Marketing strategist by trade<span style="color:var(--coal-line);margin:0 10px;">/</span>behavior obsessive by habit</p>
-    </div>
-
-    <div id="cc-cue" style="position:absolute;left:50%;bottom:clamp(16px,2.6vh,28px);transform:translateX(-50%);z-index:3;pointer-events:none;">
-      <span style="position:relative;display:block;width:1px;height:38px;background:var(--coal-line);overflow:hidden;"><span style="position:absolute;left:-1px;top:0;width:3px;height:11px;background:var(--ember);animation:cc-fall 2.2s ease-in-out infinite;"></span></span>
-    </div>
-  </section>
+  <HeroTitlePage />
 
   <!-- ============ 01 — ABOUT (grounding band) ============ -->
   <section id="about" style="position:relative;border-top:1px solid var(--coal-line);background:var(--coal-soft);">
@@ -329,19 +308,6 @@ const threads = [
     bindRipple('.js-ilias', '156,47,36');
   }
 
-  function bindSeam() {
-    if (!motionOK()) return;
-    const tint = document.getElementById('cc-seam-tint');
-    if (!tint) return;
-    const set = (rgb: string) => { tint.style.background = `radial-gradient(75% 85% at 50% 38%, rgba(${rgb},0.16), transparent 62%)`; tint.style.opacity = '1'; };
-    const clear = () => { tint.style.opacity = '0'; };
-    const why = document.querySelector('.js-seam-why');
-    const who = document.querySelector('.js-seam-who');
-    const enter = (rgb: string) => (e: PointerEvent) => { if (e.pointerType !== 'touch') set(rgb); };
-    if (why) { why.addEventListener('pointerenter', enter('123,110,84') as EventListener); why.addEventListener('pointerleave', clear); }
-    if (who) { who.addEventListener('pointerenter', enter('156,47,36') as EventListener); who.addEventListener('pointerleave', clear); }
-  }
-
   function initMarquee() {
     if (cleanupMarquee) cleanupMarquee();
     const row = document.querySelector('.marqrow') as HTMLElement | null;
@@ -396,7 +362,6 @@ const threads = [
     initScroll();
     fitAbout();
     initMarquee();
-    bindSeam();
     if (cleanupResize) cleanupResize();
     window.addEventListener('resize', fitAbout, { passive: true });
     cleanupResize = () => window.removeEventListener('resize', fitAbout);

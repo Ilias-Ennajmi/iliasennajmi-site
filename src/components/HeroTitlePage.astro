@@ -1,0 +1,68 @@
+---
+import PortraitPlaceholder from './PortraitPlaceholder.astro';
+---
+<section style="position:relative;min-height:100svh;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:clamp(6rem,11vh,8rem) clamp(20px,5vw,40px) clamp(4rem,8vh,6rem);">
+  <div style="position:absolute;inset:0;z-index:0;background:radial-gradient(80% 90% at 0% 24%, rgba(120,108,86,0.07), transparent 56%),radial-gradient(80% 90% at 100% 76%, rgba(93,71,49,0.06), transparent 56%),linear-gradient(180deg,#efe9db 0%,#e9e2d2 56%,var(--coal) 100%);"></div>
+  <div id="cc-seam-tint" style="position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;transition:opacity .6s ease,background .6s ease;"></div>
+
+  <div style="position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;text-align:center;max-width:640px;animation:cc-rise .9s ease both;">
+
+    <!-- illustrated mark (placeholder until the real artwork is ready) -->
+    <div style="position:relative;width:clamp(120px,16vw,168px);aspect-ratio:1;margin-bottom:clamp(1.6rem,3.5vh,2.4rem);border-radius:50%;overflow:hidden;">
+      <PortraitPlaceholder label="MARK · SOON" />
+    </div>
+
+    <h1 style="margin:0;font-family:var(--display);font-weight:500;font-style:italic;font-size:clamp(2.6rem,7vw,4.6rem);line-height:1;letter-spacing:-0.015em;color:var(--ember);">Ilias Ennajmi</h1>
+    <div style="margin-top:clamp(0.8rem,1.6vh,1.1rem);font-family:var(--mono);font-weight:600;font-size:clamp(0.8rem,1.6vw,1rem);letter-spacing:0.18em;text-transform:uppercase;color:var(--bone);">Why People Act &amp; Who Profits</div>
+    <p style="margin:clamp(1.2rem,2.4vh,1.6rem) 0 0;font-family:var(--body);font-weight:400;font-style:italic;font-size:clamp(1.05rem,2vw,1.25rem);color:var(--ash);line-height:1.5;text-wrap:pretty;">and other observations that won't make you any money</p>
+
+    <span class="hero-rule" style="display:block;width:min(220px,42vw);height:1px;background:var(--coal-line);margin:clamp(1.8rem,3.5vh,2.4rem) 0;transform:scaleX(0);transform-origin:center;"></span>
+
+    <div style="font-family:var(--mono);font-size:clamp(0.6rem,1.2vw,0.7rem);letter-spacing:0.16em;text-transform:uppercase;color:var(--ash);line-height:1.9;">
+      Written by
+      <a href="/ulysses/" class="js-seam-why charge" style="color:var(--tide);text-decoration:none;">a behavior obsessive</a>
+      <span style="color:var(--coal-line);margin:0 8px;">/</span>
+      <a href="/ilias/" class="js-seam-who charge" style="color:var(--ember);text-decoration:none;">a marketing strategist</a>
+    </div>
+
+    <div aria-hidden="true" style="margin-top:clamp(1.2rem,2.4vh,1.6rem);color:var(--ember);font-size:0.7rem;letter-spacing:0.3em;">◆ ◆ ◆ ◆ ◆</div>
+
+    <blockquote style="margin:clamp(1.6rem,3vh,2.2rem) 0 0;font-family:var(--display);font-weight:400;font-style:italic;font-size:clamp(1.1rem,2.2vw,1.4rem);line-height:1.4;color:var(--bone);max-width:38ch;text-wrap:pretty;">&ldquo;Guy realizes free will isn&rsquo;t real, immediately monetizes the observation.&rdquo;</blockquote>
+    <div style="margin-top:0.7rem;font-family:var(--mono);font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);">— a Hacker News commenter, not wrong</div>
+  </div>
+
+  <div id="cc-cue" style="position:absolute;left:50%;bottom:clamp(16px,2.6vh,28px);transform:translateX(-50%);z-index:3;pointer-events:none;">
+    <span style="position:relative;display:block;width:1px;height:38px;background:var(--coal-line);overflow:hidden;"><span style="position:absolute;left:-1px;top:0;width:3px;height:11px;background:var(--ember);animation:cc-fall 2.2s ease-in-out infinite;"></span></span>
+  </div>
+</section>
+
+<style>
+  @keyframes hero-rule-draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  .hero-rule { animation: hero-rule-draw 1s .5s cubic-bezier(.2,.7,.2,1) both; }
+</style>
+
+<script>
+  function motionOK() {
+    return !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  // No cleanup/dedup guard needed: this component's DOM (including
+  // .js-seam-why/.js-seam-who) is fully replaced on every navigation to
+  // "/" by Astro's view-transition swap (nothing here uses
+  // transition:persist), so old listeners are GC'd along with their
+  // detached nodes rather than accumulating.
+  function bindSeam() {
+    if (!motionOK()) return;
+    const tint = document.getElementById('cc-seam-tint');
+    if (!tint) return;
+    const set = (rgb: string) => { tint.style.background = `radial-gradient(75% 85% at 50% 38%, rgba(${rgb},0.16), transparent 62%)`; tint.style.opacity = '1'; };
+    const clear = () => { tint.style.opacity = '0'; };
+    const why = document.querySelector('.js-seam-why');
+    const who = document.querySelector('.js-seam-who');
+    const enter = (rgb: string) => (e: PointerEvent) => { if (e.pointerType !== 'touch') set(rgb); };
+    if (why) { why.addEventListener('pointerenter', enter('123,110,84') as EventListener); why.addEventListener('pointerleave', clear); }
+    if (who) { who.addEventListener('pointerenter', enter('156,47,36') as EventListener); who.addEventListener('pointerleave', clear); }
+  }
+
+  document.addEventListener('astro:page-load', bindSeam);
+</script>
