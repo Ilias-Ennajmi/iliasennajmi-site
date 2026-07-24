@@ -13,14 +13,13 @@ const { compact = false } = Astro.props;
     <div style="font-family:var(--display);font-weight:500;font-size:clamp(1.5rem,3vw,2.2rem);line-height:1.1;letter-spacing:-0.01em;text-wrap:balance;">New essays, straight to your inbox.</div>
     <p style="font-family:var(--body);font-weight:300;font-style:italic;color:var(--ash);margin:0.7rem 0 0;font-size:1.02rem;line-height:1.5;text-wrap:pretty;">No schedule, no funnel, no &ldquo;quick favor.&rdquo; Just the essays, when they're done.</p>
 
-    <form name="newsletter" method="POST" action="/" data-netlify="true" netlify-honeypot="bot-field" class="nl-form" style="display:flex;flex-wrap:wrap;gap:12px;margin-top:1.6rem;">
+    <form name="newsletter" method="POST" action="/thanks/" data-netlify="true" netlify-honeypot="bot-field" class="nl-form" style="display:flex;flex-wrap:wrap;gap:12px;margin-top:1.6rem;">
       <input type="hidden" name="form-name" value="newsletter" />
       <p style="position:absolute;left:-9999px;" aria-hidden="true"><label>Don't fill this out: <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
       <label for="nl-email" class="sr-only" style="position:absolute;left:-9999px;">Email address</label>
       <input id="nl-email" type="email" name="email" required placeholder="you@wherever.com" autocomplete="email" style="flex:1;min-width:220px;background:var(--coal);border:1px solid var(--coal-line);color:var(--bone);font-family:var(--body);font-size:1rem;padding:13px 16px;outline-offset:2px;" />
       <button type="submit" class="charge nl-btn" style="font-family:var(--mono);font-size:0.66rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;background:var(--bone);color:var(--coal);border:1px solid var(--bone);padding:13px 26px;cursor:pointer;transition:background .3s,color .3s;">Subscribe</button>
     </form>
-    <p class="nl-note" style="display:none;margin:1.2rem 0 0;font-family:var(--mono);font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;"></p>
     <p style="margin:1rem 0 0;font-family:var(--mono);font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--ash);opacity:0.7;">Or take the <a href="/rss.xml" style="color:var(--ember);">RSS feed</a> — same words, zero inbox.</p>
   </div>
 </section>
@@ -30,23 +29,10 @@ const { compact = false } = Astro.props;
   .nl-form input:focus-visible { outline: 2px solid var(--ember); }
 </style>
 
-<script>
-  document.addEventListener('astro:page-load', () => {
-    document.querySelectorAll<HTMLFormElement>('.nl-form').forEach((form) => {
-      const note = form.parentElement?.querySelector<HTMLElement>('.nl-note');
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const data = new FormData(form);
-        const body = new URLSearchParams(data as unknown as Record<string, string>).toString();
-        try {
-          const res = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body });
-          if (!res.ok) throw new Error(String(res.status));
-          form.style.display = 'none';
-          if (note) { note.style.display = 'block'; note.style.color = 'var(--tide)'; note.textContent = '◆ You’re on the list. No noise, promise.'; }
-        } catch (err) {
-          if (note) { note.style.display = 'block'; note.style.color = 'var(--ember)'; note.textContent = 'Something failed — try again, or just grab the RSS below.'; }
-        }
-      });
-    });
-  });
-</script>
+<!--
+  Deliberately no JS: the form does a native POST so Netlify's form handler
+  actually receives it and the browser lands on /thanks/. An intercepted
+  fetch() here previously reported success off any 200 — and a POST to a
+  static host returns 200 for the page itself, so it "succeeded" even when
+  nothing was ever captured.
+-->

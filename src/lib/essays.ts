@@ -10,17 +10,13 @@ export async function getPublishedCollection(strand: Strand) {
   return entries.sort((a, b) => a.data.order - b.data.order);
 }
 
-/** The essay's read time — the manual frontmatter override if set, else computed from the body. */
+/** The essay's read time, always measured from the body — never author-declared. */
 export function readTimeOf(entry: EssayEntry): string {
-  return entry.data.read ?? estimateReadTime(entry.body ?? '');
+  return estimateReadTime(entry.body ?? '');
 }
 
 /** Read time in whole minutes (for the scroll-based reading meter). */
 export function readMinutesOf(entry: EssayEntry): number {
-  if (entry.data.read) {
-    const n = parseInt(entry.data.read, 10);
-    if (!isNaN(n)) return n;
-  }
   return estimateReadMinutes(entry.body ?? '');
 }
 

@@ -5,13 +5,13 @@ const essaySchema = z.object({
   id: z.string(),
   title: z.string(),
   tag: z.string(),
-  read: z.string().optional(),
   date: z.string(),
   order: z.coerce.number().default(999),
   standfirst: z.string(),
   draft: z.boolean().default(false),
   pairsWith: z.string().optional(),
   startHereOrder: z.coerce.number().optional(),
+  interactive: z.enum(['anchor']).optional(),
 });
 
 const ulysses = defineCollection({

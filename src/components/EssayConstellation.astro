@@ -1,0 +1,205 @@
+---
+import { getCollection } from 'astro:content';
+import { getPublishedCollection } from '../lib/essays';
+
+/**
+ * The pairsWith graph, drawn. Ulysses runs down the left, Ilias down the
+ * right, and each cross-strand pairing is an edge through the middle — the
+ * site's "seam" as an object you can actually look at.
+ *
+ * Positions are plain arithmetic (no layout library): essays are spaced
+ * evenly down each column, so the drawing scales as essays are written.
+ */
+const uly = await getPublishedCollection('ulysses');
+const ili = await getPublishedCollection('ilias');
+
+// Unwritten pieces appear as faint anonymous marks — the shape of the
+// project, without pretending the drafts are readable.
+const draftCount =
+  (await getCollection('ulysses', (e) => e.data.draft)).length +
+  (await getCollection('ilias', (e) => e.data.draft)).length;
+
+// Columns sit well inside the frame: titles are drawn outward from each
+// column, and long ones need room or they clip against the viewBox edge.
+// Titles are drawn outward from each column, so the gutters have to be wide
+// enough for the longest one. Ilias titles run longer, hence the asymmetry.
+const W = 1240;
+const PAD_Y = 64;
+const ROW = 92;
+const rows = Math.max(uly.length, ili.length);
+const H = PAD_Y * 2 + Math.max(0, rows - 1) * ROW;
+const LX = 330;
+const RX = 830;
+
+const col = (list: typeof uly, x: number) =>
+  list.map((e, i) => ({
+    id: e.data.id,
+    title: e.data.title,
+    tag: e.data.tag,
+    pairsWith: e.data.pairsWith,
+    href: `/essays/${e.data.id}/`,
+    x,
+    y: PAD_Y + i * ROW + (rows - list.length) * ROW / 2,
+  }));
+
+const left = col(uly, LX);
+const right = col(ili, RX);
+const byId = new Map([...left, ...right].map((n) => [n.id, n]));
+
+const edges = left
+  .filter((n) => n.pairsWith && byId.has(n.pairsWith))
+  .map((n) => {
+    const to = byId.get(n.pairsWith!)!;
+    const mx = (n.x + to.x) / 2;
+    return { from: n.id, to: to.id, d: `M ${n.x} ${n.y} C ${mx} ${n.y}, ${mx} ${to.y}, ${to.x} ${to.y}` };
+  });
+---
+<figure class="constellation no-print" aria-labelledby="constellation-cap">
+  <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`Map of ${left.length + right.length} essays: Ulysses on the left, Ilias on the right, joined by their cross-strand pairings. The full list follows below.`} style="display:block;width:100%;height:auto;overflow:visible;">
+    <g class="cn-edges" fill="none" stroke="var(--coal-line)" stroke-width="1.4">
+      {edges.map((e) => <path d={e.d} data-edge data-a={e.from} data-b={e.to} />)}
+    </g>
+
+    <text x={LX} y="22" class="cn-head cn-head-uly">ULYSSES</text>
+    <text x={RX} y="22" class="cn-head cn-head-ili">ILIAS</text>
+
+    {[...left.map((n) => ({ n, side: 'l' as const })), ...right.map((n) => ({ n, side: 'r' as const }))].map(({ n, side }) => (
+      <a href={n.href} class="cn-node" data-node={n.id} data-pair={n.pairsWith}>
+        <title>{n.title} — {n.tag}</title>
+        <rect
+          x={n.x - 6} y={n.y - 6} width="12" height="12"
+          transform={`rotate(45 ${n.x} ${n.y})`}
+          class={side === 'l' ? 'cn-dot cn-dot-uly' : 'cn-dot cn-dot-ili'}
+        />
+        <text
+          x={side === 'l' ? n.x - 20 : n.x + 20}
+          y={n.y - 2}
+          text-anchor={side === 'l' ? 'end' : 'start'}
+          class="cn-title"
+        >{n.title}</text>
+        <text
+          x={side === 'l' ? n.x - 20 : n.x + 20}
+          y={n.y + 14}
+          text-anchor={side === 'l' ? 'end' : 'start'}
+          class="cn-tag"
+        >{n.tag}</text>
+      </a>
+    ))}
+  </svg>
+
+  <figcaption id="constellation-cap" class="cn-cap">
+    <span><span class="cn-key cn-key-uly" aria-hidden="true"></span>Why people act</span>
+    <span><span class="cn-key cn-key-ili" aria-hidden="true"></span>Who profits</span>
+    <span class="cn-cap-note">Lines join an essay to its counterpart in the other strand.</span>
+    {draftCount > 0 && (
+      <span class="cn-cap-note">{draftCount} more in progress, not yet published.</span>
+    )}
+  </figcaption>
+</figure>
+
+<style>
+  .constellation { margin: 0 0 clamp(2.4rem, 5vw, 4rem); overflow-x: auto; }
+  .constellation svg { min-width: 840px; }
+
+  .cn-head {
+    font-family: var(--mono); font-size: 11px; font-weight: 600;
+    letter-spacing: 0.22em; text-anchor: middle; fill: var(--ash);
+  }
+  .cn-head-uly { fill: var(--tide); }
+  .cn-head-ili { fill: var(--ember); }
+
+  /* No transform-box/transform-origin here: the diamonds are rotated by the
+     SVG transform attribute, and setting a CSS transform box re-interprets
+     that rotate()'s origin against the 12x12 fill box, flinging each node
+     far off its column. */
+  .cn-dot { transition: opacity .3s ease, fill .3s ease; }
+  .cn-dot-uly { fill: var(--tide); }
+  .cn-dot-ili { fill: var(--ember); }
+
+  .cn-title { font-family: var(--display); font-size: 20px; font-weight: 500; fill: var(--bone); }
+  .cn-tag {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em;
+    text-transform: uppercase; fill: var(--ash);
+  }
+
+  .cn-node { cursor: pointer; }
+  .cn-node text, .cn-node rect { transition: opacity .3s ease, fill .3s ease; }
+  .cn-node:hover .cn-title, .cn-node:focus-visible .cn-title { fill: var(--acc-node, var(--ember)); }
+  .cn-node:focus-visible { outline: none; }
+  .cn-node:focus-visible .cn-title { text-decoration: underline; text-underline-offset: 3px; }
+
+  /* dim everything except the hovered/focused node and its pair */
+  .constellation[data-focus] .cn-node:not([data-active]) { opacity: 0.26; }
+  .constellation[data-focus] [data-edge]:not([data-active]) { opacity: 0.18; }
+  .constellation [data-edge][data-active] { stroke: var(--ash); stroke-width: 2; }
+
+  .cn-cap {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px 22px;
+    margin-top: clamp(1rem, 2vw, 1.6rem);
+    font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--ash);
+  }
+  .cn-cap > span { display: inline-flex; align-items: center; gap: 9px; }
+  .cn-key { width: 7px; height: 7px; transform: rotate(45deg); display: inline-block; }
+  .cn-key-uly { background: var(--tide); }
+  .cn-key-ili { background: var(--ember); }
+  .cn-cap-note { opacity: 0.72; text-transform: none; letter-spacing: 0.06em; font-size: 0.62rem; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cn-dot, .cn-node text, .cn-node rect, .constellation [data-edge] { transition: none !important; }
+  }
+</style>
+
+<script>
+  let cleanupConstellation: (() => void) | null = null;
+
+  function setupConstellation() {
+    if (cleanupConstellation) { cleanupConstellation(); cleanupConstellation = null; }
+    const root = document.querySelector<HTMLElement>('.constellation');
+    if (!root) return;
+
+    const nodes = Array.from(root.querySelectorAll<SVGAElement>('.cn-node'));
+    const edges = Array.from(root.querySelectorAll<SVGPathElement>('[data-edge]'));
+    const listeners: Array<() => void> = [];
+
+    const clear = () => {
+      root.removeAttribute('data-focus');
+      nodes.forEach((n) => n.removeAttribute('data-active'));
+      edges.forEach((e) => e.removeAttribute('data-active'));
+    };
+
+    const focus = (el: SVGAElement) => {
+      const id = el.dataset.node;
+      const pair = el.dataset.pair;
+      root.setAttribute('data-focus', '');
+      nodes.forEach((n) => {
+        const on = n.dataset.node === id || n.dataset.node === pair;
+        if (on) n.setAttribute('data-active', '');
+        else n.removeAttribute('data-active');
+      });
+      edges.forEach((e) => {
+        const on = e.dataset.a === id || e.dataset.b === id;
+        if (on) e.setAttribute('data-active', '');
+        else e.removeAttribute('data-active');
+      });
+    };
+
+    nodes.forEach((n) => {
+      const enter = () => focus(n);
+      n.addEventListener('pointerenter', enter);
+      n.addEventListener('focus', enter);
+      n.addEventListener('pointerleave', clear);
+      n.addEventListener('blur', clear);
+      listeners.push(() => {
+        n.removeEventListener('pointerenter', enter);
+        n.removeEventListener('focus', enter);
+        n.removeEventListener('pointerleave', clear);
+        n.removeEventListener('blur', clear);
+      });
+    });
+
+    cleanupConstellation = () => { listeners.forEach((off) => off()); clear(); };
+  }
+
+  document.addEventListener('astro:page-load', setupConstellation);
+</script>

@@ -2,10 +2,10 @@
 id: "retention"
 title: "The retention trap"
 tag: "On Growth"
-read: "9 min"
 date: "Jan 2026"
 order: 5
 pairsWith: "past"
+draft: true
 standfirst: "Acquisition gets the headlines, but the spreadsheet lives and dies on the people who stay. Why most growth is just churn you haven’t noticed yet."
 ---
 Growth is the most flattering number a company tracks, and the easiest to fake. Pour enough money into the top of the funnel and the chart goes up regardless of whether anyone stays. It is a bucket and a tap: you can fill a leaking bucket fast enough to look full, right up until the water bill arrives.

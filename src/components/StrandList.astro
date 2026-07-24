@@ -130,7 +130,7 @@ function boot() {
     if (window.SiteFX) window.SiteFX.refresh();
   }
 
-  posts.forEach((p, i) => { p.no = '№ 0' + (i + 1); });
+  posts.forEach((p, i) => { p.no = '№ ' + String(i + 1).padStart(2, '0'); });
   renderTags();
   renderList();
 

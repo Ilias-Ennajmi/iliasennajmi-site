@@ -2,10 +2,10 @@
 id: "belief"
 title: "Why smart people believe dumb things"
 tag: "On Belief"
-read: "10 min"
 date: "Jan 2026"
 order: 5
 pairsWith: "say-no"
+draft: true
 standfirst: "Intelligence does not protect you from bad beliefs — it just gives you better tools to defend them. On motivated reasoning and the comfort of being right."
 ---
 It is tempting to think bad beliefs are a problem of insufficient intelligence — that the cure for nonsense is simply more thinking. But the smartest people are often the most spectacularly wrong, and for a specific reason: intelligence is a better lawyer, not a better judge.

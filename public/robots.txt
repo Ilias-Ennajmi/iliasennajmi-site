@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://iliasennajmi.com/sitemap-index.xml

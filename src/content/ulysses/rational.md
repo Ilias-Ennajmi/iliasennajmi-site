@@ -2,10 +2,10 @@
 id: "rational"
 title: "The myth of the rational actor"
 tag: "On Philosophy"
-read: "8 min"
 date: "Dec 2025"
 order: 6
 pairsWith: "first-number"
+startHereOrder: 3
 standfirst: "Economics assumes a person who has never existed. What happens to a theory when its central character is fiction."
 ---
 At the center of a great deal of economics stands a character who has never been seen in the wild: a person with stable preferences, perfect information, and the cold consistency to act on both. He is convenient, tractable, and entirely imaginary — and we have built much of the modern world on the assumption that he is us.

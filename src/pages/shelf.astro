@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../lib/site';
 
 const shelves = [
   { label: 'Reading now', meta: '3 open', items: [
@@ -37,9 +38,8 @@ const shelves = [
   ] },
 ];
 
-shelves.forEach((c) => c.items.forEach((it: any) => {
-  it.url = it.url || `https://www.google.com/search?q=${encodeURIComponent(it.title + ' ' + it.by)}`;
-}));
+// Items link out only when there's a real URL to link to. A generated
+// search query isn't a recommendation, so unlinked items render as text.
 ---
 <BaseLayout
   title="The Shelf — Ilias Ennajmi"
@@ -59,7 +59,7 @@ shelves.forEach((c) => c.items.forEach((it: any) => {
         <span style="width:28px;height:1px;background:var(--ember);"></span><span class="cc-num" data-to="4">04</span> — The Shelf
       </div>
       <h1 style="margin:0;font-family:var(--display);font-weight:500;font-size:clamp(3.4rem,11vw,8.5rem);line-height:0.9;letter-spacing:-0.015em;">The Shelf<span style="color:var(--ember);">.</span></h1>
-      <p style="font-family:var(--body);font-weight:300;font-style:italic;font-size:clamp(1.2rem,2.4vw,1.7rem);color:var(--bone);opacity:0.82;max-width:48ch;margin:1.6rem 0 0;line-height:1.45;text-wrap:pretty;">Everything currently feeding the work — books, sound, tools and a few rabbit holes. Updated whenever something earns its place. Last touched June 2026.</p>
+      <p style="font-family:var(--body);font-weight:300;font-style:italic;font-size:clamp(1.2rem,2.4vw,1.7rem);color:var(--bone);opacity:0.82;max-width:48ch;margin:1.6rem 0 0;line-height:1.45;text-wrap:pretty;">Everything currently feeding the work — books, sound, tools and a few rabbit holes. Updated whenever something earns its place. Last touched {SITE.nowUpdated}.</p>
     </div>
   </header>
 
@@ -82,10 +82,17 @@ shelves.forEach((c) => c.items.forEach((it: any) => {
           </div>
           {col.items.map((it) => (
             <div class="shelf-item" style="padding:1rem 0;border-bottom:1px solid var(--coal-line);">
-              <a href={it.url} target="_blank" rel="noopener" class="charge shelf-link" style="display:flex;align-items:baseline;justify-content:space-between;gap:14px;text-decoration:none;transition:color .25s;">
-                <span style="font-family:var(--body);font-size:1.18rem;line-height:1.2;">{it.title}</span>
-                <span style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.03em;color:var(--ash);white-space:nowrap;">{it.by}</span>
-              </a>
+              {it.url ? (
+                <a href={it.url} target="_blank" rel="noopener noreferrer" class="charge shelf-link" style="display:flex;align-items:baseline;justify-content:space-between;gap:14px;text-decoration:none;transition:color .25s;">
+                  <span style="font-family:var(--body);font-size:1.18rem;line-height:1.2;">{it.title}</span>
+                  <span style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.03em;color:var(--ash);white-space:nowrap;">{it.by}</span>
+                </a>
+              ) : (
+                <div style="display:flex;align-items:baseline;justify-content:space-between;gap:14px;">
+                  <span style="font-family:var(--body);font-size:1.18rem;line-height:1.2;">{it.title}</span>
+                  <span style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.03em;color:var(--ash);white-space:nowrap;">{it.by}</span>
+                </div>
+              )}
               {it.note && (
                 <p class="shelf-note" style="font-family:var(--body);font-weight:300;font-style:italic;font-size:0.96rem;color:var(--ash);margin:0.4rem 0 0;line-height:1.4;text-wrap:pretty;">{it.note}</p>
               )}

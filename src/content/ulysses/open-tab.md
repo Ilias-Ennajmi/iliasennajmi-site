@@ -2,7 +2,6 @@
 id: "open-tab"
 title: "The tyranny of the open tab"
 tag: "On Choice"
-read: "9 min"
 date: "May 2026"
 order: 1
 pairsWith: "attention-rent"

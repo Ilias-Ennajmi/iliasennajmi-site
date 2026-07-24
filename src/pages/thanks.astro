@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getStartHerePath } from '../lib/essays';
+
+const startHere = await getStartHerePath();
+const first = startHere[0];
+---
+<BaseLayout
+  title="You're on the list — Ilias Ennajmi"
+  description="Subscription confirmed. New essays will arrive when they're finished, and not before."
+  active="home"
+  siteFx
+>
+<main id="main-content">
+  <section style="position:relative;overflow:hidden;min-height:78svh;display:flex;align-items:center;justify-content:center;text-align:center;padding:clamp(7rem,14vh,10rem) clamp(22px,6vw,64px) clamp(4rem,8vw,6rem);">
+    <div style="position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,var(--paper-hi) 0%,var(--coal) 100%);"></div>
+    <div style="position:absolute;inset:-12%;z-index:0;background:radial-gradient(55% 48% at 50% 20%, rgba(93,71,49,0.10), transparent 60%);animation:cc-drift1 24s ease-in-out infinite;"></div>
+
+    <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;max-width:56ch;animation:cc-rise .9s ease both;">
+      <div aria-hidden="true" style="color:var(--ember);font-size:0.72rem;letter-spacing:0.3em;margin-bottom:clamp(1.6rem,3.5vh,2.4rem);">◆ ◆ ◆</div>
+      <p style="margin:0 0 1.1rem;font-family:var(--mono);font-size:0.66rem;letter-spacing:0.24em;text-transform:uppercase;color:var(--ash);">Subscribed</p>
+      <h1 style="margin:0;font-family:var(--display);font-weight:500;font-size:clamp(2.2rem,5.5vw,3.8rem);line-height:1.04;letter-spacing:-0.015em;text-wrap:balance;">You're on the list.</h1>
+      <p style="margin:clamp(1.4rem,3vh,2rem) 0 0;font-family:var(--body);font-weight:300;font-style:italic;font-size:clamp(1.08rem,2vw,1.3rem);line-height:1.55;color:var(--ash);text-wrap:pretty;">Essays arrive when they're finished, which is irregularly and on no schedule anyone would call a strategy. Unsubscribing takes one click and I won't ask why.</p>
+
+      {first && (
+        <a href={`/essays/${first.entry.data.id}/`} class="charge thanks-cta" style="display:inline-flex;align-items:center;gap:10px;margin-top:clamp(2.2rem,5vh,3rem);font-family:var(--mono);font-size:0.66rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--ember);border:1px solid var(--coal-line);border-radius:40px;padding:14px 26px;transition:border-color .3s,letter-spacing .3s;">
+          Start reading <span style="font-family:var(--display);font-size:1.1em;line-height:0;">→</span>
+        </a>
+      )}
+
+      <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:clamp(18px,3vw,32px);margin-top:clamp(1.8rem,4vh,2.6rem);font-family:var(--mono);font-size:0.6rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ash);">
+        <a href="/" style="border-bottom:1px solid var(--coal-line);padding-bottom:4px;">Home</a>
+        <a href="/start/" style="border-bottom:1px solid var(--coal-line);padding-bottom:4px;">Start here</a>
+        <a href="/rss.xml" style="border-bottom:1px solid var(--coal-line);padding-bottom:4px;">RSS</a>
+      </div>
+    </div>
+  </section>
+</main>
+</BaseLayout>
+
+<style>
+  .thanks-cta:hover { border-color: var(--ember); letter-spacing: 0.24em; }
+</style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    window.pageBoot({ strand: null, progress: 'page' });
+  });
+</script>

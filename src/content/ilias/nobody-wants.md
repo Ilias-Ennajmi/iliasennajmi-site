@@ -2,7 +2,6 @@
 id: "nobody-wants"
 title: "Nobody wants the product"
 tag: "On Positioning"
-read: "7 min"
 date: "Feb 2026"
 order: 4
 pairsWith: "defaults"

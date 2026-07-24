@@ -2,7 +2,6 @@
 id: "attention-rent"
 title: "You can’t buy attention, only rent it"
 tag: "On Attention"
-read: "10 min"
 date: "Mar 2026"
 order: 3
 pairsWith: "open-tab"

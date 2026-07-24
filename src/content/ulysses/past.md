@@ -2,10 +2,10 @@
 id: "past"
 title: "The version of the past you can afford"
 tag: "On Memory"
-read: "11 min"
 date: "Mar 2026"
 order: 3
 pairsWith: "retention"
+draft: true
 standfirst: "Memory is not a recording, it is a negotiation. How we rewrite our own history to keep living with the choices we made."
 ---
 Every time you recall a memory, you do not play it back — you rebuild it, and you rebuild it to fit the person doing the remembering today. The past is not a fixed place you visit. It is a story under constant, quiet revision, edited to keep the present bearable.

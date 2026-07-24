@@ -1,11 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PortraitPlaceholder from '../components/PortraitPlaceholder.astro';
 import ContactLinks from '../components/ContactLinks.astro';
+import { SITE } from '../lib/site';
 
 const now = [
   { label: 'Reading', value: 'Seeing Like a State', note: 'Scott on how plans flatten what made them work.' },
-  { label: 'Writing', value: 'A piece on pricing', note: 'Why the first number is the only one that matters.' },
+  { label: 'Writing', value: 'Fewer, longer pieces', note: 'Cutting the thin ones rather than adding to them.' },
   { label: 'Working on', value: 'Brand strategy', note: 'For a company that should know better.' },
   { label: 'Stuck on', value: 'One Nina Simone record', note: 'Pastel Blues, side A, on repeat.' },
 ];
@@ -39,21 +39,16 @@ const principles = [
     </div>
   </header>
 
-  <!-- BIO + PORTRAIT -->
+  <!-- BIO -->
   <section style="max-width:1180px;margin:0 auto;padding:clamp(2.5rem,5vw,4rem) clamp(22px,6vw,64px) clamp(4.5rem,9vw,7.5rem);">
-    <div id="bio-grid" style="display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(2.6rem,5vw,4.8rem);align-items:start;">
+    <div style="display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(2.6rem,5vw,4.8rem);align-items:start;">
       <div data-reveal>
         <p style="font-family:var(--display);font-weight:400;font-size:clamp(1.55rem,3.2vw,2.4rem);line-height:1.24;margin:0 0 1.8rem;letter-spacing:-0.005em;text-wrap:pretty;">I'm <span style="font-style:italic;">Ilias Ennajmi</span> — based in Casablanca, working wherever the interesting problems are.</p>
         <p style="font-family:var(--body);font-weight:400;font-size:clamp(1.08rem,1.8vw,1.26rem);line-height:1.62;color:var(--tide);margin:0 0 1.4rem;max-width:60ch;text-wrap:pretty;">By day I work in marketing strategy: figuring out how to make people want things, and how to get out of the way once they do. It's a craft built on a slightly uncomfortable premise — that most decisions are made for us long before we think we're making them.</p>
         <p style="font-family:var(--body);font-weight:400;font-size:clamp(1.08rem,1.8vw,1.26rem);line-height:1.62;color:var(--tide);margin:0 0 1.4rem;max-width:60ch;text-wrap:pretty;">That premise is also what I can't stop writing about. <span style="font-style:italic;">Ulysses</span> is where I take the slow road — psychology, behavior, philosophy, the question of why people act at all. <span style="font-style:italic;">Ilias</span> is the louder half — marketing and strategy, who profits when they do. Same machine, looked at from both ends.</p>
         <p style="font-family:var(--body);font-weight:400;font-size:clamp(1.08rem,1.8vw,1.26rem);line-height:1.62;color:var(--tide);margin:0;max-width:60ch;text-wrap:pretty;">This site is where the two habits argue with each other in public. No newsletter funnel, no course, no five-step framework. Just the thinking, built slowly, on purpose.</p>
       </div>
-      <div data-reveal style="position:relative;">
-        <div class="js-portrait" style="position:relative;aspect-ratio:4/5;width:100%;max-width:360px;-webkit-mask:linear-gradient(180deg,#000 80%,transparent 99%);mask:linear-gradient(180deg,#000 80%,transparent 99%);transition:filter .55s ease;filter:grayscale(0.28) contrast(1.02);">
-          <PortraitPlaceholder label="PORTRAIT" />
-        </div>
-        <span style="display:block;margin-top:18px;font-family:var(--mono);font-size:0.56rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ash);">Casablanca → wherever the work is</span>
-      </div>
+      <span data-reveal style="display:block;margin-top:clamp(1.6rem,3vw,2.2rem);font-family:var(--mono);font-size:0.56rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ash);">Casablanca → wherever the work is</span>
     </div>
   </section>
 
@@ -61,7 +56,7 @@ const principles = [
   <section style="border-top:1px solid var(--coal-line);background:var(--coal-soft);">
     <div style="max-width:1180px;margin:0 auto;padding:clamp(4.5rem,9vw,7.5rem) clamp(22px,6vw,64px);">
       <div data-reveal style="display:flex;align-items:baseline;gap:16px;margin-bottom:clamp(2rem,4vw,3rem);font-family:var(--mono);font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ash);">
-        <span>Now — June 2026</span>
+        <span>Now — {SITE.nowUpdated}</span>
         <span class="cc-rule"></span>
         <span>What's current</span>
       </div>
@@ -122,19 +117,7 @@ const principles = [
 </style>
 
 <script>
-  let cleanupResize: (() => void) | null = null;
-
-  function fitGrid() {
-    const grid = document.getElementById('bio-grid');
-    if (!grid) return;
-    grid.style.gridTemplateColumns = window.innerWidth > 860 ? '1.5fr 0.85fr' : 'minmax(0,1fr)';
-  }
-
   document.addEventListener('astro:page-load', () => {
-    fitGrid();
-    if (cleanupResize) cleanupResize();
-    window.addEventListener('resize', fitGrid, { passive: true });
-    cleanupResize = () => window.removeEventListener('resize', fitGrid);
     window.pageBoot({ strand: null, progress: 'page' });
   });
 </script>

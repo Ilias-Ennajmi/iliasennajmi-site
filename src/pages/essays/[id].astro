@@ -2,8 +2,10 @@
 import { render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import NewsletterSignup from '../../components/NewsletterSignup.astro';
+import InteractiveAnchor from '../../components/InteractiveAnchor.astro';
 import { getPublishedCollection, readMinutesOf, readTimeOf, getPairedEssay } from '../../lib/essays';
 import { wordCount } from '../../lib/readTime';
+import { shareLinks } from '../../lib/site';
 
 type Strand = 'ulysses' | 'ilias';
 interface Enriched {
@@ -65,6 +67,7 @@ const jsonLd = {
 
 const canonicalUrl = new URL(`/essays/${entry.data.id}/`, Astro.site).toString();
 const citation = `Ennajmi, Ilias. "${entry.data.title}." Ilias Ennajmi, ${entry.data.date}. ${canonicalUrl}.`;
+const share = shareLinks(canonicalUrl, entry.data.title);
 ---
 <BaseLayout
   title={`${entry.data.title} — Ilias Ennajmi`}
@@ -114,8 +117,8 @@ const citation = `Ennajmi, Ilias. "${entry.data.title}." Ilias Ennajmi, ${entry.
         <div class="no-print" style="display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);">
           <span>Share</span>
           <span style="width:3px;height:3px;border-radius:50%;background:var(--acc);"></span>
-          <a href="https://x.com" class="charge share-link">X</a>
-          <a href="https://www.linkedin.com" class="charge share-link">LinkedIn</a>
+          <a href={share.x} class="charge share-link" target="_blank" rel="noopener noreferrer">X</a>
+          <a href={share.linkedin} class="charge share-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
           <span style="width:3px;height:3px;border-radius:50%;background:var(--acc);"></span>
           <button type="button" class="charge share-link cite-btn" data-citation={citation} style="background:none;border:none;padding:0;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;cursor:pointer;">Cite</button>
           <span style="width:3px;height:3px;border-radius:50%;background:var(--acc);"></span>
@@ -149,6 +152,11 @@ const citation = `Ennajmi, Ilias. "${entry.data.title}." Ilias Ennajmi, ${entry.
     <!-- BODY -->
     <article class="essay-body" style="max-width:680px;margin:0 auto;padding:clamp(3rem,6vw,5rem) clamp(22px,6vw,64px) clamp(4rem,7vw,6rem);">
       <Content />
+
+      {/* Rendered here, then moved by JS to wherever ::interactive:: sits in the
+          body. Server-rendered so there's no layout shift, and if the swap never
+          runs the widget simply stays at the end rather than vanishing. */}
+      {entry.data.interactive === 'anchor' && <div data-interactive-source hidden><InteractiveAnchor /></div>}
 
       <div data-reveal style="display:flex;align-items:center;gap:14px;margin-top:clamp(2.4rem,4vw,3.4rem);font-family:var(--mono);font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--ash);">
         <span style="width:8px;height:8px;background:var(--acc);transform:rotate(45deg);display:inline-block;"></span>
@@ -278,7 +286,28 @@ const citation = `Ennajmi, Ilias. "${entry.data.title}." Ilias Ennajmi, ${entry.
     };
   }
 
+  // Move the server-rendered interactive widget to wherever the author put
+  // the ::interactive:: marker in the markdown. Done before the data-reveal
+  // pass below so the widget joins the same scroll-reveal rhythm. Moving a
+  // node carries its listeners, so this is order-independent relative to the
+  // widget's own astro:page-load setup.
+  function placeInteractive() {
+    const source = document.querySelector('[data-interactive-source]');
+    if (!source) return;
+    const widget = source.firstElementChild;
+    if (!widget) return;
+    const marker = Array.from(document.querySelectorAll('.essay-body > p'))
+      .find((p) => p.textContent?.trim() === '::interactive::');
+    // No marker (author forgot it): fall back to the end of the body. Insert
+    // rather than replace — in dev the wrapper also holds Astro's module
+    // script for the widget, so removing it would break the widget itself.
+    if (marker) marker.replaceWith(widget);
+    else source.parentElement?.insertBefore(widget, source);
+  }
+
   document.addEventListener('astro:page-load', () => {
+    placeInteractive();
+
     // <Content /> renders as opaque HTML (real markdown, not hand-built
     // JSX per block), so each top-level element needs data-reveal added
     // here instead of in the template, to keep the same staggered

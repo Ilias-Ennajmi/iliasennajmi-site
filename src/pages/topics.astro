@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import EssayConstellation from '../components/EssayConstellation.astro';
 import { getPublishedCollection, readTimeOf } from '../lib/essays';
 
 const ulysses = (await getPublishedCollection('ulysses')).map((e) => ({
@@ -66,6 +67,15 @@ const markFor = (i: number) => marks[i % marks.length];
   </header>
 
   <section style="max-width:1180px;margin:0 auto;padding:0 clamp(22px,6vw,64px) clamp(5rem,9vw,7.5rem);">
+    <div data-reveal style="padding-bottom:clamp(1.6rem,3vw,2.4rem);border-bottom:1px solid var(--coal-line);">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:clamp(1.6rem,3vw,2.4rem);font-family:var(--mono);font-size:0.66rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--ash);">
+        <span style="width:6px;height:6px;background:var(--ember);transform:rotate(45deg);display:inline-block;flex:none;"></span>
+        <span style="color:var(--bone);font-size:0.8rem;">The map</span>
+        <span class="cc-rule"></span>
+      </div>
+      <EssayConstellation />
+    </div>
+
     {tags.map((tag, i) => (
       <div data-reveal style="padding:clamp(2.2rem,4vw,3.2rem) 0;border-bottom:1px solid var(--coal-line);">
         <div style="display:flex;align-items:center;gap:16px;margin-bottom:clamp(1.2rem,2vw,1.8rem);font-family:var(--mono);font-size:0.66rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--ash);">

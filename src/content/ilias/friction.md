@@ -2,11 +2,10 @@
 id: "friction"
 title: "Friction is a feature you pay for"
 tag: "On Funnels"
-read: "6 min"
 date: "Apr 2026"
 order: 2
 pairsWith: "willpower"
-startHereOrder: 4
+draft: true
 standfirst: "The hardest part of a cancel flow is never an accident. A walk through the dark patterns hiding in plain sight, and what they cost the brand later."
 ---
 Signing up took thirty seconds and one tap. Cancelling requires a phone call, during business hours, in a timezone that is not yours. This asymmetry is not incompetence. It is the product working exactly as specified — easy in, expensive out.

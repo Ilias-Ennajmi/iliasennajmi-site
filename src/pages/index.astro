@@ -1,15 +1,17 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PortraitPlaceholder from '../components/PortraitPlaceholder.astro';
 import ContactLinks from '../components/ContactLinks.astro';
 import HeroTitlePage from '../components/HeroTitlePage.astro';
 import NewsletterSignup from '../components/NewsletterSignup.astro';
-import { getPublishedCollection } from '../lib/essays';
+import { getPublishedCollection, getStartHerePath, readMinutesOf } from '../lib/essays';
 
 const ulyssesEntries = await getPublishedCollection('ulysses');
 const iliasEntries = await getPublishedCollection('ilias');
 const latestU = ulyssesEntries[0];
 const latestI = iliasEntries[0];
+
+const startHere = await getStartHerePath();
+const startHereMinutes = startHere.reduce((sum, x) => sum + readMinutesOf(x.entry), 0);
 
 const shelves = [
   { label: 'My latest reads', items: [
@@ -55,7 +57,7 @@ const threads = [
         <span>The person behind it</span>
       </div>
       <h2 data-reveal style="font-family:var(--display);font-weight:500;font-size:clamp(2.6rem,6.2vw,4.8rem);line-height:0.96;letter-spacing:-0.015em;margin:0 0 clamp(2.6rem,4.5vw,3.8rem);text-wrap:balance;">Who's speaking<span style="font-style:italic;color:var(--ember);">?</span></h2>
-      <div id="about-grid" style="display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(2.4rem,5vw,4.5rem);align-items:start;">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(2.4rem,5vw,4.5rem);align-items:start;">
         <div data-reveal>
           <p style="font-family:var(--display);font-weight:400;font-size:clamp(1.5rem,3.2vw,2.4rem);line-height:1.22;margin:0 0 1.6rem;letter-spacing:-0.005em;text-wrap:pretty;">I'm <span style="font-style:italic;">Ilias</span> — I work in <span style="position:relative;white-space:nowrap;">marketing strategy<span class="cc-uline" style="position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--ember);transform:scaleX(0);transform-origin:left center;transition:transform .85s cubic-bezier(.2,.7,.2,1);"></span></span> and write, on the side, about why people choose what they choose.</p>
           <p style="font-family:var(--body);font-weight:300;font-size:clamp(1.05rem,1.8vw,1.22rem);line-height:1.6;color:var(--ash);margin:0;max-width:52ch;text-wrap:pretty;">By day that means figuring out how to make people want things. By night it means trying to understand the same machinery from the inside — the psychology, the defaults, the small nudges nobody votes on. This site is where the two habits argue with each other in public.</p>
@@ -67,12 +69,6 @@ const threads = [
             <span>Writing</span>
           </div>
           <a href="/about/" class="charge more-link" style="display:inline-flex;align-items:center;gap:10px;margin-top:clamp(1.8rem,3vw,2.6rem);font-family:var(--mono);font-size:0.66rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ember);transition:gap .3s;">More about me <span style="font-family:var(--display);font-size:1.1em;line-height:0;">→</span></a>
-        </div>
-        <div data-reveal style="position:relative;">
-          <div class="js-portrait" style="position:relative;aspect-ratio:4/5;width:100%;max-width:340px;-webkit-mask:linear-gradient(180deg,#000 78%,transparent 99%);mask:linear-gradient(180deg,#000 78%,transparent 99%);transition:filter .55s ease;filter:grayscale(0.28) contrast(1.02);">
-            <PortraitPlaceholder label="PORTRAIT · OPTIONAL" />
-          </div>
-          <span style="position:absolute;left:0;bottom:-26px;font-family:var(--mono);font-size:0.56rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ash);">Casablanca → wherever the work is</span>
         </div>
       </div>
     </div>
@@ -90,7 +86,7 @@ const threads = [
     <a href="/start/" class="charge featured-card" data-reveal style="position:relative;display:block;background:var(--coal-soft);border:1px solid var(--coal-line);padding:clamp(24px,3.5vw,42px) clamp(24px,4vw,48px);margin:0 0 clamp(2.2rem,4vw,3.2rem);transition:background .45s ease;">
       <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;margin-bottom:clamp(1rem,2vw,1.5rem);font-family:var(--mono);font-size:0.62rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;">
         <span style="display:inline-flex;align-items:center;gap:10px;color:var(--tide);"><span style="width:7px;height:7px;background:var(--tide);transform:rotate(45deg);"></span>New here?</span>
-        <span style="color:var(--ash);">4 essays · ~30 min</span>
+        <span style="color:var(--ash);">{startHere.length} essays · ~{startHereMinutes} min</span>
       </div>
       <div class="featured-title" style="font-family:var(--display);font-weight:500;font-size:clamp(1.7rem,3.6vw,2.8rem);line-height:1.02;letter-spacing:-0.012em;text-wrap:balance;transition:color .4s ease;">Start Here</div>
       <p style="font-family:var(--body);font-weight:300;font-style:italic;color:var(--ash);font-size:clamp(1rem,1.6vw,1.2rem);line-height:1.45;margin:0.9rem 0 0;max-width:62ch;text-wrap:pretty;">Four essays, in a deliberate order, that show the whole idea in miniature — why people act, and who profits when they do.</p>
@@ -137,9 +133,6 @@ const threads = [
           <span style="display:inline-flex;align-items:baseline;gap:16px;padding:0 clamp(22px,3vw,46px);white-space:nowrap;font-family:var(--display);font-style:italic;font-weight:400;font-size:clamp(1.4rem,3vw,2.3rem);color:var(--bone);">{thread.text}<span style="font-family:var(--mono);font-style:normal;font-size:0.56rem;font-weight:500;letter-spacing:0.16em;color:var(--ember);align-self:center;">{thread.tag}</span><span style="color:var(--coal-line);font-style:normal;">◆</span></span>
         ))
       ))}
-    </div>
-    <div style="max-width:1180px;margin:clamp(2.6rem,4.5vw,3.8rem) auto 0;padding:0 clamp(22px,6vw,64px);">
-      <a href="https://x.com" class="charge x-link" data-reveal style="display:inline-block;font-family:var(--mono);font-size:0.68rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ash);transition:color .3s;">More on X →</a>
     </div>
   </section>
 
@@ -206,7 +199,6 @@ const threads = [
   .js-ilias:hover { background: #efe7d4; }
   .js-ilias:hover .fork-title-ember { color: var(--ember); }
   .js-ilias:hover .fork-underline-ember { width: 100%; }
-  .x-link:hover { color: var(--bone); }
   .shelf-link:hover { letter-spacing: 0.22em; }
 </style>
 
@@ -264,7 +256,6 @@ const threads = [
   // scroll listener and marquee tick loop every time.
   let cleanupScroll: (() => void) | null = null;
   let cleanupMarquee: (() => void) | null = null;
-  let cleanupResize: (() => void) | null = null;
 
   function initScroll() {
     if (cleanupScroll) cleanupScroll();
@@ -284,12 +275,6 @@ const threads = [
     window.addEventListener('scroll', onScroll, { passive: true });
     cleanupScroll = () => window.removeEventListener('scroll', onScroll);
     onScroll();
-  }
-
-  function fitAbout() {
-    const grid = document.getElementById('about-grid');
-    if (!grid) return;
-    grid.style.gridTemplateColumns = window.innerWidth > 820 ? '1.4fr 0.9fr' : 'minmax(0,1fr)';
   }
 
   function bindCards() {
@@ -363,11 +348,7 @@ const threads = [
     bindCards();
     setupReveals();
     initScroll();
-    fitAbout();
     initMarquee();
-    if (cleanupResize) cleanupResize();
-    window.addEventListener('resize', fitAbout, { passive: true });
-    cleanupResize = () => window.removeEventListener('resize', fitAbout);
   }
 
   document.addEventListener('astro:page-load', boot);

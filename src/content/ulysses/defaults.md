@@ -2,7 +2,6 @@
 id: "defaults"
 title: "You are your defaults"
 tag: "On Identity"
-read: "7 min"
 date: "Apr 2026"
 order: 2
 pairsWith: "nobody-wants"
