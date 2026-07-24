@@ -1,15 +1,35 @@
 ---
-import PortraitPlaceholder from './PortraitPlaceholder.astro';
 ---
 <section style="position:relative;min-height:100svh;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:clamp(6rem,11vh,8rem) clamp(20px,5vw,40px) clamp(4rem,8vh,6rem);">
-  <div style="position:absolute;inset:0;z-index:0;background:radial-gradient(80% 90% at 0% 24%, rgba(120,108,86,0.07), transparent 56%),radial-gradient(80% 90% at 100% 76%, rgba(93,71,49,0.06), transparent 56%),linear-gradient(180deg,#efe9db 0%,#e9e2d2 56%,var(--coal) 100%);"></div>
+  <div style="position:absolute;inset:0;z-index:0;background:radial-gradient(80% 90% at 0% 24%, rgba(120,108,86,0.07), transparent 56%),radial-gradient(80% 90% at 100% 76%, rgba(93,71,49,0.06), transparent 56%),linear-gradient(180deg,var(--paper-hi) 0%,var(--paper-mid) 56%,var(--coal) 100%);"></div>
   <div id="cc-seam-tint" style="position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;transition:opacity .6s ease,background .6s ease;"></div>
 
   <div style="position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;text-align:center;max-width:640px;animation:cc-rise .9s ease both;">
 
-    <!-- illustrated mark (placeholder until the real artwork is ready) -->
-    <div style="position:relative;width:clamp(120px,16vw,168px);aspect-ratio:1;margin-bottom:clamp(1.6rem,3.5vh,2.4rem);border-radius:50%;overflow:hidden;">
-      <PortraitPlaceholder label="MARK · SOON" />
+    <!-- illustrated mark: an original classical coin-profile, drawn from the
+         site's own vocabulary (beaded ring, laurel, ember diamonds). All
+         colors are theme tokens so the coin inverts cleanly in ink mode. -->
+    <div style="position:relative;width:clamp(120px,16vw,168px);aspect-ratio:1;margin-bottom:clamp(1.6rem,3.5vh,2.4rem);">
+      <svg aria-hidden="true" viewBox="0 0 200 200" style="display:block;width:100%;height:100%;">
+        <circle cx="100" cy="100" r="98" fill="var(--paper-hi)"/>
+        <circle cx="100" cy="100" r="90" fill="none" stroke="var(--bone)" stroke-width="2.5" stroke-dasharray="0.5 7.4" stroke-linecap="round"/>
+        <circle cx="100" cy="100" r="82" fill="none" stroke="var(--bone)" stroke-width="1" opacity="0.35"/>
+        <path fill="var(--bone)" d="M 104 33 C 87 33 75 44 72 60 L 63 98 L 72 100 C 72.5 102 72.5 103 72.5 104.5 C 69.5 106 69 107.5 69.5 109 C 71.5 110.5 72 111.5 71.5 112.5 C 69.5 114 69 116 70 118 C 72.5 119.5 73 120.5 72 122 C 70.5 124 70.5 127 72 130 C 74.5 134.5 79 137.5 85 138.5 C 90 139.5 94 139 97 138 C 100 146 101 154 100 162 L 100 166 L 138 166 C 136 152 135 143 137 132 C 143 122 146 112 146 99 C 146 60 133 33 104 33 Z"/>
+        <g fill="none" stroke="var(--coal)" stroke-width="2" stroke-linecap="round">
+          <path d="M 84 48 C 102 38 128 42 141 62"/>
+        </g>
+        <g fill="var(--coal)">
+          <path d="M 88 46 C 92 39 99 37 104 39 C 100 45 93 47 88 46 Z"/>
+          <path d="M 102 41 C 108 36 115 36 119 40 C 114 45 107 45 102 41 Z"/>
+          <path d="M 116 42 C 123 39 129 41 132 46 C 126 50 119 48 116 42 Z"/>
+          <path d="M 128 49 C 135 48 140 52 142 58 C 136 60 130 56 128 49 Z"/>
+        </g>
+        <g fill="var(--ember)">
+          <rect x="76.5" y="143" width="7" height="7" transform="rotate(45 80 146.5)"/>
+          <rect x="77.9" y="156" width="5" height="5" transform="rotate(45 80.4 158.5)" opacity="0.8"/>
+          <rect x="78.9" y="167" width="3.4" height="3.4" transform="rotate(45 80.6 168.7)" opacity="0.55"/>
+        </g>
+      </svg>
     </div>
 
     <h1 style="margin:0;font-family:var(--display);font-weight:500;font-style:italic;font-size:clamp(2.6rem,7vw,4.6rem);line-height:1;letter-spacing:-0.015em;color:var(--ember);">Ilias Ennajmi</h1>
@@ -19,7 +39,7 @@ import PortraitPlaceholder from './PortraitPlaceholder.astro';
     <span class="hero-rule" style="display:block;width:min(220px,42vw);height:1px;background:var(--coal-line);margin:clamp(1.8rem,3.5vh,2.4rem) 0;transform:scaleX(0);transform-origin:center;"></span>
 
     <div style="font-family:var(--mono);font-size:clamp(0.6rem,1.2vw,0.7rem);letter-spacing:0.16em;text-transform:uppercase;color:var(--ash);line-height:1.9;">
-      Written by
+      Written by&nbsp;
       <a href="/ulysses/" class="js-seam-why charge" style="color:var(--tide);text-decoration:none;">a behavior obsessive</a>
       <span style="color:var(--coal-line);margin:0 8px;">/</span>
       <a href="/ilias/" class="js-seam-who charge" style="color:var(--ember);text-decoration:none;">a marketing strategist</a>

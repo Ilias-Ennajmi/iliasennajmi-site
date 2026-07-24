@@ -1,6 +1,6 @@
 ---
 ---
-<div id="cmdk-backdrop" style="position:fixed;inset:0;z-index:9500;background:rgba(28,26,20,0.55);display:none;">
+<div id="cmdk-backdrop" style="position:fixed;inset:0;z-index:9500;background:var(--overlay);display:none;">
   <div id="cmdk-panel" role="dialog" aria-modal="true" aria-label="Search" style="max-width:600px;margin:12vh auto 0;background:var(--coal-soft);border:1px solid var(--coal-line);max-height:70vh;display:flex;flex-direction:column;">
     <div style="display:flex;align-items:center;gap:12px;padding:18px 20px;border-bottom:1px solid var(--coal-line);">
       <span style="width:7px;height:7px;background:var(--ember);transform:rotate(45deg);flex:none;"></span>
@@ -23,10 +23,11 @@
   .cmdk-item-title { font-family: var(--display); font-weight: 500; font-size: 1.1rem; color: var(--bone); }
   .cmdk-item-meta { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ash); margin-top: 4px; }
   .cmdk-empty { padding: 30px 20px; font-family: var(--body); font-style: italic; color: var(--ash); text-align: center; }
+  .cmdk-group { padding: 12px 20px 6px; font-family: var(--mono); font-size: 0.56rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ash); }
 </style>
 
 <script>
-  type SearchItem = { title: string; tag: string; standfirst: string; strand: string; read: string; href: string };
+  type SearchItem = { title: string; tag: string; standfirst: string; strand: string; read: string; href: string; group?: string };
 
   let items: SearchItem[] | null = null;
   let activeIndex = 0;
@@ -56,12 +57,18 @@
       results.innerHTML = '<div class="cmdk-empty">No matches — try another word.</div>';
       return;
     }
-    results.innerHTML = filtered.map((item, i) => `
+    let lastGroup: string | undefined;
+    results.innerHTML = filtered.map((item, i) => {
+      const header = item.group && item.group !== lastGroup
+        ? `<div class="cmdk-group">${escapeHtml(item.group)}</div>`
+        : '';
+      lastGroup = item.group;
+      return `${header}
       <a href="${item.href}" class="cmdk-item" data-index="${i}" data-active="${i === activeIndex ? '1' : '0'}">
         <div class="cmdk-item-title">${escapeHtml(item.title)}</div>
         <div class="cmdk-item-meta">${escapeHtml(item.strand)} · ${escapeHtml(item.tag)}${item.read ? ' · ' + escapeHtml(item.read) : ''}</div>
-      </a>
-    `).join('');
+      </a>`;
+    }).join('');
   }
 
   function escapeHtml(s: string): string {
@@ -74,7 +81,16 @@
     const q = (e.target as HTMLInputElement).value.trim();
     const all = await loadIndex();
     if (!q) {
-      filtered = all.slice(0, 8);
+      let recents: SearchItem[] = [];
+      try {
+        recents = (JSON.parse(localStorage.getItem('recent-essays') || '[]') as Array<Record<string, string>>)
+          .map((r) => ({ title: r.title, tag: r.tag, standfirst: '', strand: r.strand, read: r.read, href: r.href, group: 'Recently viewed' }));
+      } catch (err) { recents = []; }
+      recents = recents.slice(0, 4);
+      const seen = new Set(recents.map((r) => r.href));
+      const browse = all.filter((a) => !seen.has(a.href)).slice(0, 8 - recents.length)
+        .map((a) => ({ ...a, group: recents.length ? 'Browse' : undefined }));
+      filtered = [...recents, ...browse];
     } else {
       filtered = all
         .map((item) => ({ item, s: score(item, q) }))

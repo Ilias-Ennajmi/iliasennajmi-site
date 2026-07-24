@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PortraitPlaceholder from '../components/PortraitPlaceholder.astro';
 import ContactLinks from '../components/ContactLinks.astro';
 import HeroTitlePage from '../components/HeroTitlePage.astro';
+import NewsletterSignup from '../components/NewsletterSignup.astro';
 import { getPublishedCollection } from '../lib/essays';
 
 const ulyssesEntries = await getPublishedCollection('ulysses');
@@ -189,6 +190,8 @@ const threads = [
       <ContactLinks size="lg" />
     </div>
   </section>
+
+  <NewsletterSignup />
 
 </main>
 </BaseLayout>

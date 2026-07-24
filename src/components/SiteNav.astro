@@ -1,6 +1,6 @@
 ---
 interface Props {
-  active: 'home' | 'about' | 'ulysses' | 'ilias' | 'shelf' | 'essay' | 'topics';
+  active: 'home' | 'about' | 'ulysses' | 'ilias' | 'shelf' | 'essay' | 'topics' | 'saved';
 }
 const { active } = Astro.props;
 const on = 'var(--ember)';
@@ -12,10 +12,11 @@ const links = [
   { href: '/ilias/', label: 'Ilias', key: 'ilias', num: '04' },
   { href: '/topics/', label: 'Topics', key: 'topics', num: '05' },
   { href: '/shelf/', label: 'The Shelf', key: 'shelf', num: '06' },
+  { href: '/saved/', label: 'Saved', key: 'saved', num: '07' },
 ];
 ---
 
-<nav id="sn-bar" aria-label="Primary" style="position:fixed;top:0;left:0;right:0;z-index:7000;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:18px clamp(22px,5vw,52px);background:linear-gradient(180deg,rgba(231,224,208,0.96),rgba(231,224,208,0));font-family:var(--mono);">
+<nav id="sn-bar" aria-label="Primary" style="position:fixed;top:0;left:0;right:0;z-index:7000;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:18px clamp(22px,5vw,52px);background:linear-gradient(180deg,var(--nav-scrim-a),var(--nav-scrim-b));font-family:var(--mono);">
   <a href="/" id="sn-wordmark" style="font-family:var(--display);font-style:italic;font-weight:500;font-size:1.45rem;letter-spacing:0.01em;line-height:1;color:var(--bone);text-decoration:none;">Ilias Ennajmi</a>
 
   <div id="sn-links" style="display:flex;align-items:center;gap:clamp(16px,3vw,40px);font-size:0.68rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ash);white-space:nowrap;">
@@ -28,6 +29,7 @@ const links = [
   </div>
 
   <div style="display:flex;align-items:center;gap:clamp(14px,2vw,24px);">
+    <button id="sn-theme-btn" type="button" aria-label="Switch between paper and ink theme" style="display:flex;align-items:center;justify-content:center;background:none;border:1px solid var(--coal-line);cursor:pointer;color:var(--ash);width:36px;min-height:36px;padding:0;font-size:0.9rem;line-height:1;-webkit-tap-highlight-color:transparent;transition:color .25s,border-color .25s;">◐</button>
     <button id="sn-search-btn" type="button" aria-label="Search essays" style="display:flex;align-items:center;gap:8px;background:none;border:1px solid var(--coal-line);cursor:pointer;font-family:var(--mono);font-size:0.6rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--ash);padding:8px 12px;min-height:36px;-webkit-tap-highlight-color:transparent;">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
       <span class="sn-search-label" style="display:none;">⌘K</span>
@@ -63,7 +65,7 @@ const links = [
 
 <style>
   .sn-link:hover { color: var(--bone); }
-  #sn-search-btn:hover { color: var(--bone); border-color: var(--ash); }
+  #sn-search-btn:hover, #sn-theme-btn:hover { color: var(--bone); border-color: var(--ash); }
   @media (min-width: 640px) { .sn-search-label { display: inline !important; } }
 </style>
 
@@ -94,6 +96,19 @@ const links = [
     burger.addEventListener('click', open);
     drawer.querySelectorAll('[data-close]').forEach((el) => el.addEventListener('click', close));
 
+    const themeBtn = document.getElementById('sn-theme-btn');
+    if (themeBtn) {
+      themeBtn.addEventListener('click', () => {
+        const root = document.documentElement;
+        const toInk = root.getAttribute('data-theme') !== 'ink';
+        if (toInk) root.setAttribute('data-theme', 'ink');
+        else root.removeAttribute('data-theme');
+        try { localStorage.setItem('theme', toInk ? 'ink' : 'paper'); } catch (e) { /* private mode */ }
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', toInk ? '#16130d' : '#e7e0d0');
+      });
+    }
+
     const searchBtn = document.getElementById('sn-search-btn');
     if (searchBtn) {
       searchBtn.addEventListener('click', () => {
@@ -101,6 +116,14 @@ const links = [
         if (w.openCommandPalette) w.openCommandPalette();
       });
     }
+
+    // swipe up on the open drawer closes it (it animates upward anyway);
+    // listeners live on the drawer itself, which is replaced per navigation
+    let touchStartY = 0;
+    drawer.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY; }, { passive: true });
+    drawer.addEventListener('touchmove', (e) => {
+      if (e.touches[0].clientY - touchStartY < -70) close();
+    }, { passive: true });
 
     const onKeydown = (e: KeyboardEvent) => { if (e.key === 'Escape') close(); };
     document.addEventListener('keydown', onKeydown);
