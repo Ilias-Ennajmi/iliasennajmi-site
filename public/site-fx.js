@@ -132,6 +132,15 @@
       var label = meter.querySelector('[data-meter-label]');
       var fill = meter.querySelector('[data-meter-fill]');
       var art = document.querySelector('article');
+
+      // Read-depth analytics ride along on the meter's existing progress
+      // figure rather than adding a second scroll listener. `fired` is
+      // per-call, and _readingMeter re-runs on every navigation, so
+      // milestones reset for each essay automatically.
+      var essay = (location.pathname.match(/\/essays\/([^/]+)/) || [])[1] || location.pathname;
+      var marks = [[0.25, 'read-25'], [0.5, 'read-50'], [0.75, 'read-75'], [0.98, 'read-complete']];
+      var fired = {};
+
       var upd = function () {
         if (!art) return;
         var y = window.scrollY || 0;
@@ -145,6 +154,13 @@
           label.textContent = p >= 0.992 ? 'Finished' : (left <= 0 ? '\u2039 1 min left' : left + ' min left');
         }
         meter.style.opacity = (p > 0.015 && p < 0.999) ? '1' : (p >= 0.999 ? '0.55' : '0');
+
+        for (var i = 0; i < marks.length; i++) {
+          if (p >= marks[i][0] && !fired[marks[i][1]]) {
+            fired[marks[i][1]] = 1;
+            if (typeof window.track === 'function') window.track(marks[i][1], { essay: essay });
+          }
+        }
       };
       this._meterUpd = upd;
       window.addEventListener('scroll', upd, { passive: true });

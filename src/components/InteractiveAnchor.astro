@@ -159,18 +159,30 @@
 
     const show = (n: number) => steps.forEach((s) => { s.hidden = s.dataset.step !== String(n); });
 
+    let shownAnchor = LOW;
+
     const start = () => {
       const high = Math.random() < 0.5;
       const anchor = high ? HIGH : LOW;
       const other = high ? LOW : HIGH;
+      shownAnchor = anchor;
       root.querySelectorAll('.ad-anchor-value').forEach((el) => { el.textContent = money(anchor); });
       root.querySelectorAll('.ad-other-value').forEach((el) => { el.textContent = money(other); });
       if (input) input.value = '';
       show(1);
     };
 
+    const track = (name: string, props?: Record<string, string>) => {
+      const t = (window as unknown as { track?: (n: string, p?: Record<string, string>) => void }).track;
+      if (typeof t === 'function') t(name, props);
+    };
+
     root.querySelectorAll('[data-answer]').forEach((btn) => {
-      on(btn, 'click', () => { show(2); input?.focus(); });
+      on(btn, 'click', () => {
+        track('anchor-answered', { answer: (btn as HTMLElement).dataset.answer || '' });
+        show(2);
+        input?.focus();
+      });
     });
 
     const reveal = () => {
@@ -180,6 +192,9 @@
         return;
       }
       if (guessEl) guessEl.textContent = money(Math.round(raw));
+      // Which anchor the reader happened to get is the interesting dimension:
+      // it's the only thing that differs between the two groups.
+      track('anchor-completed', { anchor: shownAnchor === HIGH ? 'high' : 'low' });
       show(3);
     };
 

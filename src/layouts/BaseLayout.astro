@@ -9,6 +9,7 @@ import Footer from '../components/Footer.astro';
 import GrainOverlay from '../components/GrainOverlay.astro';
 import ScrollProgress from '../components/ScrollProgress.astro';
 import CommandPalette from '../components/CommandPalette.astro';
+import Analytics from '../components/Analytics.astro';
 
 interface Props {
   title: string;
@@ -85,9 +86,7 @@ const resolvedOgImage = ogImage ? new URL(ogImage, Astro.site).toString() : unde
   </script>
   <link rel="alternate" type="application/rss+xml" title="Ilias Ennajmi — Essays" href="/rss.xml" />
   {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
-  {import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN && (
-    <script is:inline defer data-domain={import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN} src="https://plausible.io/js/script.js"></script>
-  )}
+  <Analytics />
   <ClientRouter />
   {siteFx && <script is:inline src="/site-fx.js"></script>}
   {siteFx && <script is:inline src="/page-boot.js"></script>}

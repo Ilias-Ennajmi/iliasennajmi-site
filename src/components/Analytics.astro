@@ -1,0 +1,55 @@
+---
+/**
+ * Analytics, entirely opt-in: nothing loads unless the matching env var is
+ * set, so a fresh clone ships zero third-party requests and needs no cookie
+ * banner (all three providers below are cookieless).
+ *
+ *   PUBLIC_CF_BEACON_TOKEN   Cloudflare Web Analytics — pageviews + web vitals
+ *   PUBLIC_GOATCOUNTER       GoatCounter endpoint, e.g. https://you.goatcounter.com/count
+ *   PUBLIC_PLAUSIBLE_DOMAIN  Plausible
+ *
+ * Custom events (see window.track below) are only actually delivered by
+ * GoatCounter and Plausible. Cloudflare's free beacon has no custom-event
+ * API, so with Cloudflare alone the calls are collected but no-op.
+ */
+const cfToken = import.meta.env.PUBLIC_CF_BEACON_TOKEN;
+const goatcounter = import.meta.env.PUBLIC_GOATCOUNTER;
+const plausible = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN;
+---
+{cfToken && (
+  <script
+    is:inline
+    defer
+    src="https://static.cloudflareinsights.com/beacon.min.js"
+    data-cf-beacon={JSON.stringify({ token: cfToken, spa: true })}
+  ></script>
+)}
+
+{plausible && (
+  <script is:inline defer data-domain={plausible} src="https://plausible.io/js/script.js"></script>
+)}
+
+{goatcounter && (
+  <script is:inline defer data-goatcounter={goatcounter} src="https://gc.zgo.at/count.js"></script>
+)}
+
+<script is:inline>
+  // One call site for the rest of the app; each provider that supports
+  // custom events gets fed, and it stays silent when none is configured.
+  window.track = function (name, props) {
+    try {
+      if (typeof window.plausible === 'function') {
+        window.plausible(name, props ? { props: props } : undefined);
+      }
+      if (window.goatcounter && typeof window.goatcounter.count === 'function') {
+        window.goatcounter.count({
+          path: name + (props && props.essay ? ':' + props.essay : ''),
+          title: name,
+          event: true,
+        });
+      }
+    } catch (e) {
+      // analytics must never break the page
+    }
+  };
+</script>

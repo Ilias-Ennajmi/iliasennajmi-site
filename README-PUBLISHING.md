@@ -9,7 +9,25 @@ Built with [Astro](https://astro.build). Essays live as Markdown in `src/content
 3. **The `/admin/` editor** — already wired to DecapBridge (see `public/admin/config.yml`). Log in at `/admin/` with whatever you set up in your DecapBridge account.
 4. **Set the site URL** — Site configuration → Environment variables → `SITE_URL` = your live URL. Used for canonical links, RSS, sitemap, and OG images. Redeploy once after changing it.
 5. **Custom domain** (optional) — Domain management → Add a domain in Netlify.
-6. **Analytics** (optional) — sign up at [plausible.io](https://plausible.io), then set the `PUBLIC_PLAUSIBLE_DOMAIN` environment variable in Netlify to your domain. Leave it unset and no analytics script loads at all.
+6. **Analytics** (optional) — see below. With no env var set, no analytics script loads at all.
+
+## Analytics
+
+All three options are cookieless, so none of them needs a cookie banner. Set the env var in Netlify (Site configuration → Environment variables) and redeploy.
+
+| Provider | Env var | Cost | Custom events |
+|---|---|---|---|
+| Cloudflare Web Analytics | `PUBLIC_CF_BEACON_TOKEN` | Free | No |
+| GoatCounter | `PUBLIC_GOATCOUNTER` | Free (personal) | Yes |
+| Plausible | `PUBLIC_PLAUSIBLE_DOMAIN` | Paid | Yes |
+
+**Cloudflare** (traffic): create a site at [Cloudflare Web Analytics](https://dash.cloudflare.com/?to=/:account/web-analytics) — no need to move your DNS — and copy the token out of the snippet it gives you. Set it as `PUBLIC_CF_BEACON_TOKEN`. The beacon is configured with `spa: true`, which matters here because the site uses view transitions; without it only the first page of a visit would register.
+
+**Read-completion** (the interesting metric): the site fires `read-25`, `read-50`, `read-75` and `read-complete` events per essay, plus `anchor-answered` / `anchor-completed` for the interactive demo. **Cloudflare's free tier has no custom-event API**, so these only show up if you also set `PUBLIC_GOATCOUNTER` or `PUBLIC_PLAUSIBLE_DOMAIN`. Running Cloudflare for traffic and GoatCounter for events is free and works fine — both can be set at once.
+
+**Newsletter signups** need no analytics at all: Netlify counts every submission under Forms in the dashboard, and each signup also lands on `/thanks/`, so that page's view count is your conversion number. Turn on Forms → Settings → notifications or the submissions just sit there unseen.
+
+Events are dispatched through `window.track()`, defined in `src/components/Analytics.astro`. It stays silent when no event-capable provider is configured, so nothing breaks either way.
 
 ## Writing an essay
 
