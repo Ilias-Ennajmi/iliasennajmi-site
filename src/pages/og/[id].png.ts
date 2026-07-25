@@ -7,17 +7,16 @@ import { getPublishedCollection } from '../../lib/essays';
 
 const FONT_DIR = path.join(process.cwd(), 'node_modules');
 
-const garamond = fs.readFileSync(path.join(FONT_DIR, '@fontsource/eb-garamond/files/eb-garamond-latin-500-normal.woff'));
-const garamondItalic = fs.readFileSync(path.join(FONT_DIR, '@fontsource/eb-garamond/files/eb-garamond-latin-500-italic.woff'));
-const archivo = fs.readFileSync(path.join(FONT_DIR, '@fontsource/archivo/files/archivo-latin-600-normal.woff'));
+const fraunces = fs.readFileSync(path.join(FONT_DIR, '@fontsource/fraunces/files/fraunces-latin-500-normal.woff'));
+const spaceGrotesk = fs.readFileSync(path.join(FONT_DIR, '@fontsource/space-grotesk/files/space-grotesk-latin-600-normal.woff'));
 
-const COAL = '#e7e0d0';
-const BONE = '#2b2519';
-const ASH = '#6a6251';
+const COAL = '#fcf0ec';
+const BONE = '#1a1310';
+const ASH = '#4a3d36';
 
 export async function getStaticPaths() {
-  const ulysses = (await getPublishedCollection('ulysses')).map((entry) => ({ entry, accent: '#7b6e54', strandLabel: 'Ulysses' }));
-  const ilias = (await getPublishedCollection('ilias')).map((entry) => ({ entry, accent: '#9c2f24', strandLabel: 'Ilias' }));
+  const ulysses = (await getPublishedCollection('ulysses')).map((entry) => ({ entry, accent: '#7a5a4c', strandLabel: 'Ulysses' }));
+  const ilias = (await getPublishedCollection('ilias')).map((entry) => ({ entry, accent: '#c13824', strandLabel: 'Ilias' }));
   return [...ulysses, ...ilias].map(({ entry, accent, strandLabel }) => ({
     params: { id: entry.data.id },
     props: { title: entry.data.title, tag: entry.data.tag, accent, strandLabel },
@@ -39,7 +38,7 @@ export const GET: APIRoute = async ({ props }) => {
           justifyContent: 'space-between',
           background: COAL,
           padding: '80px',
-          fontFamily: 'EB Garamond',
+          fontFamily: 'Fraunces',
         },
         children: [
           {
@@ -57,7 +56,7 @@ export const GET: APIRoute = async ({ props }) => {
                   type: 'div',
                   props: {
                     style: {
-                      fontFamily: 'Archivo',
+                      fontFamily: 'Space Grotesk',
                       fontSize: '26px',
                       fontWeight: 600,
                       letterSpacing: '4px',
@@ -74,7 +73,7 @@ export const GET: APIRoute = async ({ props }) => {
             type: 'div',
             props: {
               style: {
-                fontFamily: 'EB Garamond',
+                fontFamily: 'Fraunces',
                 fontWeight: 500,
                 fontSize: '64px',
                 lineHeight: 1.08,
@@ -93,7 +92,7 @@ export const GET: APIRoute = async ({ props }) => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                fontFamily: 'Archivo',
+                fontFamily: 'Space Grotesk',
                 fontSize: '22px',
                 letterSpacing: '3px',
                 textTransform: 'uppercase',
@@ -112,9 +111,8 @@ export const GET: APIRoute = async ({ props }) => {
       width: 1200,
       height: 630,
       fonts: [
-        { name: 'EB Garamond', data: garamond, weight: 500, style: 'normal' },
-        { name: 'EB Garamond', data: garamondItalic, weight: 500, style: 'italic' },
-        { name: 'Archivo', data: archivo, weight: 600, style: 'normal' },
+        { name: 'Fraunces', data: fraunces, weight: 500, style: 'normal' },
+        { name: 'Space Grotesk', data: spaceGrotesk, weight: 600, style: 'normal' },
       ],
     }
   );

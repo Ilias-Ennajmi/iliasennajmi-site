@@ -18,7 +18,7 @@
       opts = opts || {};
       this.strand = opts.strand || null;                       // 'ulysses' | 'ilias' | null
       this.accent = this.strand === 'ulysses' ? 'var(--tide)' : 'var(--ember)';
-      this.rgb    = this.strand === 'ulysses' ? '123,110,84' : '156,47,36';
+      this.rgb    = this.strand === 'ulysses' ? '122,90,76' : '193,56,36';
       this.motion = (opts.motion !== undefined ? opts.motion : !RM());
       this.progressMode = (opts.progress === undefined) ? 'page' : opts.progress;
 

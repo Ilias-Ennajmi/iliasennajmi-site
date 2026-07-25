@@ -2,7 +2,9 @@
 import { ClientRouter } from 'astro:transitions';
 import '@fontsource-variable/eb-garamond';
 import '@fontsource-variable/eb-garamond/wght-italic.css';
-import '@fontsource-variable/archivo';
+import '@fontsource-variable/fraunces';
+import '@fontsource-variable/fraunces/wght-italic.css';
+import '@fontsource-variable/space-grotesk';
 import '../styles/global.css';
 import SiteNav from '../components/SiteNav.astro';
 import Footer from '../components/Footer.astro';
@@ -35,7 +37,7 @@ const {
   jsonLd,
 } = Astro.props;
 
-const favicon = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23e7e0d0'/%3E%3Cpath d='M16 6l10 10-10 10L6 16z' fill='%239c2f24'/%3E%3C/svg%3E";
+const favicon = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23fcf0ec'/%3E%3Cpath d='M16 6l10 10-10 10L6 16z' fill='%23c13824'/%3E%3C/svg%3E";
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
 const resolvedOgImage = ogImage ? new URL(ogImage, Astro.site).toString() : undefined;
 ---
@@ -65,7 +67,7 @@ const resolvedOgImage = ogImage ? new URL(ogImage, Astro.site).toString() : unde
   )}
   <link rel="icon" href={favicon} />
   <link rel="manifest" href="/manifest.webmanifest" />
-  <meta name="theme-color" content="#e7e0d0" />
+  <meta name="theme-color" content="#fcf0ec" />
   <script is:inline>
     // Apply the saved (or OS-preferred) theme before first paint, and
     // re-apply after every view-transition swap — the swap replaces <html>
@@ -78,7 +80,7 @@ const resolvedOgImage = ogImage ? new URL(ogImage, Astro.site).toString() : unde
         if (t === 'ink') document.documentElement.setAttribute('data-theme', 'ink');
         else document.documentElement.removeAttribute('data-theme');
         var meta = document.querySelector('meta[name="theme-color"]');
-        if (meta) meta.setAttribute('content', t === 'ink' ? '#16130d' : '#e7e0d0');
+        if (meta) meta.setAttribute('content', t === 'ink' ? '#1c1210' : '#fcf0ec');
       };
       apply();
       document.addEventListener('astro:after-swap', apply);

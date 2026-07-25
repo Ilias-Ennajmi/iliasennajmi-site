@@ -1,7 +1,7 @@
 ---
 ---
 <section style="position:relative;min-height:100svh;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:clamp(6rem,11vh,8rem) clamp(20px,5vw,40px) clamp(4rem,8vh,6rem);">
-  <div style="position:absolute;inset:0;z-index:0;background:radial-gradient(80% 90% at 0% 24%, rgba(120,108,86,0.07), transparent 56%),radial-gradient(80% 90% at 100% 76%, rgba(93,71,49,0.06), transparent 56%),linear-gradient(180deg,var(--paper-hi) 0%,var(--paper-mid) 56%,var(--coal) 100%);"></div>
+  <div style="position:absolute;inset:0;z-index:0;background:radial-gradient(80% 90% at 0% 24%, rgba(122,90,76,0.07), transparent 56%),radial-gradient(80% 90% at 100% 76%, rgba(122,90,76,0.06), transparent 56%),linear-gradient(180deg,var(--paper-hi) 0%,var(--paper-mid) 56%,var(--coal) 100%);"></div>
   <div id="cc-seam-tint" style="position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;transition:opacity .6s ease,background .6s ease;"></div>
 
   <div style="position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;text-align:center;max-width:640px;animation:cc-rise .9s ease both;">
@@ -80,8 +80,8 @@
     const why = document.querySelector('.js-seam-why');
     const who = document.querySelector('.js-seam-who');
     const enter = (rgb: string) => (e: PointerEvent) => { if (e.pointerType !== 'touch') set(rgb); };
-    if (why) { why.addEventListener('pointerenter', enter('123,110,84') as EventListener); why.addEventListener('pointerleave', clear); }
-    if (who) { who.addEventListener('pointerenter', enter('156,47,36') as EventListener); who.addEventListener('pointerleave', clear); }
+    if (why) { why.addEventListener('pointerenter', enter('122,90,76') as EventListener); why.addEventListener('pointerleave', clear); }
+    if (who) { who.addEventListener('pointerenter', enter('193,56,36') as EventListener); who.addEventListener('pointerleave', clear); }
   }
 
   document.addEventListener('astro:page-load', bindSeam);

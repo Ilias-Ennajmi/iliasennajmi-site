@@ -95,7 +95,7 @@ const share = shareLinks(canonicalUrl, entry.data.title);
   <main id="main-content">
     <!-- ARTICLE HEADER -->
     <header data-cursor-light style="position:relative;overflow:hidden;padding:clamp(8rem,16vh,12rem) clamp(22px,6vw,64px) clamp(2.5rem,5vw,4rem);">
-      <div style="position:absolute;inset:0;z-index:0;background:radial-gradient(110% 80% at 18% 6%, rgba(93,71,49,0.10), transparent 56%),linear-gradient(180deg,var(--paper-hi) 0%,var(--coal) 70%);"></div>
+      <div style="position:absolute;inset:0;z-index:0;background:radial-gradient(110% 80% at 18% 6%, rgba(122,90,76,0.10), transparent 56%),linear-gradient(180deg,var(--paper-hi) 0%,var(--coal) 70%);"></div>
       <div style="position:relative;z-index:1;max-width:760px;margin:0 auto;animation:cc-rise .9s ease both;">
         <a href={strandHref} class="charge back-link" style="display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:0.62rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--acc);margin-bottom:clamp(2rem,4vw,3rem);transition:gap .3s;">← {strandLabel}</a>
         <div style="display:flex;flex-wrap:wrap;align-items:center;gap:13px;margin-bottom:clamp(1.4rem,2.5vw,2rem);font-family:var(--mono);font-size:0.6rem;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--ash);">
@@ -184,7 +184,7 @@ const share = shareLinks(canonicalUrl, entry.data.title);
 
     <!-- PREV / NEXT -->
     <nav aria-label="More essays" class="no-print" style="border-top:1px solid var(--coal-line);">
-      <div class="kb-hint" style="max-width:1180px;margin:0 auto;padding:1.1rem clamp(22px,6vw,64px) 0;text-align:center;font-family:var(--mono);font-size:0.56rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ash);opacity:0.7;">Navigate with <span style="color:var(--acc);">←</span> <span style="color:var(--acc);">→</span></div>
+      <div class="kb-hint" style="max-width:1180px;margin:0 auto;padding:1.1rem clamp(22px,6vw,64px) 0;text-align:center;font-family:var(--mono);font-size:0.56rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ash);">Navigate with <span style="color:var(--acc);">←</span> <span style="color:var(--acc);">→</span></div>
       <div style="max-width:1180px;margin:0 auto;padding:0 clamp(22px,6vw,64px);display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--coal-line);">
         <a href={prevHref} data-prev-link class="charge prevnext-link" style="background:var(--coal);display:flex;flex-direction:column;gap:0.8rem;padding:clamp(2.2rem,4vw,3.4rem) clamp(1.4rem,3vw,2.6rem);transition:background .4s;">
           <span style="font-family:var(--mono);font-size:0.6rem;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--ash);">← Previous</span>
