@@ -98,6 +98,12 @@ a:focus-visible, [tabindex]:focus-visible {
 @keyframes cc-marqR { from { transform: translateX(-50%); } to { transform: translateX(0); } }
 @keyframes cc-fall { 0% { transform: translateY(0); opacity: 0; } 12% { opacity: 1; } 100% { transform: translateY(14px); opacity: 0; } }
 @keyframes cc-spin { from { transform: rotate(45deg); } to { transform: rotate(405deg); } }
+@keyframes meter-complete { 0% { transform: scale(1) rotate(45deg); } 35% { transform: scale(1.7) rotate(45deg); } 100% { transform: scale(1) rotate(45deg); } }
+/* One-shot: the reading meter's own diamond, briefly catching light the
+   instant an essay is actually finished. Triggered from _readingMeter in
+   site-fx.js; the surrounding @media(prefers-reduced-motion) rule already
+   disables all `animation` sitewide, so no separate guard is needed here. */
+.meter-flash { animation: meter-complete .7s cubic-bezier(.25,.8,.25,1) both; }
 
 @media (hover: hover) {
   .cc-fork:hover > a { opacity: 0.4; filter: saturate(0.5); }

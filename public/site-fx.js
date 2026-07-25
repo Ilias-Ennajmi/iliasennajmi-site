@@ -131,6 +131,7 @@
       var total = parseFloat(meter.getAttribute('data-minutes')) || 0;
       var label = meter.querySelector('[data-meter-label]');
       var fill = meter.querySelector('[data-meter-fill]');
+      var diamond = meter.querySelector('span');
       var art = document.querySelector('article');
 
       // Read-depth analytics ride along on the meter's existing progress
@@ -159,6 +160,15 @@
           if (p >= marks[i][0] && !fired[marks[i][1]]) {
             fired[marks[i][1]] = 1;
             if (typeof window.track === 'function') window.track(marks[i][1], { essay: essay });
+            // A single quiet flash on the meter's own diamond the instant an
+            // essay is actually finished — not a reward banner, just the one
+            // marker that's already there briefly catching light. `fired`
+            // above makes this naturally one-shot per view.
+            if (marks[i][1] === 'read-complete' && diamond) {
+              diamond.classList.remove('meter-flash');
+              void diamond.offsetWidth;
+              diamond.classList.add('meter-flash');
+            }
           }
         }
       };

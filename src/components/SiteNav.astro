@@ -98,14 +98,58 @@ const links = [
 
     const themeBtn = document.getElementById('sn-theme-btn');
     if (themeBtn) {
-      themeBtn.addEventListener('click', () => {
+      const reduceMotion = () => { try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } };
+      // Any in-flight pour gets torn down before starting the next one, so
+      // rapid re-clicking can't stack overlays.
+      let activePour = null;
+
+      themeBtn.addEventListener('click', (e) => {
         const root = document.documentElement;
         const toInk = root.getAttribute('data-theme') !== 'ink';
-        if (toInk) root.setAttribute('data-theme', 'ink');
-        else root.removeAttribute('data-theme');
-        try { localStorage.setItem('theme', toInk ? 'ink' : 'paper'); } catch (e) { /* private mode */ }
-        const meta = document.querySelector('meta[name="theme-color"]');
-        if (meta) meta.setAttribute('content', toInk ? '#16130d' : '#e7e0d0');
+        const applyTheme = () => {
+          if (toInk) root.setAttribute('data-theme', 'ink');
+          else root.removeAttribute('data-theme');
+          try { localStorage.setItem('theme', toInk ? 'ink' : 'paper'); } catch (err) { /* private mode */ }
+          const meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) meta.setAttribute('content', toInk ? '#16130d' : '#e7e0d0');
+        };
+
+        if (reduceMotion()) { applyTheme(); return; }
+        if (activePour) { activePour(); activePour = null; }
+
+        // Ink dropped in water: an opaque disc of the *incoming* theme's page
+        // background spreads from the clicked button, covering the still-old
+        // page underneath. Only once it has fully covered the screen does the
+        // real theme actually flip — invisibly, since the flat disc already
+        // matches the new background — and then the disc is removed, letting
+        // the page's actual texture and text appear under fully-spread ink.
+        const r = themeBtn.getBoundingClientRect();
+        const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+        const radius = Math.hypot(Math.max(cx, innerWidth - cx), Math.max(cy, innerHeight - cy));
+        const pourBg = toInk ? '#16130d' : '#e7e0d0';
+
+        const overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;inset:0;z-index:9998;pointer-events:none;background:' + pourBg + ';' +
+          'clip-path:circle(0px at ' + cx + 'px ' + cy + 'px);' +
+          'transition:clip-path .6s cubic-bezier(.2,.7,.2,1);';
+        document.body.appendChild(overlay);
+
+        let done = false;
+        const finish = () => {
+          if (done) return;
+          done = true;
+          applyTheme();
+          overlay.remove();
+          activePour = null;
+        };
+
+        requestAnimationFrame(() => {
+          overlay.style.clipPath = 'circle(' + Math.ceil(radius) + 'px at ' + cx + 'px ' + cy + 'px)';
+        });
+
+        const timeout = setTimeout(finish, 750);
+        overlay.addEventListener('transitionend', () => { clearTimeout(timeout); finish(); }, { once: true });
+        activePour = () => { clearTimeout(timeout); if (!done) { done = true; overlay.remove(); } };
       });
     }
 
