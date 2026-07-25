@@ -106,7 +106,7 @@
           var r = h.getBoundingClientRect();
           glow.style.background = 'radial-gradient(320px 320px at ' + (e.clientX - r.left) + 'px ' + (e.clientY - r.top) + 'px, rgba(' + self.rgb + ',0.16), transparent 70%)';
           glow.style.opacity = '1';
-          if (wm) { wm.style.transition = 'color .6s ease'; wm.style.color = 'rgba(' + self.rgb + ',0.2)'; }
+          if (wm) { wm.style.transition = 'color .6s ease'; wm.style.color = 'rgba(' + self.rgb + ',0.12)'; }
         });
         h.addEventListener('pointerleave', function () {
           glow.style.opacity = '0';

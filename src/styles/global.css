@@ -146,6 +146,38 @@ a:focus-visible, [tabindex]:focus-visible {
 }
 @media (max-height: 680px) { #cc-cue { display: none !important; } }
 
+/* Oversized decorative numeral/letter behind a page header.
+   It lives *inside* the centred content column and is pushed entirely
+   outside it (right:100% / left:100%), so it bleeds into the outer margin
+   and off the page edge but can never cross into the text. Anchoring it to
+   the viewport edge instead — as this used to — put 80-121px of glyph
+   through the headline on /ilias/, /about/ and /shelf/ at desktop widths.
+   z-index:-1 keeps it behind the copy while staying inside the column's
+   stacking context, so it still sits above the header gradient. */
+.wm {
+  position: absolute;
+  z-index: -1;
+  font-family: var(--display);
+  font-weight: 800;
+  line-height: 0.7;
+  letter-spacing: -0.04em;
+  color: var(--wm);
+  pointer-events: none;
+  user-select: none;
+  transition: color .6s ease;
+  font-size: clamp(6rem, 17vw, 15rem);
+}
+.wm-left { right: 100%; margin-right: clamp(10px, 2vw, 28px); }
+.wm-right { left: 100%; margin-left: clamp(10px, 2vw, 28px); }
+.wm-strong { color: var(--wm-strong); }
+/* The column hits its 1180px cap and stops growing once the viewport minus
+   the header's own horizontal padding exceeds that — only past that point
+   does an outer margin exist for the glyph to bleed into. Below it, show
+   nothing rather than a glyph with no room, clipped awkwardly close to the
+   copy. */
+.wm { display: none; }
+@media (min-width: 1360px) { .wm { display: block; } }
+
 /* shared: section-header divider rule (draws in on scroll via JS toggling transform) */
 .cc-rule { flex: 1; height: 1px; background: var(--coal-line); transform: scaleX(0); transform-origin: left center; transition: transform 1s cubic-bezier(.2, .7, .2, 1); }
 
