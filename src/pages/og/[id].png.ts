@@ -10,13 +10,13 @@ const FONT_DIR = path.join(process.cwd(), 'node_modules');
 const fraunces = fs.readFileSync(path.join(FONT_DIR, '@fontsource/fraunces/files/fraunces-latin-500-normal.woff'));
 const spaceGrotesk = fs.readFileSync(path.join(FONT_DIR, '@fontsource/space-grotesk/files/space-grotesk-latin-600-normal.woff'));
 
-const COAL = '#fcf0ec';
+const COAL = '#f2dbd4';
 const BONE = '#1a1310';
 const ASH = '#4a3d36';
 
 export async function getStaticPaths() {
   const ulysses = (await getPublishedCollection('ulysses')).map((entry) => ({ entry, accent: '#7a5a4c', strandLabel: 'Ulysses' }));
-  const ilias = (await getPublishedCollection('ilias')).map((entry) => ({ entry, accent: '#c13824', strandLabel: 'Ilias' }));
+  const ilias = (await getPublishedCollection('ilias')).map((entry) => ({ entry, accent: '#a52716', strandLabel: 'Ilias' }));
   return [...ulysses, ...ilias].map(({ entry, accent, strandLabel }) => ({
     params: { id: entry.data.id },
     props: { title: entry.data.title, tag: entry.data.tag, accent, strandLabel },

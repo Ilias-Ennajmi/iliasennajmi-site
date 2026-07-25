@@ -1,22 +1,29 @@
 /* Palette adapted from Neuebel&Mark (neuebel.com) — warm peach-cream ground,
-   near-black text, coral-red accent — retuned per-value against WCAG AA
-   (4.5:1 for normal text) rather than copied at face value: the reference's
-   own live accent (#EF3C3C) only clears ~3.7:1 on this cream, so --ember
-   here is darkened to #c13824 while keeping the same coral identity. */
+   near-black text, coral-red accent. First pass copied the reference's
+   background at face value (L96%, essentially white) and darkened its
+   accent for AA text contrast — on a full page of long-form reading (vs.
+   the reference's small graphic showcase) that read as washed out and
+   under-powered, per direct user feedback. Retuned: background deepened to
+   L88-89% for real presence, and the accent is now two tokens — --ember
+   (AA-safe at 4.5:1, for links/labels/body-scale text) and --ember-vivid
+   (AA-large only, 3:1+, for headline punctuation, the hero mark, and other
+   large/decorative uses where the reference's actual vividness matters
+   most). Every value re-verified against WCAG at these new levels. */
 :root {
-  --coal: #fcf0ec;
-  --coal-soft: #f8e8e2;
-  --coal-line: rgba(26, 19, 16, 0.14);
+  --coal: #f2dbd4;
+  --coal-soft: #efcec3;
+  --coal-line: rgba(26, 19, 16, 0.15);
   --bone: #1a1310;
   --ash: #4a3d36;
   --tide: #7a5a4c;
-  --ember: #c13824;
-  --paper-hi: #fef8f5;
-  --paper-mid: #fbeae4;
+  --ember: #a52716;
+  --ember-vivid: #d92e1c;
+  --paper-hi: #f5e9e5;
+  --paper-mid: #f4e2dc;
   --wm: rgba(26, 19, 16, 0.05);
   --wm-strong: rgba(122, 90, 76, 0.12);
-  --nav-scrim-a: rgba(252, 240, 236, 0.96);
-  --nav-scrim-b: rgba(252, 240, 236, 0);
+  --nav-scrim-a: rgba(242, 219, 212, 0.96);
+  --nav-scrim-b: rgba(242, 219, 212, 0);
   --overlay: rgba(26, 19, 16, 0.55);
   --display: 'Fraunces Variable', 'Fraunces', Georgia, serif;
   --body: 'EB Garamond Variable', 'EB Garamond', Garamond, 'Hoefler Text', Georgia, serif;
@@ -26,7 +33,7 @@
 /* Ink mode: the same warm palette, inverted to lamplight-on-dark. Toggled by
    data-theme on <html>; a no-flash script in BaseLayout's head applies it
    before first paint and re-applies after view-transition swaps. The accent
-   is brightened relative to paper mode (#f2775f vs #c13824) — standard
+   is brightened relative to paper mode (#f2775f vs #a52716) — standard
    practice for dark-background legibility — and both ends verified at
    6.5:1+ against the new dark ground. */
 :root[data-theme="ink"] {
@@ -37,6 +44,7 @@
   --ash: #c9b3aa;
   --tide: #cf9d8c;
   --ember: #f2775f;
+  --ember-vivid: #ff5a3c;
   --paper-hi: #271a15;
   --paper-mid: #21160f;
   --wm: rgba(251, 238, 231, 0.045);
@@ -45,7 +53,7 @@
   --nav-scrim-b: rgba(28, 18, 16, 0);
   --overlay: rgba(0, 0, 0, 0.6);
 }
-:root[data-theme="ink"] ::selection { background: rgba(242, 119, 95, 0.30); color: var(--bone); }
+:root[data-theme="ink"] ::selection { background: rgba(255, 90, 60, 0.30); color: var(--bone); }
 :root[data-theme="ink"] .grain-overlay { mix-blend-mode: screen; opacity: 0.05; }
 html { transition: background 0.35s ease; }
 
@@ -61,7 +69,7 @@ html, body {
 
 body { overflow-x: hidden; }
 
-::selection { background: rgba(193, 56, 36, 0.20); color: var(--bone); }
+::selection { background: rgba(217, 46, 28, 0.20); color: var(--bone); }
 
 a { color: inherit; text-decoration: none; }
 

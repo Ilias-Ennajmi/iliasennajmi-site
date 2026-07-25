@@ -24,7 +24,7 @@
           <path d="M 116 42 C 123 39 129 41 132 46 C 126 50 119 48 116 42 Z"/>
           <path d="M 128 49 C 135 48 140 52 142 58 C 136 60 130 56 128 49 Z"/>
         </g>
-        <g fill="var(--ember)">
+        <g fill="var(--ember-vivid)">
           <rect x="76.5" y="143" width="7" height="7" transform="rotate(45 80 146.5)"/>
           <rect x="77.9" y="156" width="5" height="5" transform="rotate(45 80.4 158.5)" opacity="0.8"/>
           <rect x="78.9" y="167" width="3.4" height="3.4" transform="rotate(45 80.6 168.7)" opacity="0.55"/>
@@ -32,7 +32,7 @@
       </svg>
     </div>
 
-    <h1 style="margin:0;font-family:var(--display);font-weight:500;font-style:italic;font-size:clamp(2.6rem,7vw,4.6rem);line-height:1;letter-spacing:-0.015em;color:var(--ember);">Ilias Ennajmi</h1>
+    <h1 style="margin:0;font-family:var(--display);font-weight:500;font-style:italic;font-size:clamp(2.6rem,7vw,4.6rem);line-height:1;letter-spacing:-0.015em;color:var(--ember-vivid);">Ilias Ennajmi</h1>
     <div style="margin-top:clamp(0.8rem,1.6vh,1.1rem);font-family:var(--mono);font-weight:600;font-size:clamp(0.8rem,1.6vw,1rem);letter-spacing:0.18em;text-transform:uppercase;color:var(--bone);">Why People Act &amp; Who Profits</div>
     <p style="margin:clamp(1.2rem,2.4vh,1.6rem) 0 0;font-family:var(--body);font-weight:400;font-style:italic;font-size:clamp(1.05rem,2vw,1.25rem);color:var(--ash);line-height:1.5;text-wrap:pretty;">and other observations that won't make you any money</p>
 
@@ -45,7 +45,7 @@
       <a href="/ilias/" class="js-seam-who charge" style="color:var(--ember);text-decoration:none;">a marketing strategist</a>
     </div>
 
-    <div aria-hidden="true" style="margin-top:clamp(1.2rem,2.4vh,1.6rem);color:var(--ember);font-size:0.7rem;letter-spacing:0.3em;">◆ ◆ ◆ ◆ ◆</div>
+    <div aria-hidden="true" style="margin-top:clamp(1.2rem,2.4vh,1.6rem);color:var(--ember-vivid);font-size:0.7rem;letter-spacing:0.3em;">◆ ◆ ◆ ◆ ◆</div>
 
     <blockquote style="margin:clamp(1.6rem,3vh,2.2rem) 0 0;font-family:var(--display);font-weight:400;font-style:italic;font-size:clamp(1.1rem,2.2vw,1.4rem);line-height:1.4;color:var(--bone);max-width:38ch;text-wrap:pretty;">&ldquo;Guy realizes free will isn&rsquo;t real, immediately monetizes the observation.&rdquo;</blockquote>
     <div style="margin-top:0.7rem;font-family:var(--mono);font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);">— a Hacker News commenter, not wrong</div>
@@ -81,7 +81,7 @@
     const who = document.querySelector('.js-seam-who');
     const enter = (rgb: string) => (e: PointerEvent) => { if (e.pointerType !== 'touch') set(rgb); };
     if (why) { why.addEventListener('pointerenter', enter('122,90,76') as EventListener); why.addEventListener('pointerleave', clear); }
-    if (who) { who.addEventListener('pointerenter', enter('193,56,36') as EventListener); who.addEventListener('pointerleave', clear); }
+    if (who) { who.addEventListener('pointerenter', enter('165,39,22') as EventListener); who.addEventListener('pointerleave', clear); }
   }
 
   document.addEventListener('astro:page-load', bindSeam);

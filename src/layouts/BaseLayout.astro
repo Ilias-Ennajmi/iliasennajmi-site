@@ -37,7 +37,7 @@ const {
   jsonLd,
 } = Astro.props;
 
-const favicon = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23fcf0ec'/%3E%3Cpath d='M16 6l10 10-10 10L6 16z' fill='%23c13824'/%3E%3C/svg%3E";
+const favicon = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23f2dbd4'/%3E%3Cpath d='M16 6l10 10-10 10L6 16z' fill='%23a52716'/%3E%3C/svg%3E";
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
 const resolvedOgImage = ogImage ? new URL(ogImage, Astro.site).toString() : undefined;
 ---
@@ -67,7 +67,7 @@ const resolvedOgImage = ogImage ? new URL(ogImage, Astro.site).toString() : unde
   )}
   <link rel="icon" href={favicon} />
   <link rel="manifest" href="/manifest.webmanifest" />
-  <meta name="theme-color" content="#fcf0ec" />
+  <meta name="theme-color" content="#f2dbd4" />
   <script is:inline>
     // Apply the saved (or OS-preferred) theme before first paint, and
     // re-apply after every view-transition swap — the swap replaces <html>
@@ -80,7 +80,7 @@ const resolvedOgImage = ogImage ? new URL(ogImage, Astro.site).toString() : unde
         if (t === 'ink') document.documentElement.setAttribute('data-theme', 'ink');
         else document.documentElement.removeAttribute('data-theme');
         var meta = document.querySelector('meta[name="theme-color"]');
-        if (meta) meta.setAttribute('content', t === 'ink' ? '#1c1210' : '#fcf0ec');
+        if (meta) meta.setAttribute('content', t === 'ink' ? '#1c1210' : '#f2dbd4');
       };
       apply();
       document.addEventListener('astro:after-swap', apply);
