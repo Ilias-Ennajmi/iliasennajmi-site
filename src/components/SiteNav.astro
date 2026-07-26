@@ -111,7 +111,7 @@ const links = [
           else root.removeAttribute('data-theme');
           try { localStorage.setItem('theme', toInk ? 'ink' : 'paper'); } catch (err) { /* private mode */ }
           const meta = document.querySelector('meta[name="theme-color"]');
-          if (meta) meta.setAttribute('content', toInk ? '#1c1210' : '#f2dbd4');
+          if (meta) meta.setAttribute('content', toInk ? '#1e1a15' : '#ebe5db');
         };
 
         if (reduceMotion()) { applyTheme(); return; }
@@ -126,7 +126,7 @@ const links = [
         const r = themeBtn.getBoundingClientRect();
         const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
         const radius = Math.hypot(Math.max(cx, innerWidth - cx), Math.max(cy, innerHeight - cy));
-        const pourBg = toInk ? '#1c1210' : '#f2dbd4';
+        const pourBg = toInk ? '#1e1a15' : '#ebe5db';
 
         const overlay = document.createElement('div');
         overlay.style.cssText = 'position:fixed;inset:0;z-index:9998;pointer-events:none;background:' + pourBg + ';' +
