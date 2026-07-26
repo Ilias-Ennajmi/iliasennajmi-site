@@ -123,6 +123,8 @@ const share = shareLinks(canonicalUrl, entry.data.title);
           <button type="button" class="charge share-link cite-btn" data-citation={citation} style="background:none;border:none;padding:0;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;cursor:pointer;">Cite</button>
           <span style="width:3px;height:3px;border-radius:50%;background:var(--acc);"></span>
           <button type="button" class="charge share-link save-btn" style="background:none;border:none;padding:0;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;cursor:pointer;">Save</button>
+          <span class="listen-sep" style="width:3px;height:3px;border-radius:50%;background:var(--acc);display:none;"></span>
+          <button type="button" class="charge share-link listen-btn" style="display:none;background:none;border:none;padding:0;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;cursor:pointer;">Listen</button>
         </div>
       </div>
     </div>
@@ -214,11 +216,85 @@ const share = shareLinks(canonicalUrl, entry.data.title);
   .paired-link[data-accent="ember"]:hover .paired-title { color: var(--ember); }
 </style>
 
-<script define:vars={{ strand, prevHref, nextHref, essayTitle: entry.data.title, canonicalUrl, essayMeta: { id: entry.data.id, title: entry.data.title, tag: entry.data.tag, strand: strandLabel, accent, read: readLabel, href: `/essays/${entry.data.id}/` } }}>
+<script define:vars={{ strand, prevHref, nextHref, essayTitle: entry.data.title, canonicalUrl, essayMeta: { id: entry.data.id, title: entry.data.title, tag: entry.data.tag, strand: strandLabel, accent, read: readLabel, minutes: readMinutes, href: `/essays/${entry.data.id}/` } }}>
   let cleanupKeydown = null;
   let cleanupHighlight = null;
   let cleanupSidenotes = null;
   let cleanupSidenoteResize = null;
+  let cleanupListen = null;
+  let cleanupReadingLog = null;
+
+  // ---- Listen to this essay (Web Speech API, no dependency) ----
+  // Feature-detected: hidden entirely rather than shown broken on browsers
+  // without speechSynthesis (notably some older/embedded WebViews).
+  function setupListen() {
+    if (cleanupListen) cleanupListen();
+    const btn = document.querySelector('.listen-btn');
+    const sep = document.querySelector('.listen-sep');
+    if (!btn || !('speechSynthesis' in window)) { cleanupListen = null; return; }
+
+    btn.style.display = '';
+    if (sep) sep.style.display = '';
+
+    let utter = null;
+    const buildText = () => {
+      const body = document.querySelector('.essay-body');
+      if (!body) return '';
+      const parts = [];
+      body.querySelectorAll(':scope > p, :scope > h2, :scope > blockquote, :scope > ul, :scope > ol').forEach((el) => {
+        if (el.closest('.footnotes')) return;
+        const t = el.textContent.trim();
+        if (t) parts.push(t);
+      });
+      return parts.join('. ');
+    };
+
+    const setLabel = (t) => { btn.textContent = t; };
+
+    const onClick = () => {
+      const synth = window.speechSynthesis;
+      if (synth.speaking && !synth.paused) { synth.pause(); setLabel('Resume'); return; }
+      if (synth.paused) { synth.resume(); setLabel('Pause'); return; }
+      const text = buildText();
+      if (!text) return;
+      utter = new SpeechSynthesisUtterance(text);
+      utter.onend = () => setLabel('Listen');
+      utter.onerror = () => setLabel('Listen');
+      synth.speak(utter);
+      setLabel('Pause');
+    };
+    btn.addEventListener('click', onClick);
+
+    cleanupListen = () => {
+      btn.removeEventListener('click', onClick);
+      // Never let audio keep playing after the reader navigates away —
+      // cancel() is safe to call even when nothing is speaking.
+      try { window.speechSynthesis.cancel(); } catch (e) {}
+      setLabel('Listen');
+    };
+  }
+
+  // ---- Local reading log ("Your reading, honestly" on /saved/) ----
+  // Listens for the generic completion event site-fx.js's reading meter
+  // dispatches; this file is where strand/tag/minutes are already known.
+  function setupReadingLog() {
+    if (cleanupReadingLog) cleanupReadingLog();
+    const onComplete = (e) => {
+      if (!e.detail || e.detail.essay !== essayMeta.id) return;
+      try {
+        const log = JSON.parse(localStorage.getItem('reading-log') || '[]');
+        if (!log.some((r) => r.id === essayMeta.id)) {
+          log.push({
+            id: essayMeta.id, title: essayMeta.title, tag: essayMeta.tag,
+            strand: essayMeta.strand, minutes: essayMeta.minutes, completedAt: Date.now(),
+          });
+          localStorage.setItem('reading-log', JSON.stringify(log));
+        }
+      } catch (err) { /* private mode */ }
+    };
+    window.addEventListener('cc:essay-complete', onComplete);
+    cleanupReadingLog = () => window.removeEventListener('cc:essay-complete', onComplete);
+  }
 
   // Footnotes ([^1] syntax, supported by Astro's default GFM markdown)
   // render as a numbered ref + a list at the bottom. This rebuilds them
@@ -317,6 +393,8 @@ const share = shareLinks(canonicalUrl, entry.data.title);
     window.scrollTo(0, 0);
 
     setupSidenotes();
+    setupListen();
+    setupReadingLog();
     if (cleanupSidenoteResize) cleanupSidenoteResize();
     let resizeTimer;
     const onResize = () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(setupSidenotes, 150); };

@@ -168,6 +168,11 @@
               diamond.classList.remove('meter-flash');
               void diamond.offsetWidth;
               diamond.classList.add('meter-flash');
+              // Generic event, not analytics-specific: essays/[id].astro's
+              // own script (which already has strand/tag/minutes in scope)
+              // listens for this to build the local reading log, so this
+              // file doesn't need to know anything about that feature.
+              window.dispatchEvent(new CustomEvent('cc:essay-complete', { detail: { essay: essay } }));
             }
           }
         }
