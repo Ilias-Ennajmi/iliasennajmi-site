@@ -17,13 +17,60 @@
   </div>
 </div>
 
-<style>
-  .cmdk-item { display: block; padding: 14px 20px; border-bottom: 1px solid var(--coal-line); text-decoration: none; cursor: pointer; }
+<style is:global>
+  /* Results are injected via innerHTML (rebuilt on every keystroke), so
+     they never receive Astro's data-astro-cid-* scoping attribute — a
+     scoped <style> here would silently never match, same root cause as
+     StrandList.astro's dynamic rows. Must be is:global. */
+  .cmdk-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 13px 20px;
+    border-bottom: 1px solid var(--coal-line);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .cmdk-item:last-child { border-bottom: none; }
   .cmdk-item[data-active="1"] { background: var(--coal-line); }
-  .cmdk-item-title { font-family: var(--display); font-weight: 500; font-size: 1.1rem; color: var(--bone); }
-  .cmdk-item-meta { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ash); margin-top: 4px; }
+  .cmdk-item-dot {
+    width: 6px;
+    height: 6px;
+    flex: none;
+    margin-top: 7px;
+    transform: rotate(45deg);
+  }
+  .cmdk-item-body { min-width: 0; flex: 1; display: block; }
+  .cmdk-item-title {
+    display: block;
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: 1.05rem;
+    line-height: 1.3;
+    color: var(--bone);
+    text-wrap: balance;
+  }
+  .cmdk-item-meta {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ash);
+    margin-top: 3px;
+  }
   .cmdk-empty { padding: 30px 20px; font-family: var(--body); font-style: italic; color: var(--ash); text-align: center; }
-  .cmdk-group { padding: 12px 20px 6px; font-family: var(--mono); font-size: 0.56rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ash); }
+  .cmdk-group {
+    padding: 14px 20px 8px;
+    font-family: var(--mono);
+    font-size: 0.56rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ash);
+    border-bottom: 1px solid var(--coal-line);
+  }
 </style>
 
 <script>
@@ -63,10 +110,15 @@
         ? `<div class="cmdk-group">${escapeHtml(item.group)}</div>`
         : '';
       lastGroup = item.group;
+      const dotColor = item.strand === 'Ulysses' ? 'var(--tide)' : item.strand === 'Ilias' ? 'var(--ember)' : 'var(--ash)';
+      const meta = [item.strand, item.tag, item.read].filter(Boolean).join(' · ');
       return `${header}
       <a href="${item.href}" class="cmdk-item" data-index="${i}" data-active="${i === activeIndex ? '1' : '0'}">
-        <div class="cmdk-item-title">${escapeHtml(item.title)}</div>
-        <div class="cmdk-item-meta">${escapeHtml(item.strand)} · ${escapeHtml(item.tag)}${item.read ? ' · ' + escapeHtml(item.read) : ''}</div>
+        <span class="cmdk-item-dot" style="background:${dotColor};"></span>
+        <span class="cmdk-item-body">
+          <span class="cmdk-item-title">${escapeHtml(item.title)}</span>
+          <span class="cmdk-item-meta">${escapeHtml(meta)}</span>
+        </span>
       </a>`;
     }).join('');
   }
