@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ContactLinks from '../components/ContactLinks.astro';
 import HeroTitlePage from '../components/HeroTitlePage.astro';
 import NewsletterSignup from '../components/NewsletterSignup.astro';
+import SectionPath from '../components/SectionPath.astro';
 import { getPublishedCollection, getStartHerePath, readMinutesOf } from '../lib/essays';
 
 const ulyssesEntries = await getPublishedCollection('ulysses');
@@ -44,8 +45,9 @@ const threads = [
   description="Essays on the hidden mechanics of choice: what makes people act, and who profits when they do."
   active="home"
 >
-<main id="main-content">
+<main id="main-content" style="position:relative;">
 
+  <SectionPath />
   <HeroTitlePage />
 
   <!-- ============ 01 — ABOUT (grounding band) ============ -->

@@ -1,0 +1,165 @@
+---
+/**
+ * A vertical ink line connecting the homepage's numbered sections (01-05),
+ * living in the content column's outer margin (same gutter the .wm
+ * watermark letters bleed into — see global.css). Distinct from
+ * ScrollProgress.astro's #cc-prog (a full-viewport-edge "how far down the
+ * whole page" rail): this one only spans section 01 to section 05, and its
+ * five diamond nodes light up in sync with each section's own scroll-reveal
+ * rather than tracking raw scroll position.
+ *
+ * Exact node Y-offsets can't be known at build time (they depend on
+ * rendered content height and viewport width), so this ships hidden and a
+ * runtime script measures + reveals it. That means it's a progressive
+ * enhancement with no no-JS fallback — acceptable here since it's
+ * aria-hidden and purely decorative, same as the site's other JS-driven
+ * flourishes (marquee velocity, ripple, cursor light).
+ */
+---
+<div class="section-path" aria-hidden="true">
+  <svg class="sp-svg" width="2" style="position:absolute;left:0;top:0;overflow:visible;">
+    <line x1="1" y1="0" x2="1" y2="100%" stroke="var(--coal-line)" stroke-width="1.5"></line>
+    <line class="sp-fill" x1="1" y1="0" x2="1" y2="100%" pathLength="100" stroke="var(--ember-vivid)" stroke-width="1.5" stroke-dasharray="100" stroke-dashoffset="100"></line>
+  </svg>
+</div>
+
+<style>
+  .section-path {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  /* Same gutter-availability breakpoint as .wm in global.css — below this
+     width there's no outer margin for either to live in. */
+  @media (min-width: 1360px) {
+    .section-path { display: block; }
+  }
+  .sp-node {
+    position: absolute;
+    left: -2.5px;
+    width: 7px;
+    height: 7px;
+    transform: translateY(-50%) rotate(45deg);
+    background: var(--coal);
+    border: 1.5px solid var(--coal-line);
+    transition: background 0.4s ease, border-color 0.4s ease;
+  }
+  .sp-node.is-lit {
+    background: var(--ember-vivid);
+    border-color: var(--ember-vivid);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sp-fill, .sp-node { transition: none !important; }
+  }
+</style>
+
+<script>
+  let cleanupSectionPath: (() => void) | null = null;
+
+  function motionOK() {
+    try { return !window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+    catch (e) { return true; }
+  }
+
+  function setupSectionPath() {
+    if (cleanupSectionPath) { cleanupSectionPath(); cleanupSectionPath = null; }
+
+    const root = document.querySelector('.section-path') as HTMLElement | null;
+    const main = document.getElementById('main-content');
+    const fill = document.querySelector('.sp-fill') as SVGLineElement | null;
+    if (!root || !main || !fill) return;
+
+    // The five numbered section header rows, in document order.
+    const markers = Array.from(main.querySelectorAll('.cc-num')) as HTMLElement[];
+    if (markers.length < 2) return;
+
+    root.querySelectorAll('.sp-node').forEach((n) => n.remove());
+
+    let sectionYs: number[] = [];
+    let spanStart = 0;
+    let spanEnd = 0;
+
+    const measure = () => {
+      const mainTop = main.getBoundingClientRect().top;
+      sectionYs = markers.map((m) => m.getBoundingClientRect().top - mainTop);
+      spanStart = sectionYs[0];
+      spanEnd = sectionYs[sectionYs.length - 1];
+
+      root.style.top = spanStart + 'px';
+      root.style.height = Math.max(1, spanEnd - spanStart) + 'px';
+      const svg = root.querySelector('.sp-svg') as SVGSVGElement;
+      svg.setAttribute('height', String(Math.max(1, spanEnd - spanStart)));
+
+      root.querySelectorAll('.sp-node').forEach((n) => n.remove());
+      sectionYs.forEach((y) => {
+        const node = document.createElement('div');
+        node.className = 'sp-node';
+        node.style.top = (y - spanStart) + 'px';
+        root.appendChild(node);
+      });
+
+      root.style.opacity = '1';
+    };
+
+    const reduceMotion = !motionOK();
+
+    // Node lighting rides on this same scroll handler rather than a
+    // separate IntersectionObserver — matching the *exact* concern already
+    // documented in site-fx.js's _activate(): "IntersectionObserver can be
+    // unreliable in some embeds." A geometry check here is one less moving
+    // part, not just a workaround: it reuses the getBoundingClientRect data
+    // this function already needs for the dashoffset math. Threshold
+    // (0.92 of viewport height) matches site-fx.js's own IO-fallback check.
+    const nodeEls = () => root.querySelectorAll('.sp-node');
+    const litFlags: boolean[] = markers.map(() => false);
+
+    const updateScroll = () => {
+      if (reduceMotion) return; // fully drawn already, see below
+      const mainTop = main.getBoundingClientRect().top; // negative once scrolled past
+      const scrolledPast = -mainTop; // px scrolled since main's top entered
+      const span = Math.max(1, spanEnd - spanStart);
+      const progress = Math.min(1, Math.max(0, (scrolledPast - spanStart) / span));
+      fill.setAttribute('stroke-dashoffset', String(100 * (1 - progress)));
+
+      const nodes = nodeEls();
+      markers.forEach((m, i) => {
+        if (litFlags[i]) return;
+        if (m.getBoundingClientRect().top <= innerHeight * 0.92) {
+          litFlags[i] = true;
+          nodes[i]?.classList.add('is-lit');
+        }
+      });
+    };
+
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => { updateScroll(); ticking = false; });
+    };
+    const onResize = () => { measure(); updateScroll(); };
+
+    measure();
+
+    if (reduceMotion) {
+      fill.setAttribute('stroke-dashoffset', '0');
+      root.querySelectorAll('.sp-node').forEach((n) => n.classList.add('is-lit'));
+    } else {
+      updateScroll();
+      window.addEventListener('scroll', onScroll, { passive: true });
+    }
+    window.addEventListener('resize', onResize, { passive: true });
+
+    cleanupSectionPath = () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onResize);
+    };
+  }
+
+  document.addEventListener('astro:page-load', setupSectionPath);
+</script>
