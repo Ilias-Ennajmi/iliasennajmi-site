@@ -11,6 +11,8 @@ const style = size === 'lg' ? 'font-size:clamp(1.6rem,3.5vw,2.6rem);' : undefine
 const links = [
   { label: 'Email', href: `mailto:${SITE.email}`, accent: 'ember', external: false },
   { label: 'LinkedIn', href: SITE.social.linkedin, accent: 'tide', external: true },
+  { label: 'Instagram', href: SITE.social.instagram, accent: 'ember', external: true },
+  { label: 'Threads', href: SITE.social.threads, accent: 'tide', external: true },
   { label: 'Substack', href: SITE.social.substack, accent: 'ember', external: true },
 ].filter((l): l is { label: string; href: string; accent: string; external: boolean } => Boolean(l.href));
 ---

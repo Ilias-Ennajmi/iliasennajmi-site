@@ -8,8 +8,10 @@
 export const SITE = {
   email: 'hello@iliasennajmi.com',
   social: {
-    linkedin: null as string | null,
-    substack: null as string | null,
+    linkedin: 'https://www.linkedin.com/in/ilias-ennajmi/' as string | null,
+    instagram: 'https://www.instagram.com/ilias.ennajmi/' as string | null,
+    threads: 'https://www.threads.com/@ilias.ennajmi' as string | null,
+    substack: 'https://substack.com/@iliasennajmi' as string | null,
     x: null as string | null,
   },
   /** Last hand-review of the /about "Now" block and the Shelf. Bump when you actually update them. */
