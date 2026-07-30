@@ -74,7 +74,7 @@ body { overflow-x: hidden; }
 
 a { color: inherit; text-decoration: none; }
 
-a:focus-visible, [tabindex]:focus-visible {
+a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
   outline: 2px solid var(--ember);
   outline-offset: 3px;
   border-radius: 1px;
