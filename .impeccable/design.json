@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-28T00:00:00.000Z",
+  "title": "Design System: Ilias Ennajmi — Why people act, who profits",
+  "extensions": {
+    "colorMeta": {
+      "paper": { "role": "neutral", "displayName": "Warm Beige Paper", "canonical": "oklch(92.4% 0.015 80.7)", "tonalRamp": ["oklch(15% 0.015 80.7)", "oklch(30% 0.015 80.7)", "oklch(42% 0.015 80.7)", "oklch(55% 0.015 80.7)", "oklch(65% 0.015 80.7)", "oklch(75% 0.015 80.7)", "oklch(85% 0.015 80.7)", "oklch(95% 0.015 80.7)"] },
+      "paper-soft": { "role": "neutral", "displayName": "Paper Soft", "canonical": "oklch(89.1% 0.025 83.4)" },
+      "paper-line": { "role": "neutral", "displayName": "Paper Line (hairline)", "canonical": "rgba(41, 28, 15, 0.14)" },
+      "ink": { "role": "neutral", "displayName": "Ink Black", "canonical": "oklch(23.9% 0.030 65.5)", "tonalRamp": ["oklch(15% 0.030 65.5)", "oklch(30% 0.030 65.5)", "oklch(42% 0.030 65.5)", "oklch(55% 0.030 65.5)", "oklch(65% 0.030 65.5)", "oklch(75% 0.030 65.5)", "oklch(85% 0.030 65.5)", "oklch(95% 0.030 65.5)"] },
+      "umber": { "role": "neutral", "displayName": "Faded Umber", "canonical": "oklch(41.0% 0.032 64.9)", "tonalRamp": ["oklch(15% 0.032 64.9)", "oklch(30% 0.032 64.9)", "oklch(42% 0.032 64.9)", "oklch(55% 0.032 64.9)", "oklch(65% 0.032 64.9)", "oklch(75% 0.032 64.9)", "oklch(85% 0.032 64.9)", "oklch(95% 0.032 64.9)"] },
+      "coffee": { "role": "secondary", "displayName": "Coffee Brown (Ulysses strand)", "canonical": "oklch(48.5% 0.060 70.2)", "tonalRamp": ["oklch(15% 0.060 70.2)", "oklch(30% 0.060 70.2)", "oklch(42% 0.060 70.2)", "oklch(55% 0.060 70.2)", "oklch(65% 0.060 70.2)", "oklch(75% 0.060 70.2)", "oklch(85% 0.060 70.2)", "oklch(95% 0.060 70.2)"] },
+      "oxblood": { "role": "primary", "displayName": "Oxblood (everyday accent)", "canonical": "oklch(47.6% 0.165 31.1)", "tonalRamp": ["oklch(15% 0.165 31.1)", "oklch(30% 0.165 31.1)", "oklch(42% 0.165 31.1)", "oklch(55% 0.165 31.1)", "oklch(65% 0.165 31.1)", "oklch(75% 0.165 31.1)", "oklch(85% 0.165 31.1)", "oklch(95% 0.165 31.1)"] },
+      "signal-red": { "role": "primary", "displayName": "Signal Red (rare flare)", "canonical": "oklch(57.6% 0.209 30.3)", "tonalRamp": ["oklch(15% 0.209 30.3)", "oklch(30% 0.209 30.3)", "oklch(42% 0.209 30.3)", "oklch(55% 0.209 30.3)", "oklch(65% 0.209 30.3)", "oklch(75% 0.209 30.3)", "oklch(85% 0.209 30.3)", "oklch(95% 0.209 30.3)"] }
+    },
+    "inkModeColorMeta": {
+      "coal": { "displayName": "Ink-mode ground", "canonical": "oklch(22.1% 0.011 73.3)", "hex": "#1e1a15" },
+      "coal-soft": { "displayName": "Ink-mode surface", "canonical": "oklch(25.6% 0.016 71.3)", "hex": "#28221b" },
+      "bone": { "displayName": "Ink-mode text", "canonical": "oklch(94.8% 0.018 81.3)", "hex": "#f4ede1" },
+      "ash": { "displayName": "Ink-mode muted label", "canonical": "oklch(76.4% 0.034 76.4)", "hex": "#bfb09b" },
+      "tide": { "displayName": "Ink-mode Ulysses accent", "canonical": "oklch(73.7% 0.050 70.0)", "hex": "#bfa588" },
+      "ember": { "displayName": "Ink-mode Oxblood", "canonical": "oklch(70.8% 0.156 32.5)", "hex": "#f2775f" },
+      "ember-vivid": { "displayName": "Ink-mode Signal Red", "canonical": "oklch(68.5% 0.206 32.5)", "hex": "#ff5a3c" },
+      "note": "Ink mode is a full mirrored dark theme, toggled via data-theme on <html>, not a separate design language — same roles, same rules, inverted lightness."
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display (Fraunces)", "purpose": "Hero titles, page h1s, drop caps, blockquote text. Tight leading, slightly negative tracking." },
+      "body": { "displayName": "Body (EB Garamond)", "purpose": "Essay paragraph text. Generous 1.66 line-height is the system's single most load-bearing typographic decision." },
+      "label": { "displayName": "Label (Space Grotesk mono)", "purpose": "All UI chrome — nav, buttons, eyebrows, metadata. Always uppercase, always wide-tracked, never full sentences." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "ease-standard", "value": "cubic-bezier(.2, .7, .2, 1)", "purpose": "Default easing for reveals, hairline draw-ins, and section transitions." },
+      { "name": "ease-snap", "value": "cubic-bezier(.7, 0, .2, 1)", "purpose": "Sharper easing for the mobile drawer and other UI-chrome slides." },
+      { "name": "ink-pour", "value": "clip-path circle() expansion, .6s cubic-bezier(.2,.7,.2,1)", "purpose": "Signature theme-toggle transition: a flat disc of the incoming theme's background expands from the clicked button before the real theme flips underneath it." },
+      { "name": "diamond-flash", "value": "meter-complete .7s cubic-bezier(.25,.8,.25,1)", "purpose": "One-shot scale+rotate flash on the reading meter's diamond the instant an essay is finished." }
+    ],
+    "breakpoints": [
+      { "name": "mobile-nav", "value": "860px" },
+      { "name": "watermark-margin", "value": "1360px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary CTA (pill button)",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Standalone call-to-action, e.g. 'See all Ulysses →'. Pill-shaped, border-only, no fill ever.",
+      "html": "<a href=\"#\" class=\"ds-btn-primary\">See all Ulysses →</a>",
+      "css": ".ds-btn-primary { display: inline-block; font-family: 'Space Grotesk Variable', sans-serif; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--oxblood, #a52716); border: 1px solid rgba(41,28,15,0.14); border-radius: 40px; padding: 14px 26px; text-decoration: none; transition: border-color .3s, letter-spacing .3s; } .ds-btn-primary:hover { border-color: var(--oxblood, #a52716); letter-spacing: 0.22em; } .ds-btn-primary:focus-visible { outline: 2px solid var(--oxblood, #a52716); outline-offset: 3px; }"
+    },
+    {
+      "name": "Icon Utility Button",
+      "kind": "button",
+      "refersTo": "button-icon",
+      "description": "Square utility button (theme toggle, search trigger) — sharp corners, hairline border, no fill.",
+      "html": "<button class=\"ds-btn-icon\" aria-label=\"Search\">&#9673;</button>",
+      "css": ".ds-btn-icon { display: inline-flex; align-items: center; justify-content: center; background: none; border: 1px solid rgba(41,28,15,0.14); color: #574738; width: 36px; min-height: 36px; padding: 0; font-size: 0.9rem; cursor: pointer; transition: color .25s, border-color .25s; } .ds-btn-icon:hover { color: #291c0f; border-color: #574738; } .ds-btn-icon:focus-visible { outline: 2px solid #a52716; outline-offset: 3px; }"
+    },
+    {
+      "name": "Search Input",
+      "kind": "input",
+      "refersTo": "input-search",
+      "description": "Borderless input sitting inside a bordered parent (command palette). Set in Display type so search feels like writing.",
+      "html": "<input type=\"text\" class=\"ds-input-search\" placeholder=\"Search essays…\" />",
+      "css": ".ds-input-search { flex: 1; width: 100%; background: none; border: none; outline: none; font-family: 'Fraunces Variable', Georgia, serif; font-size: 1.2rem; color: #291c0f; } .ds-input-search::placeholder { color: #574738; opacity: 0.7; }"
+    },
+    {
+      "name": "Nav Link",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Primary nav item — Label typography, Umber at rest, Ink + accent underline when active.",
+      "html": "<a href=\"#\" class=\"ds-nav-link ds-nav-link--active\">Topics</a>",
+      "css": ".ds-nav-link { position: relative; font-family: 'Space Grotesk Variable', sans-serif; font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: #574738; text-decoration: none; transition: color .25s; } .ds-nav-link:hover { color: #291c0f; } .ds-nav-link--active { color: #291c0f; } .ds-nav-link--active::after { content: ''; position: absolute; left: 0; right: 0; bottom: -6px; height: 1.5px; background: #a52716; }"
+    },
+    {
+      "name": "List Item (search result / topic row)",
+      "kind": "custom",
+      "refersTo": "list-item",
+      "description": "Flex row with a leading diamond marker, 1px bottom border, background-shift on hover/active — the shared shape for command-palette results, topic rows, and shelf items.",
+      "html": "<a href=\"#\" class=\"ds-list-item\"><span class=\"ds-list-item-dot\"></span><span class=\"ds-list-item-body\"><span class=\"ds-list-item-title\">Anchoring in the wild</span><span class=\"ds-list-item-meta\">Ilias · Pricing · 6 min</span></span></a>",
+      "css": ".ds-list-item { display: flex; align-items: flex-start; gap: 12px; padding: 13px 20px; border-bottom: 1px solid rgba(41,28,15,0.14); text-decoration: none; cursor: pointer; transition: background .15s ease; } .ds-list-item:hover, .ds-list-item:focus-visible { background: rgba(41,28,15,0.14); } .ds-list-item-dot { width: 6px; height: 6px; flex: none; margin-top: 7px; background: #a52716; transform: rotate(45deg); } .ds-list-item-body { min-width: 0; flex: 1; } .ds-list-item-title { display: block; font-family: 'Fraunces Variable', Georgia, serif; font-weight: 500; font-size: 1.05rem; line-height: 1.3; color: #291c0f; } .ds-list-item-meta { display: block; font-family: 'Space Grotesk Variable', sans-serif; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: #574738; margin-top: 3px; }"
+    },
+    {
+      "name": "Card (lead / featured)",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Sharp-cornered container, hairline border, Paper Soft background shift as its only interactive feedback.",
+      "html": "<a href=\"#\" class=\"ds-card\"><span class=\"ds-card-eyebrow\">Featured</span><span class=\"ds-card-title\">Start here — a curated path through both strands</span></a>",
+      "css": ".ds-card { display: block; background: #e3dac9; border: 1px solid rgba(41,28,15,0.14); border-radius: 0; padding: clamp(24px, 3.5vw, 42px); text-decoration: none; transition: background .45s ease; } .ds-card-eyebrow { display: block; font-family: 'Space Grotesk Variable', sans-serif; font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase; color: #a52716; margin-bottom: 10px; } .ds-card-title { display: block; font-family: 'Fraunces Variable', Georgia, serif; font-weight: 500; font-size: clamp(1.4rem, 2.5vw, 1.9rem); color: #291c0f; }"
+    },
+    {
+      "name": "Diamond Marker",
+      "kind": "custom",
+      "refersTo": "diamond-marker",
+      "description": "The system's one recurring decorative shape — a rotated square, reused as bullet, tick, active-dot, and section node across every page.",
+      "html": "<span class=\"ds-diamond\"></span>",
+      "css": ".ds-diamond { display: inline-block; width: 7px; height: 7px; background: #a52716; transform: rotate(45deg); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Reading Room",
+    "overview": "A quiet, paper-and-ink space built for uninterrupted long-form reading — every decision defers to the words on the page rather than competing with them. The voice is unhurried and precise: pacing is editorial, never urgent, with nothing on the page performing for attention it hasn't earned. Two long-form strands (Ulysses for psychology, Ilias for marketing) are typographically identical twins distinguished only by a single accent-color swap (coffee brown vs. oxblood red), so the reading experience itself argues the site's whole thesis — these are the same mechanism, seen from two angles. Depth is conveyed only through tonal layering and hairline dividers, never shadows; color is almost entirely absent except for one recurring red, spent rarely and on purpose. The repeated diamond mark — a small square rotated 45°, standing in for bullets, ticks, active-state dots, and section nodes — is the system's one recurring shape, doing quietly everywhere what a logo would do loudly.",
+    "keyCharacteristics": [
+      "Warm beige paper ground with near-black ink text — never true white/black",
+      "Exactly one accent hue family (oxblood/signal-red), spent sparingly",
+      "Flat surfaces throughout: zero box-shadows, depth via tone + hairline only",
+      "Sharp rectangular edges by default; pill and circle are the only rounded exceptions",
+      "One recurring diamond mark as the sole decorative motif",
+      "Fully mirrored dark (\"ink\") theme, toggled with a signature circular ink-pour transition"
+    ],
+    "rules": [
+      { "name": "The One Accent Rule", "body": "Exactly one hue family (Oxblood/Signal Red) is allowed to carry emphasis or urgency anywhere in the system. Coffee is not a second accent — it exists solely to mark 'this is Ulysses content,' never as a general highlight color.", "section": "colors" },
+      { "name": "The Vivid-Is-Rare Rule", "body": "Signal Red is reserved for headline punctuation, drop caps, and pull-quote accents. The moment it would appear in body copy, a link, or any surface larger than a few square centimeters, use Oxblood instead — Signal Red's whole effect depends on staying rare.", "section": "colors" },
+      { "name": "The Mono-Never-Reads Rule", "body": "Space Grotesk appears only as short uppercase labels and UI chrome. It never sets a sentence of actual prose.", "section": "typography" },
+      { "name": "The Paper Doesn't Float Rule", "body": "Zero box-shadows exist anywhere in the system. Depth is conveyed entirely through tonal layering and 1px hairline dividers. A design that reaches for a shadow to separate two surfaces has reached for the wrong tool here.", "section": "elevation" },
+      { "name": "The Sharp-Except-Pills Rule", "body": "Rectangular elements carry zero corner radius by default. Two deliberate exceptions: CTA buttons (40px pill) and small circular dots/nodes (50%). Nothing else rounds.", "section": "shapes" }
+    ],
+    "dos": [
+      "Do treat the rotated-square diamond as the system's only decorative marker shape — reuse it rather than introducing a second icon/bullet motif.",
+      "Do keep Signal Red rare: headline punctuation, drop caps, pull-quote borders only.",
+      "Do set every label/eyebrow/nav/meta string in Label typography (mono, uppercase, wide-tracked) — never in Body or Display.",
+      "Do convey separation with a Paper Line hairline or a Paper→Paper Soft tone shift, never a shadow.",
+      "Do reserve the 40px pill radius for standalone CTA buttons only.",
+      "Do honor prefers-reduced-motion on every animated component by rendering the end state instantly instead."
+    ],
+    "donts": [
+      "Don't add a box-shadow anywhere; the system has none and depends on having none.",
+      "Don't introduce a second general-purpose accent color — Coffee is strand-scoped, not a spare accent.",
+      "Don't round a card, panel, image, or embed's corners — 0 radius is the default, not an oversight.",
+      "Don't set body prose in Space Grotesk, or a UI label in EB Garamond — the pairing's whole effect depends on that boundary staying crisp.",
+      "Don't embed a real third-party logo or brand mark, even as a placeholder."
+    ]
+  }
+}
