@@ -29,7 +29,7 @@ const links = [
   </div>
 
   <div style="display:flex;align-items:center;gap:clamp(14px,2vw,24px);">
-    <button id="sn-theme-btn" type="button" aria-label="Switch between paper and ink theme" style="display:flex;align-items:center;justify-content:center;background:none;border:1px solid var(--coal-line);cursor:pointer;color:var(--ash);width:36px;min-height:36px;padding:0;font-size:0.9rem;line-height:1;-webkit-tap-highlight-color:transparent;transition:color .25s,border-color .25s;">◐</button>
+    <button id="sn-theme-btn" type="button" aria-label="Switch between paper and ink theme" aria-pressed="false" style="display:flex;align-items:center;justify-content:center;background:none;border:1px solid var(--coal-line);cursor:pointer;color:var(--ash);width:36px;min-height:36px;padding:0;font-size:0.9rem;line-height:1;-webkit-tap-highlight-color:transparent;transition:color .25s,border-color .25s;">◐</button>
     <button id="sn-search-btn" type="button" aria-label="Search essays" style="display:flex;align-items:center;gap:8px;background:none;border:1px solid var(--coal-line);cursor:pointer;font-family:var(--mono);font-size:0.6rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--ash);padding:8px 12px;min-height:36px;-webkit-tap-highlight-color:transparent;">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
       <span class="sn-search-label" style="display:none;">⌘K</span>
@@ -99,6 +99,10 @@ const links = [
     const themeBtn = document.getElementById('sn-theme-btn');
     if (themeBtn) {
       const reduceMotion = () => { try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } };
+      // Reflect the theme actually applied pre-paint (see BaseLayout's
+      // no-flash inline script), not just clicks, so a reader who loads
+      // straight into ink mode still gets a correct initial aria-pressed.
+      themeBtn.setAttribute('aria-pressed', String(document.documentElement.getAttribute('data-theme') === 'ink'));
       // Any in-flight pour gets torn down before starting the next one, so
       // rapid re-clicking can't stack overlays.
       let activePour = null;
@@ -106,6 +110,7 @@ const links = [
       themeBtn.addEventListener('click', (e) => {
         const root = document.documentElement;
         const toInk = root.getAttribute('data-theme') !== 'ink';
+        themeBtn.setAttribute('aria-pressed', String(toInk));
         const applyTheme = () => {
           if (toInk) root.setAttribute('data-theme', 'ink');
           else root.removeAttribute('data-theme');

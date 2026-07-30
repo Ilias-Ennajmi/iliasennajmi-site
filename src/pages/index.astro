@@ -78,21 +78,12 @@ const threads = [
 
   <!-- ============ 02 — THE FORK ============ -->
   <section id="fork" style="max-width:1180px;margin:0 auto;padding:clamp(4.5rem,9vw,7.5rem) clamp(22px,6vw,64px);">
-    <div data-reveal style="display:flex;align-items:baseline;gap:16px;margin-bottom:clamp(1.6rem,3vw,2.4rem);font-family:var(--mono);font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ash);">
+    <h2 data-reveal style="margin:0 0 clamp(1.6rem,3vw,2.4rem);display:flex;align-items:baseline;gap:16px;font-family:var(--mono);font-weight:400;font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ash);">
       <span><span class="cc-num" data-to="2">02</span> — The Fork</span>
       <span class="cc-rule"></span>
       <span style="color:var(--ash);">Two ways down the same hole</span>
-    </div>
+    </h2>
     <p data-reveal style="font-family:var(--body);font-weight:300;font-size:clamp(1.1rem,2vw,1.35rem);line-height:1.5;color:var(--ash);max-width:46ch;margin:0 0 clamp(2.2rem,4vw,3.2rem);text-wrap:pretty;">The writing splits in two. One side asks <span style="font-style:italic;">why</span> people act. The other asks <span style="position:relative;white-space:nowrap;font-style:italic;color:var(--ember);">who profits<span class="cc-uline" style="position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--ember);transform:scaleX(0);transform-origin:left center;transition:transform .85s cubic-bezier(.2,.7,.2,1);"></span></span> when they do. Pick a door.</p>
-
-    <a href="/start/" class="charge featured-card" data-reveal style="position:relative;display:block;background:var(--coal-soft);border:1px solid var(--coal-line);padding:clamp(24px,3.5vw,42px) clamp(24px,4vw,48px);margin:0 0 clamp(2.2rem,4vw,3.2rem);transition:background .45s ease;">
-      <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;margin-bottom:clamp(1rem,2vw,1.5rem);font-family:var(--mono);font-size:0.62rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;">
-        <span style="display:inline-flex;align-items:center;gap:10px;color:var(--tide);"><span style="width:7px;height:7px;background:var(--tide);transform:rotate(45deg);"></span>New here?</span>
-        <span style="color:var(--ash);">{startHere.length} essays · ~{startHereMinutes} min</span>
-      </div>
-      <div class="featured-title" style="font-family:var(--display);font-weight:500;font-size:clamp(1.7rem,3.6vw,2.8rem);line-height:1.02;letter-spacing:-0.012em;text-wrap:balance;transition:color .4s ease;">Start Here</div>
-      <p style="font-family:var(--body);font-weight:300;font-style:italic;color:var(--ash);font-size:clamp(1rem,1.6vw,1.2rem);line-height:1.45;margin:0.9rem 0 0;max-width:62ch;text-wrap:pretty;">Four essays, in a deliberate order, that show the whole idea in miniature — why people act, and who profits when they do.</p>
-    </a>
 
     <div class="cc-fork" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1px;background:var(--coal-line);border-top:1px solid var(--coal-line);border-bottom:1px solid var(--coal-line);">
       <a href="/ulysses/" class="js-ulysses charge" data-reveal style="position:relative;overflow:hidden;background:var(--coal);display:flex;flex-direction:column;justify-content:space-between;gap:clamp(2.4rem,6vw,4.5rem);min-height:clamp(300px,33vw,440px);padding:clamp(28px,3.5vw,48px);transition:background .45s ease,opacity .45s ease,filter .45s ease;">
@@ -118,16 +109,22 @@ const threads = [
         <span class="fork-underline-ember" style="position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--ember);transition:width .55s cubic-bezier(.2,.7,.2,1);"></span>
       </a>
     </div>
+
+    <a href="/start/" class="charge start-pill" data-reveal style="display:inline-flex;align-items:center;gap:10px;margin-top:clamp(1.8rem,3vw,2.6rem);font-family:var(--mono);font-size:0.68rem;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--ash);border:1px solid var(--coal-line);border-radius:40px;padding:14px 26px;transition:border-color .3s,color .3s;">
+      <span style="width:6px;height:6px;background:var(--ash);transform:rotate(45deg);flex:none;"></span>
+      New here? Start Here — {startHere.length} essays, ~{startHereMinutes} min →
+    </a>
   </section>
 
   <!-- ============ 03 — LOOSE THREADS (marquee) ============ -->
   <section style="padding:clamp(4.5rem,9vw,7.5rem) 0;border-top:1px solid var(--coal-line);overflow:hidden;">
     <div style="max-width:1180px;margin:0 auto;padding:0 clamp(22px,6vw,64px);">
-      <div data-reveal style="display:flex;align-items:baseline;gap:16px;font-family:var(--mono);font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ash);">
+      <h2 data-reveal style="margin:0;display:flex;align-items:baseline;flex-wrap:wrap;gap:16px;font-family:var(--mono);font-weight:400;font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ash);">
         <span><span class="cc-num" data-to="3">03</span> — Loose Threads</span>
         <span class="cc-rule"></span>
         <span>A public notebook — some become essays</span>
-      </div>
+      </h2>
+      <button type="button" id="marq-toggle" data-reveal aria-pressed="false" style="margin-top:14px;font-family:var(--mono);font-size:0.6rem;letter-spacing:0.16em;text-transform:uppercase;background:none;border:1px solid var(--coal-line);color:var(--ash);padding:7px 14px;cursor:pointer;transition:color .25s,border-color .25s;">Pause scrolling</button>
     </div>
     <div class="marqrow" style="margin-top:clamp(2.6rem,4.5vw,3.8rem);display:flex;width:max-content;animation:cc-marqL 64s linear infinite;cursor:default;">
       {[0, 1].map(() => (
@@ -149,10 +146,10 @@ const threads = [
 
   <!-- ============ 04 — THE SHELF ============ -->
   <section style="max-width:1180px;margin:0 auto;padding:clamp(4.5rem,9vw,7.5rem) clamp(22px,6vw,64px);border-top:1px solid var(--coal-line);">
-    <div data-reveal style="display:flex;align-items:baseline;gap:16px;margin-bottom:clamp(2rem,4vw,3rem);font-family:var(--mono);font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ash);">
+    <h2 data-reveal style="margin:0 0 clamp(2rem,4vw,3rem);display:flex;align-items:baseline;gap:16px;font-family:var(--mono);font-weight:400;font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ash);">
       <span><span class="cc-num" data-to="4">04</span> — The Shelf</span>
       <span class="cc-rule"></span>
-    </div>
+    </h2>
     <div data-reveal style="font-family:var(--display);font-weight:500;font-size:clamp(1.9rem,4vw,3rem);line-height:1.04;letter-spacing:-0.01em;max-width:24ch;margin-bottom:clamp(2.6rem,5vw,4rem);">Whatever's shaping the work right now.</div>
     <div data-reveal style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:clamp(30px,4vw,60px);">
       {shelves.map((col) => (
@@ -193,12 +190,11 @@ const threads = [
 
 <style>
   .more-link:hover { gap: 16px; }
-  .featured-card:hover { background: #efe8d6; }
-  .featured-card:hover .featured-title { color: var(--tide); }
-  .js-ulysses:hover { background: #e8e1cf; }
+  .start-pill:hover { border-color: var(--ember); color: var(--ember); }
+  .js-ulysses:hover { background: var(--coal-soft); }
   .js-ulysses:hover .fork-title { color: var(--tide); }
   .js-ulysses:hover .fork-underline { width: 100%; }
-  .js-ilias:hover { background: #efe7d4; }
+  .js-ilias:hover { background: var(--coal-soft); }
   .js-ilias:hover .fork-title-ember { color: var(--ember); }
   .js-ilias:hover .fork-underline-ember { width: 100%; }
   .shelf-link:hover { letter-spacing: 0.22em; }
@@ -301,12 +297,25 @@ const threads = [
   function initMarquee() {
     if (cleanupMarquee) cleanupMarquee();
     const row = document.querySelector('.marqrow') as HTMLElement | null;
-    if (!row || !motionOK()) return;
-    let marqBoost = 0, marqHover = false, lastSY: number | null = null, lastST = 0;
+    const toggleBtn = document.getElementById('marq-toggle') as HTMLButtonElement | null;
+    if (!row || !motionOK()) { if (toggleBtn) toggleBtn.style.display = 'none'; return; }
+    if (toggleBtn) toggleBtn.style.display = '';
+    let marqBoost = 0, marqHover = false, userPaused = false, lastSY: number | null = null, lastST = 0;
     let rafId = 0;
-    const onEnter = () => { marqHover = true; };
-    const onLeave = () => { marqHover = false; };
-    const onClick = () => { marqHover = !marqHover; };
+    // Hover pauses/resumes only while the user hasn't explicitly toggled
+    // pause via the button/tap — an explicit pause should stick even if the
+    // pointer later enters or leaves the row.
+    const onEnter = () => { if (!userPaused) marqHover = true; };
+    const onLeave = () => { if (!userPaused) marqHover = false; };
+    const setPaused = (paused: boolean) => {
+      userPaused = paused;
+      marqHover = paused;
+      if (toggleBtn) {
+        toggleBtn.setAttribute('aria-pressed', String(paused));
+        toggleBtn.textContent = paused ? 'Resume scrolling' : 'Pause scrolling';
+      }
+    };
+    const onToggle = () => setPaused(!userPaused);
     const onScroll = () => {
       const y = window.scrollY || 0;
       const now = performance.now();
@@ -319,7 +328,8 @@ const threads = [
     row.addEventListener('mouseenter', onEnter);
     row.addEventListener('mouseleave', onLeave);
     const touchOnly = window.matchMedia('(hover:none)').matches;
-    if (touchOnly) row.addEventListener('click', onClick);
+    if (touchOnly) row.addEventListener('click', onToggle);
+    if (toggleBtn) toggleBtn.addEventListener('click', onToggle);
     window.addEventListener('scroll', onScroll, { passive: true });
     const tick = () => {
       const anims = row.getAnimations ? row.getAnimations() : [];
@@ -340,7 +350,8 @@ const threads = [
     cleanupMarquee = () => {
       row.removeEventListener('mouseenter', onEnter);
       row.removeEventListener('mouseleave', onLeave);
-      if (touchOnly) row.removeEventListener('click', onClick);
+      if (touchOnly) row.removeEventListener('click', onToggle);
+      if (toggleBtn) toggleBtn.removeEventListener('click', onToggle);
       window.removeEventListener('scroll', onScroll);
       cancelAnimationFrame(rafId);
     };
