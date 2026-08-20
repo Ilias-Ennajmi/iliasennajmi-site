@@ -112,7 +112,7 @@ function boot() {
           <span style="width:3px;height:3px;border-radius:50%;background:var(--coal-line);"></span>
           <span>${esc(lead.date)}</span>
         </div>
-        <div class="lead-title" style="font-family:var(--display);font-weight:500;font-size:clamp(2.4rem,6vw,4.6rem);line-height:0.98;letter-spacing:-0.015em;transition:color .35s;text-wrap:balance;">${esc(lead.title)}</div>
+        <div class="lead-title" style="font-family:var(--display);font-weight:500;font-size:clamp(2.4rem,6vw,4.6rem);line-height:0.98;letter-spacing:-0.015em;transition:color .35s;text-wrap:balance;overflow-wrap:break-word;">${esc(lead.title)}</div>
         <p style="font-family:var(--body);font-weight:400;font-size:clamp(1.1rem,1.8vw,1.35rem);color:var(--acc);margin:clamp(1rem,2vw,1.4rem) 0 0;max-width:64ch;line-height:1.5;text-wrap:pretty;">${esc(lead.standfirst)}</p>
         <span style="display:inline-block;margin-top:clamp(1.2rem,2vw,1.8rem);font-family:var(--mono);font-size:0.62rem;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--acc);">Read essay →</span>
       </a>`;
@@ -120,12 +120,12 @@ function boot() {
     rest.forEach((p) => {
       html += `<a href="${p.href}" class="charge js-row" data-reveal style="position:relative;display:grid;grid-template-columns:64px 1fr auto;gap:clamp(16px,3vw,40px);align-items:baseline;padding:clamp(1.5rem,3vw,2.2rem) 0;border-bottom:1px solid var(--coal-line);transition:padding-left .4s cubic-bezier(.2,.7,.2,1);"><span class="row-tick"></span>
         <span style="font-family:var(--mono);font-size:0.66rem;letter-spacing:0.04em;color:var(--acc);padding-top:0.4rem;">${esc(p.no)}</span>
-        <div>
+        <div style="min-width:0;">
           <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:14px;margin-bottom:0.55rem;font-family:var(--mono);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);">
             <span style="color:var(--acc);">${esc(p.tag)}</span>
             <span>${esc(p.read)}</span>
           </div>
-          <div class="row-title" style="font-family:var(--display);font-weight:500;font-size:clamp(1.5rem,3.2vw,2.5rem);line-height:1.04;letter-spacing:-0.01em;transition:color .35s;">${esc(p.title)}</div>
+          <div class="row-title" style="font-family:var(--display);font-weight:500;font-size:clamp(1.5rem,3.2vw,2.5rem);line-height:1.04;letter-spacing:-0.01em;transition:color .35s;overflow-wrap:break-word;">${esc(p.title)}</div>
         </div>
         <span style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.06em;color:var(--ash);white-space:nowrap;padding-top:0.4rem;">${esc(p.date)}</span>
       </a>`;
