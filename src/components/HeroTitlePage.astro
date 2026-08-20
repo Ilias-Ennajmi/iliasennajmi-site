@@ -45,7 +45,11 @@
       <a href="/ilias/" class="js-seam-who charge" style="color:var(--ember);text-decoration:none;">a marketing strategist</a>
     </div>
 
-    <div aria-hidden="true" style="margin-top:clamp(1.2rem,2.4vh,1.6rem);color:var(--ember-vivid);font-size:0.7rem;letter-spacing:0.3em;">◆ ◆ ◆ ◆ ◆</div>
+    <div aria-hidden="true" style="display:flex;gap:0.5em;margin-top:clamp(1.2rem,2.4vh,1.6rem);">
+      {Array.from({ length: 5 }).map(() => (
+        <span style="width:6px;height:6px;background:var(--ember-vivid);transform:rotate(45deg);flex:none;"></span>
+      ))}
+    </div>
 
     <blockquote style="margin:clamp(1.6rem,3vh,2.2rem) 0 0;font-family:var(--display);font-weight:400;font-style:italic;font-size:clamp(1.1rem,2.2vw,1.4rem);line-height:1.4;color:var(--bone);max-width:38ch;text-wrap:pretty;">&ldquo;Guy realizes free will isn&rsquo;t real, immediately monetizes the observation.&rdquo;</blockquote>
     <div style="margin-top:0.7rem;font-family:var(--mono);font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);">— a Hacker News commenter, not wrong</div>

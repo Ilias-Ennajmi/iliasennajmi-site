@@ -55,7 +55,7 @@ const accentVar = `var(--${accent})`;
         <div style="font-family:var(--display);font-weight:500;font-size:clamp(1.4rem,2.6vw,2rem);line-height:1.1;">{otherCard.heading}</div>
         <p style="font-family:var(--body);font-weight:300;font-style:italic;color:var(--ash);margin:0.6rem 0 0;font-size:1.05rem;">{otherCard.blurb}</p>
       </div>
-      <a href={otherCard.ctaHref} class={`charge other-cta other-cta-${otherCard.ctaAccent}`} style="font-family:var(--mono);font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--other-acc);border:1px solid var(--coal-line);border-radius:40px;padding:14px 26px;transition:border-color .3s,letter-spacing .3s;">{otherCard.ctaLabel}</a>
+      <a href={otherCard.ctaHref} class={`charge pill-cta other-cta-${otherCard.ctaAccent}`}>{otherCard.ctaLabel}</a>
     </div>
   </section>
 </main>
@@ -77,8 +77,12 @@ function boot() {
       btn.type = 'button';
       btn.textContent = name;
       const active = name === activeTag;
-      btn.style.cssText = 'font-family:var(--mono);font-size:0.6rem;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;background:none;border:none;cursor:pointer;padding:6px 0;transition:color .25s,border-color .25s;border-bottom:1.5px solid transparent;'
-        + (active ? `color:var(--coal);background:${accentVar};border-radius:40px;padding:6px 15px;` : 'color:var(--ash);');
+      btn.setAttribute('aria-pressed', String(active));
+      // Fixed padding + min-height regardless of state, so the pill's hit
+      // area always clears the 44px touch-target minimum and selecting a
+      // tag doesn't reflow neighboring chips.
+      btn.style.cssText = 'font-family:var(--mono);font-size:0.6rem;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;background:none;border:none;cursor:pointer;display:inline-flex;align-items:center;min-height:44px;padding:0 15px;border-radius:40px;transition:color .25s,background .25s;'
+        + (active ? `color:var(--coal);background:${accentVar};` : 'color:var(--ash);');
       btn.addEventListener('click', () => { activeTag = name; renderTags(); renderList(); });
       bar.appendChild(btn);
     });
