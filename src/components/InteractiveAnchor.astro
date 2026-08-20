@@ -36,8 +36,9 @@
         <span class="ad-label">Your estimate</span>
         <span class="ad-input-wrap">
           <span class="ad-currency" aria-hidden="true">€</span>
-          <input type="number" class="ad-input" inputmode="numeric" min="0" step="1000" placeholder="0" aria-label="Your estimate in euros" />
+          <input type="number" class="ad-input" inputmode="numeric" min="0" step="1000" placeholder="0" aria-label="Your estimate in euros" aria-describedby="ad-error" />
         </span>
+        <span class="ad-error" id="ad-error" role="alert"></span>
       </label>
       <button type="button" class="ad-btn ad-btn-go" data-submit>Reveal</button>
     </div>
@@ -117,6 +118,11 @@
     font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.16em;
     text-transform: uppercase; color: var(--ash);
   }
+  .ad-error {
+    font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.05em;
+    color: var(--acc, var(--ember)); min-height: 1.4em;
+  }
+  .ad-error:empty { display: none; }
   .ad-input-wrap { display: flex; align-items: center; border: 1px solid var(--coal-line); background: var(--coal); }
   .ad-currency { padding: 0 0 0 14px; font-family: var(--body); font-size: 1.05rem; color: var(--ash); }
   .ad-input {
@@ -150,6 +156,7 @@
     const steps = Array.from(root.querySelectorAll<HTMLElement>('.ad-step'));
     const input = root.querySelector<HTMLInputElement>('.ad-input');
     const guessEl = root.querySelector<HTMLElement>('.ad-guess');
+    const errorEl = root.querySelector<HTMLElement>('.ad-error');
     const listeners: Array<() => void> = [];
 
     const on = <K extends keyof HTMLElementEventMap>(el: Element, type: K, fn: (e: HTMLElementEventMap[K]) => void) => {
@@ -169,6 +176,7 @@
       root.querySelectorAll('.ad-anchor-value').forEach((el) => { el.textContent = money(anchor); });
       root.querySelectorAll('.ad-other-value').forEach((el) => { el.textContent = money(other); });
       if (input) input.value = '';
+      setError('');
       show(1);
     };
 
@@ -185,12 +193,22 @@
       });
     });
 
+    const setError = (msg: string) => { if (errorEl) errorEl.textContent = msg; };
+
     const reveal = () => {
-      const raw = Number(input?.value);
-      if (!input || !input.value.trim() || !Number.isFinite(raw) || raw < 0) {
-        input?.focus();
+      if (!input) return;
+      if (!input.value.trim()) {
+        setError('Put a number in first.');
+        input.focus();
         return;
       }
+      const raw = Number(input.value);
+      if (!Number.isFinite(raw) || raw < 0) {
+        setError('Needs to be a real number, zero or more.');
+        input.focus();
+        return;
+      }
+      setError('');
       if (guessEl) guessEl.textContent = money(Math.round(raw));
       // Which anchor the reader happened to get is the interesting dimension:
       // it's the only thing that differs between the two groups.
@@ -200,7 +218,10 @@
 
     const submitBtn = root.querySelector('[data-submit]');
     if (submitBtn) on(submitBtn, 'click', reveal);
-    if (input) on(input, 'keydown', (e) => { if ((e as KeyboardEvent).key === 'Enter') { e.preventDefault(); reveal(); } });
+    if (input) {
+      on(input, 'keydown', (e) => { if ((e as KeyboardEvent).key === 'Enter') { e.preventDefault(); reveal(); } });
+      on(input, 'input', () => setError(''));
+    }
 
     const resetBtn = root.querySelector('[data-reset]');
     if (resetBtn) on(resetBtn, 'click', start);
