@@ -36,9 +36,12 @@ const daysSinceLaunch = Math.max(0, Math.floor((Date.now() - LAUNCH_DATE.getTime
        instead of a template's default "label / big number / note" shape. -->
   <section style="max-width:900px;margin:0 auto;padding:0 clamp(22px,6vw,64px) clamp(4.5rem,8vw,7rem);">
     <p data-reveal style="font-family:var(--display);font-weight:400;font-size:clamp(1.6rem,3.4vw,2.5rem);line-height:1.4;letter-spacing:-0.008em;color:var(--bone);margin:0;text-wrap:pretty;">
-      <span style="font-weight:500;color:var(--ember);">{all.length}</span> essays published — {ulysses.length} Ulysses, {ilias.length} Ilias.
-      <span style="font-weight:500;color:var(--ember);">{totalWords.toLocaleString()}</span> words written, essay bodies only; doesn't count the drafts that never made it.
-      <span style="font-weight:500;color:var(--ember);">{totalMinutes}</span> minutes, cover to cover, at roughly 220 words a minute.
+      {/* Astro/JSX trims whitespace-only text that spans a newline down to
+          nothing (not down to a space) -- {' '} forces a real space at each
+          sentence boundary instead of relying on source line breaks. */}
+      <span style="font-weight:500;color:var(--ember);">{all.length}</span> essays published — {ulysses.length} Ulysses, {ilias.length} Ilias.{' '}
+      <span style="font-weight:500;color:var(--ember);">{totalWords.toLocaleString()}</span> words written, essay bodies only; doesn't count the drafts that never made it.{' '}
+      <span style="font-weight:500;color:var(--ember);">{totalMinutes}</span> minutes, cover to cover, at roughly 220 words a minute.{' '}
       And <span style="font-weight:500;color:var(--ember);">{daysSinceLaunch}</span> days since launch — built slowly, on purpose.
     </p>
   </section>
