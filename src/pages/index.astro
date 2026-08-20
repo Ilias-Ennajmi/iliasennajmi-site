@@ -95,7 +95,7 @@ const threads = [
         {latestU && (
           <div style="font-family:var(--mono);font-size:0.62rem;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);display:flex;align-items:baseline;gap:10px;"><span style="color:var(--tide);">Latest</span><span style="font-family:var(--body);font-style:italic;text-transform:none;letter-spacing:0;font-size:0.95rem;color:var(--bone);">{latestU.data.title}</span></div>
         )}
-        <span class="fork-underline" style="position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--tide);transition:width .55s cubic-bezier(.2,.7,.2,1);"></span>
+        <span class="fork-underline" style="position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--tide);transform:scaleX(0);transform-origin:left center;transition:transform .55s cubic-bezier(.2,.7,.2,1);"></span>
       </a>
       <a href="/ilias/" class="js-ilias charge" data-reveal style="position:relative;overflow:hidden;background:var(--coal);display:flex;flex-direction:column;justify-content:space-between;gap:clamp(2.4rem,6vw,4.5rem);min-height:clamp(300px,33vw,440px);padding:clamp(28px,3.5vw,48px);transition:background .45s ease,opacity .45s ease,filter .45s ease;">
         <div style="display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--ember);"><span>II — Ilias</span><span>→</span></div>
@@ -106,7 +106,7 @@ const threads = [
         {latestI && (
           <div style="font-family:var(--mono);font-size:0.62rem;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);display:flex;align-items:baseline;gap:10px;"><span style="color:var(--ember);">Latest</span><span style="font-family:var(--body);font-style:italic;text-transform:none;letter-spacing:0;font-size:0.95rem;color:var(--bone);">{latestI.data.title}</span></div>
         )}
-        <span class="fork-underline-ember" style="position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--ember);transition:width .55s cubic-bezier(.2,.7,.2,1);"></span>
+        <span class="fork-underline-ember" style="position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--ember);transform:scaleX(0);transform-origin:left center;transition:transform .55s cubic-bezier(.2,.7,.2,1);"></span>
       </a>
     </div>
 
@@ -193,10 +193,10 @@ const threads = [
   .start-pill:hover { border-color: var(--ember); color: var(--ember); }
   .js-ulysses:hover { background: var(--coal-soft); }
   .js-ulysses:hover .fork-title { color: var(--tide); }
-  .js-ulysses:hover .fork-underline { width: 100%; }
+  .js-ulysses:hover .fork-underline { transform: scaleX(1); }
   .js-ilias:hover { background: var(--coal-soft); }
   .js-ilias:hover .fork-title-ember { color: var(--ember); }
-  .js-ilias:hover .fork-underline-ember { width: 100%; }
+  .js-ilias:hover .fork-underline-ember { transform: scaleX(1); }
   .shelf-link:hover { letter-spacing: 0.22em; }
 </style>
 

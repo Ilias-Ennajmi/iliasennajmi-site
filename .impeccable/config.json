@@ -1,0 +1,26 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "layout-transition",
+        "value": "*",
+        "files": [
+          "src/components/StrandList.astro"
+        ],
+        "createdAt": "2026-08-20T15:29:26.281Z",
+        "reason": "js-row's padding-left hover-shift can't convert to transform without restructuring the JS-templated grid, because .row-tick is an absolutely-positioned sibling anchored to the row's left edge -- a transform on the row would drag the tick along with it and break the reveal effect. Confirmed lead-card (no such child) converted to transform cleanly; this one is a scoped, evaluated exception, not a default."
+      },
+      {
+        "rule": "layout-transition",
+        "value": "*",
+        "files": [
+          "src/styles/global.css"
+        ],
+        "createdAt": "2026-08-20T15:29:32.846Z",
+        "reason": "The .shelf-note hover-reveal (line ~235) animates max-height because the note text has variable, unknown length -- height:auto can't be transitioned, and max-height with a generous ceiling is the standard technique for revealing unknown-height content without squashing/distorting it the way scaleY would. Domain-appropriate exception, not an oversight."
+      }
+    ]
+  }
+}
