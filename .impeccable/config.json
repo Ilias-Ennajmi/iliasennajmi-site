@@ -22,6 +22,51 @@
         ],
         "createdAt": "2026-08-20T15:29:32.846Z",
         "reason": "The .shelf-note hover-reveal (line ~235) animates max-height because the note text has variable, unknown length -- height:auto can't be transitioned, and max-height with a generous ceiling is the standard technique for revealing unknown-height content without squashing/distorting it the way scaleY would. Domain-appropriate exception, not an oversight."
+      },
+      {
+        "rule": "design-system-color",
+        "value": "rgba(255, 90, 60, 0.30)",
+        "files": [
+          "src/styles/global.css"
+        ],
+        "createdAt": "2026-08-20T15:58:50.941Z",
+        "reason": "Ink-mode ::selection background tint, derived from ink-mode's own --ember-vivid (#ff5a3c) at 30% opacity -- an intentional selection-highlight color, not a stray literal."
+      },
+      {
+        "rule": "design-system-radius",
+        "value": "1px",
+        "files": [
+          "src/styles/global.css"
+        ],
+        "createdAt": "2026-08-20T15:58:51.339Z",
+        "reason": "The global :focus-visible outline's corner radius (paired with outline-offset:3px) -- functionally indistinguishable from sharp (0), the intent DESIGN.md's Sharp-Except-Pills rule actually cares about. Confirmed both occurrences (lines 80, 163) are this same focus-ring rule."
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#fff",
+        "files": [
+          "src/styles/global.css"
+        ],
+        "createdAt": "2026-08-20T15:58:51.684Z",
+        "reason": "Inside @media print (line 353-385): true black/white is the correct, intentional override for printed output, not a themed-surface color drifting from the palette."
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#000",
+        "files": [
+          "src/styles/global.css"
+        ],
+        "createdAt": "2026-08-20T15:58:51.994Z",
+        "reason": "Inside @media print -- same print-only true-black override as #fff above, used 5x for text/border color in the printed essay view."
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#555",
+        "files": [
+          "src/styles/global.css"
+        ],
+        "createdAt": "2026-08-20T15:58:52.354Z",
+        "reason": "Inside @media print -- the printed footnote-URL annotation's color, a muted print-only gray with no on-screen equivalent needed."
       }
     ]
   }
