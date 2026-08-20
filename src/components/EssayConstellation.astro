@@ -59,6 +59,14 @@ const edges = left
     <g class="cn-edges" fill="none" stroke="var(--coal-line)" stroke-width="1.4">
       {edges.map((e) => <path d={e.d} data-edge data-a={e.from} data-b={e.to} />)}
     </g>
+    {/* Same-shaped path per edge, normalized to pathLength=100 (matches
+        SectionPath.astro's convention) so a short dash can travel along it
+        at a constant visual speed regardless of the curve's real length.
+        Shares data-edge/data-a/data-b with its sibling above, so the
+        existing hover JS below activates both with no changes. */}
+    <g class="cn-edges-pulse" fill="none">
+      {edges.map((e) => <path d={e.d} data-edge data-a={e.from} data-b={e.to} class="cn-edge-pulse" pathLength="100" stroke-dasharray="8 92" stroke-dashoffset="100" />)}
+    </g>
 
     <text x={LX} y="22" class="cn-head cn-head-uly">ULYSSES</text>
     <text x={RX} y="22" class="cn-head cn-head-ili">ILIAS</text>
@@ -133,6 +141,13 @@ const edges = left
   .constellation[data-focus] [data-edge]:not([data-active]) { opacity: 0.18; }
   .constellation [data-edge][data-active] { stroke: var(--ash); stroke-width: 2; }
 
+  /* signal pulse: a short dash chasing along the active pairing's edge,
+     visible only while that edge is active (see the shared data-active
+     toggle in the script below). */
+  .cn-edge-pulse { stroke: var(--acc-node, var(--ember)); stroke-width: 2; stroke-linecap: round; opacity: 0; }
+  .constellation [data-edge][data-active].cn-edge-pulse { opacity: 0.9; animation: cn-pulse-travel 1.2s linear infinite; }
+  @keyframes cn-pulse-travel { from { stroke-dashoffset: 100; } to { stroke-dashoffset: -100; } }
+
   .cn-cap {
     display: flex; flex-wrap: wrap; align-items: center; gap: 10px 22px;
     margin-top: clamp(1rem, 2vw, 1.6rem);
@@ -147,6 +162,7 @@ const edges = left
 
   @media (prefers-reduced-motion: reduce) {
     .cn-dot, .cn-node text, .cn-node rect, .constellation [data-edge] { transition: none !important; }
+    .cn-edge-pulse, .constellation [data-edge][data-active].cn-edge-pulse { animation: none !important; opacity: 0 !important; }
   }
 </style>
 

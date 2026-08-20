@@ -68,6 +68,14 @@ const jsonLd = {
 const canonicalUrl = new URL(`/essays/${entry.data.id}/`, Astro.site).toString();
 const citation = `Ennajmi, Ilias. "${entry.data.title}." Ilias Ennajmi, ${entry.data.date}. ${canonicalUrl}.`;
 const share = shareLinks(canonicalUrl, entry.data.title);
+
+// Author-set only (see content.config.ts) -- absent means no tag, same as
+// every other nullable-field convention on this site.
+const epistemicLabel: Record<string, string> = {
+  confident: 'Confident',
+  exploratory: 'Still working this out',
+  revised: 'Revised since publishing',
+};
 ---
 <BaseLayout
   title={`${entry.data.title} — Ilias Ennajmi`}
@@ -86,10 +94,22 @@ const share = shareLinks(canonicalUrl, entry.data.title);
   </div>
 
   <div id="highlight-popover" class="no-print" style="position:absolute;display:none;z-index:9000;transform:translate(-50%,-100%);margin-top:-10px;">
-    <button type="button" id="highlight-copy-btn" style="background:var(--bone);color:var(--coal);font-family:var(--mono);font-size:0.64rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;border:none;padding:9px 16px;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:8px;">
-      <span style={`width:6px;height:6px;background:${accentVar};transform:rotate(45deg);display:inline-block;`}></span>
-      Copy quote
-    </button>
+    <div id="highlight-actions" style="display:flex;background:var(--bone);white-space:nowrap;">
+      <button type="button" id="highlight-copy-btn" style="background:none;color:var(--coal);font-family:var(--mono);font-size:0.64rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;border:none;border-right:1px solid rgba(41,28,15,0.2);padding:9px 16px;cursor:pointer;display:flex;align-items:center;gap:8px;">
+        <span style={`width:6px;height:6px;background:${accentVar};transform:rotate(45deg);display:inline-block;`}></span>
+        Copy quote
+      </button>
+      <button type="button" id="highlight-note-btn" style="background:none;color:var(--coal);font-family:var(--mono);font-size:0.64rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;border:none;padding:9px 16px;cursor:pointer;">
+        Note
+      </button>
+    </div>
+    <div id="note-composer" style="display:none;background:var(--bone);padding:10px;width:240px;">
+      <textarea id="note-composer-input" rows="2" placeholder="Why? (just for you)" style="width:100%;resize:vertical;background:var(--coal);color:var(--bone);border:1px solid rgba(41,28,15,0.3);font-family:var(--body);font-size:0.9rem;padding:8px;box-sizing:border-box;"></textarea>
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:8px;">
+        <button type="button" id="note-composer-cancel" style="background:none;border:none;color:var(--coal);opacity:0.7;font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;padding:6px 4px;">Cancel</button>
+        <button type="button" id="note-composer-save" style="background:var(--coal);color:var(--bone);border:none;font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;padding:6px 12px;">Save</button>
+      </div>
+    </div>
   </div>
 
   <main id="main-content">
@@ -104,6 +124,12 @@ const share = shareLinks(canonicalUrl, entry.data.title);
           <span>{readLabel} read</span>
           <span style="width:3px;height:3px;border-radius:50%;background:var(--coal-line);"></span>
           <span>{entry.data.date}</span>
+          {entry.data.epistemicStatus && (
+            <Fragment>
+              <span style="width:3px;height:3px;border-radius:50%;background:var(--coal-line);"></span>
+              <span style="font-style:italic;color:var(--ash);text-transform:none;letter-spacing:normal;font-family:var(--body);font-size:0.78rem;">{epistemicLabel[entry.data.epistemicStatus]}</span>
+            </Fragment>
+          )}
         </div>
         <h1 style="margin:0;font-family:var(--display);font-weight:500;font-size:clamp(2.5rem,6.4vw,4.6rem);line-height:1.0;letter-spacing:-0.018em;text-wrap:balance;">{entry.data.title}</h1>
         <p style="font-family:var(--body);font-weight:400;font-style:italic;font-size:clamp(1.25rem,2.4vw,1.7rem);line-height:1.42;color:var(--tide);margin:clamp(1.6rem,3vw,2.2rem) 0 0;text-wrap:pretty;">{entry.data.standfirst}</p>
@@ -128,6 +154,8 @@ const share = shareLinks(canonicalUrl, entry.data.title);
             <button type="button" class="charge share-link save-btn" style="background:none;border:none;padding:0;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;cursor:pointer;">Save</button>
             <span class="listen-sep" style="width:3px;height:3px;border-radius:50%;background:var(--acc);display:none;"></span>
             <button type="button" class="charge share-link listen-btn" style="display:none;background:none;border:none;padding:0;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;cursor:pointer;">Listen</button>
+            <span style="width:3px;height:3px;border-radius:50%;background:var(--acc);"></span>
+            <button type="button" class="charge share-link print-btn" style="background:none;border:none;padding:0;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;cursor:pointer;">Print</button>
           </div>
         </div>
       </div>
@@ -168,6 +196,10 @@ const share = shareLinks(canonicalUrl, entry.data.title);
         <span style="width:8px;height:8px;background:var(--acc);transform:rotate(45deg);display:inline-block;"></span>
         <span>{endLabel}</span>
       </div>
+      {/* Filled in only once the reader actually finishes -- see the
+          visibility-gated timer in the script below. Never shown for a
+          skim/scroll-past, only a real completion. */}
+      <p data-pace-reveal class="no-print" style="margin:0.7rem 0 0;font-family:var(--body);font-style:italic;font-size:0.92rem;color:var(--ash);opacity:0;transition:opacity .6s ease;"></p>
     </article>
 
     {paired && (
@@ -210,6 +242,44 @@ const share = shareLinks(canonicalUrl, entry.data.title);
 
 <style>
   .back-link:hover { gap: 15px; }
+  #highlight-note-btn:hover, #highlight-copy-btn:hover { background: rgba(41,28,15,0.06); }
+  #note-composer-save:hover { background: var(--acc, var(--ember)); }
+  .reader-note {
+    margin: 0.9rem 0 1.6rem;
+    padding-left: clamp(16px, 3vw, 24px);
+    border-left: 2px solid var(--ash);
+  }
+  .reader-note-label {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ash);
+    margin-bottom: 0.4rem;
+  }
+  .reader-note p {
+    margin: 0;
+    font-family: var(--body);
+    font-style: italic;
+    font-size: 0.98rem;
+    line-height: 1.5;
+    color: var(--bone);
+  }
+  .reader-note-remove {
+    margin-top: 0.5rem;
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: var(--mono);
+    font-size: 0.56rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ash);
+    cursor: pointer;
+    transition: color .25s;
+  }
+  .reader-note-remove:hover { color: var(--acc, var(--ember)); }
   .essay-toc summary::-webkit-details-marker { display: none; }
   .essay-toc[open] .toc-chev { transform: rotate(180deg); }
   .toc-link:hover { color: var(--acc) !important; }
@@ -227,6 +297,18 @@ const share = shareLinks(canonicalUrl, entry.data.title);
   let cleanupSidenoteResize = null;
   let cleanupListen = null;
   let cleanupReadingLog = null;
+  let cleanupPace = null;
+
+  // Which direct child of .essay-body a selection/click landed in -- stable
+  // across visits since published content doesn't change, so it doubles as
+  // a durable address for a reader's own margin note.
+  function nearestBodyChildIndex(node) {
+    const body = document.querySelector('.essay-body');
+    if (!body || !node) return -1;
+    let el = node.nodeType === 3 ? node.parentElement : node;
+    while (el && el.parentElement !== body) el = el.parentElement;
+    return el ? Array.from(body.children).indexOf(el) : -1;
+  }
 
   // ---- Listen to this essay (Web Speech API, no dependency) ----
   // Feature-detected: hidden entirely rather than shown broken on browsers
@@ -298,6 +380,94 @@ const share = shareLinks(canonicalUrl, entry.data.title);
     };
     window.addEventListener('cc:essay-complete', onComplete);
     cleanupReadingLog = () => window.removeEventListener('cc:essay-complete', onComplete);
+  }
+
+  // ---- Reading-pace reveal ----
+  // Only counts time the tab was actually visible (Page Visibility API), so
+  // leaving the essay open in a background tab for an hour doesn't produce
+  // a dishonest "you read this in 63 minutes." Compared against the
+  // displayed estimate only once the reader genuinely finishes.
+  function setupPaceReveal() {
+    if (cleanupPace) cleanupPace();
+    let activeMs = 0;
+    let lastResume = document.hidden ? null : performance.now();
+    const onVisibility = () => {
+      if (document.hidden) {
+        if (lastResume != null) { activeMs += performance.now() - lastResume; lastResume = null; }
+      } else {
+        lastResume = performance.now();
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+
+    const onComplete = (e) => {
+      if (!e.detail || e.detail.essay !== essayMeta.id) return;
+      if (lastResume != null) { activeMs += performance.now() - lastResume; lastResume = performance.now(); }
+      const el = document.querySelector('[data-pace-reveal]');
+      if (!el || !essayMeta.minutes) return;
+      const actualMin = activeMs / 60000;
+      const estMin = essayMeta.minutes;
+      const diff = estMin - actualMin;
+      let msg;
+      if (actualMin < 0.2) return; // too fast to mean anything (e.g. a bounce that still fired the event)
+      if (Math.abs(diff) < 0.5) msg = `You read this in almost exactly the estimated ${estMin} min.`;
+      else if (diff > 0) msg = `You read this in about ${Math.max(1, Math.round(actualMin))} min — ${Math.round(diff)} faster than the estimate.`;
+      else msg = `You read this in about ${Math.round(actualMin)} min — ${Math.round(-diff)} slower than the estimate. No judgment; attention isn't a stopwatch.`;
+      el.textContent = msg;
+      el.style.opacity = '1';
+    };
+    window.addEventListener('cc:essay-complete', onComplete);
+
+    cleanupPace = () => {
+      document.removeEventListener('visibilitychange', onVisibility);
+      window.removeEventListener('cc:essay-complete', onComplete);
+    };
+  }
+
+  // ---- Margin rebuttals ----
+  // Private, this-browser-only counter-notes the reader leaves on a
+  // paragraph via the same selection popover used for quoting. Addressed by
+  // .essay-body child index (see nearestBodyChildIndex above), not by a
+  // serialized Range, since published content never changes underneath it.
+  function renderRebuttals() {
+    const body = document.querySelector('.essay-body');
+    if (!body) return;
+    body.querySelectorAll('.reader-note').forEach((n) => n.remove());
+    let notes = [];
+    try { notes = JSON.parse(localStorage.getItem('rebuttals-' + essayMeta.id) || '[]'); } catch (e) { notes = []; }
+    const children = Array.from(body.children);
+    notes.forEach((n, i) => {
+      const target = children[n.index];
+      if (!target || !n.text) return;
+      const wrap = document.createElement('div');
+      wrap.className = 'reader-note no-print';
+
+      const label = document.createElement('span');
+      label.className = 'reader-note-label';
+      label.textContent = n.quote
+        ? `Your note — on "${n.quote.length > 60 ? n.quote.slice(0, 60) + '…' : n.quote}"`
+        : 'Your note';
+
+      const p = document.createElement('p');
+      p.textContent = n.text;
+
+      const removeBtn = document.createElement('button');
+      removeBtn.type = 'button';
+      removeBtn.className = 'reader-note-remove';
+      removeBtn.textContent = 'Remove';
+      removeBtn.addEventListener('click', () => {
+        let list = [];
+        try { list = JSON.parse(localStorage.getItem('rebuttals-' + essayMeta.id) || '[]'); } catch (e) { list = []; }
+        list.splice(i, 1);
+        try { localStorage.setItem('rebuttals-' + essayMeta.id, JSON.stringify(list)); } catch (e) { /* private mode */ }
+        renderRebuttals();
+      });
+
+      wrap.appendChild(label);
+      wrap.appendChild(p);
+      wrap.appendChild(removeBtn);
+      target.insertAdjacentElement('afterend', wrap);
+    });
   }
 
   // Footnotes ([^1] syntax, supported by Astro's default GFM markdown)
@@ -399,6 +569,14 @@ const share = shareLinks(canonicalUrl, entry.data.title);
     setupSidenotes();
     setupListen();
     setupReadingLog();
+    setupPaceReveal();
+    renderRebuttals();
+
+    const printBtn = document.querySelector('.print-btn');
+    if (printBtn && !printBtn.dataset.bound) {
+      printBtn.dataset.bound = '1';
+      printBtn.addEventListener('click', () => window.print());
+    }
     if (cleanupSidenoteResize) cleanupSidenoteResize();
     let resizeTimer;
     const onResize = () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(setupSidenotes, 150); };
@@ -461,9 +639,20 @@ const share = shareLinks(canonicalUrl, entry.data.title);
     if (cleanupHighlight) cleanupHighlight();
     const popover = document.getElementById('highlight-popover');
     const copyBtn = document.getElementById('highlight-copy-btn');
+    const noteBtn = document.getElementById('highlight-note-btn');
+    const actionsRow = document.getElementById('highlight-actions');
+    const composer = document.getElementById('note-composer');
+    const composerInput = document.getElementById('note-composer-input');
+    const composerCancel = document.getElementById('note-composer-cancel');
+    const composerSave = document.getElementById('note-composer-save');
     const body = document.querySelector('.essay-body');
-    if (popover && copyBtn && body) {
-      const hide = () => { popover.style.display = 'none'; };
+    if (popover && copyBtn && noteBtn && actionsRow && composer && composerInput && composerCancel && composerSave && body) {
+      let pending = null; // { index, quote }
+      const hide = () => {
+        popover.style.display = 'none';
+        actionsRow.style.display = 'flex';
+        composer.style.display = 'none';
+      };
       const onSelectionEnd = () => {
         const sel = window.getSelection();
         const text = sel ? sel.toString().trim() : '';
@@ -473,7 +662,10 @@ const share = shareLinks(canonicalUrl, entry.data.title);
         popover.style.left = (rect.left + rect.width / 2 + window.scrollX) + 'px';
         popover.style.top = (rect.top + window.scrollY) + 'px';
         popover.style.display = 'block';
+        actionsRow.style.display = 'flex';
+        composer.style.display = 'none';
         copyBtn.dataset.quote = text;
+        pending = { index: nearestBodyChildIndex(sel.anchorNode), quote: text };
       };
       const onCopyClick = async () => {
         const quote = copyBtn.dataset.quote || '';
@@ -487,10 +679,29 @@ const share = shareLinks(canonicalUrl, entry.data.title);
           hide();
         }
       };
+      const onNoteClick = () => {
+        actionsRow.style.display = 'none';
+        composer.style.display = 'block';
+        composerInput.value = '';
+        composerInput.focus();
+      };
+      const onComposerSave = () => {
+        const text = composerInput.value.trim();
+        if (!text || !pending || pending.index < 0) { hide(); return; }
+        let list = [];
+        try { list = JSON.parse(localStorage.getItem('rebuttals-' + essayMeta.id) || '[]'); } catch (e) { list = []; }
+        list.push({ index: pending.index, quote: pending.quote, text, ts: Date.now() });
+        try { localStorage.setItem('rebuttals-' + essayMeta.id, JSON.stringify(list)); } catch (e) { /* private mode */ }
+        hide();
+        renderRebuttals();
+      };
       document.addEventListener('mouseup', onSelectionEnd);
       document.addEventListener('touchend', onSelectionEnd);
       document.addEventListener('scroll', hide, { passive: true });
       copyBtn.addEventListener('click', onCopyClick);
+      noteBtn.addEventListener('click', onNoteClick);
+      composerCancel.addEventListener('click', hide);
+      composerSave.addEventListener('click', onComposerSave);
       cleanupHighlight = () => {
         document.removeEventListener('mouseup', onSelectionEnd);
         document.removeEventListener('touchend', onSelectionEnd);

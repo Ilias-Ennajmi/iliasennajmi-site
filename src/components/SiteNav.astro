@@ -1,10 +1,15 @@
 ---
+import { getPublishedCollection } from '../lib/essays';
+
 interface Props {
   active: 'home' | 'about' | 'ulysses' | 'ilias' | 'shelf' | 'essay' | 'topics' | 'saved' | 'colophon';
 }
 const { active } = Astro.props;
 const on = 'var(--ember)';
 const off = 'var(--ash)';
+// Only source of truth is the actual published count -- read live, so a
+// new essay going live changes the denominator automatically.
+const totalPublished = (await getPublishedCollection('ulysses')).length + (await getPublishedCollection('ilias')).length;
 const links = [
   { href: '/', label: 'Index', key: 'home', num: '01' },
   { href: '/about/', label: 'About', key: 'about', num: '02' },
@@ -23,6 +28,7 @@ const links = [
     {links.map((l) => (
       <a href={l.href} class="sn-link" style={`position:relative;color:${active === l.key ? 'var(--bone)' : 'var(--ash)'};text-decoration:none;transition:color .25s;`}>
         {l.label}
+        {l.key === 'saved' && <span class="sn-progress" data-total={totalPublished} style="display:none;color:var(--ash);"></span>}
         {active === l.key && <span style={`position:absolute;left:0;right:0;bottom:-6px;height:1.5px;background:${l.key === 'ulysses' ? 'var(--tide)' : 'var(--ember)'};`}></span>}
       </a>
     ))}
@@ -56,6 +62,7 @@ const links = [
       <a data-close href={l.href} style="display:flex;align-items:baseline;gap:18px;padding:clamp(15px,2.3vh,22px) 0;border-bottom:1px solid var(--coal-line);min-height:44px;text-decoration:none;">
         <span style={`font-family:var(--mono);font-size:0.6rem;font-weight:500;letter-spacing:0.14em;width:30px;flex:none;color:${active === l.key ? on : off};`}>{l.num}</span>
         <span style="font-family:var(--display);font-weight:500;font-size:clamp(2.1rem,8vw,3rem);line-height:1;letter-spacing:-0.01em;color:var(--bone);">{l.label}</span>
+        {l.key === 'saved' && <span class="sn-progress-mobile" data-total={totalPublished} style="display:none;font-family:var(--mono);font-size:0.62rem;letter-spacing:0.1em;color:var(--ash);"></span>}
       </a>
     ))}
   </nav>
@@ -97,6 +104,21 @@ const links = [
     };
     burger.addEventListener('click', open);
     drawer.querySelectorAll('[data-close]').forEach((el) => el.addEventListener('click', close));
+
+    // Reading progress on the "Saved" link: quiet by design -- stays
+    // hidden for a first-time visitor with nothing finished yet, rather
+    // than opening with "(0/6)".
+    try {
+      const log = JSON.parse(localStorage.getItem('reading-log') || '[]');
+      const done = Array.isArray(log) ? new Set(log.map((r: any) => r && r.id)).size : 0;
+      if (done > 0) {
+        document.querySelectorAll('.sn-progress, .sn-progress-mobile').forEach((el) => {
+          const total = (el as HTMLElement).dataset.total;
+          (el as HTMLElement).textContent = ` (${done}/${total})`;
+          (el as HTMLElement).style.display = 'inline';
+        });
+      }
+    } catch (e) { /* private mode */ }
 
     const themeBtn = document.getElementById('sn-theme-btn');
     if (themeBtn) {

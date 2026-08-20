@@ -10,6 +10,12 @@ const now = [
   { label: 'Stuck on', value: 'One Nina Simone record', note: 'Pastel Blues, side A, on repeat.' },
 ];
 
+// Append a snapshot here each time the block above is actually updated, so
+// this reads as a real changelog rather than an inferred/reconstructed one.
+// Empty is the honest starting state -- nothing to archive before a first
+// real update happens.
+const nowHistory: Array<{ date: string; items: { label: string; value: string }[] }> = [];
+
 const principles = [
   { no: '01', to: 1, title: 'The default is the decision.', body: 'Most choices are settled by whatever required no choice at all. Understand the defaults and you understand the behavior — everything after is theater.' },
   { no: '02', to: 2, title: 'Follow the money, then follow the attention.', body: 'Every nudge has a beneficiary. Asking who profits is not cynicism, it is just reading the incentives honestly before they read you.' },
@@ -69,6 +75,29 @@ const principles = [
           </div>
         ))}
       </div>
+
+      <div data-reveal style="margin-top:clamp(1.6rem,3vw,2.4rem);">
+        <details class="now-history">
+          <summary style="display:flex;align-items:center;gap:10px;cursor:pointer;font-family:var(--mono);font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);list-style:none;-webkit-tap-highlight-color:transparent;">
+            <span class="now-history-chev" aria-hidden="true" style="transition:transform .3s;">→</span>
+            See how this has changed
+          </summary>
+          <div style="margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid var(--coal-line);">
+            {nowHistory.length > 0 ? (
+              nowHistory.map((snap) => (
+                <div style="margin-bottom:1.4rem;">
+                  <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ash);margin-bottom:0.6rem;">{snap.date}</div>
+                  {snap.items.map((it) => (
+                    <div style="font-family:var(--body);font-size:0.98rem;color:var(--ash);"><span style="color:var(--bone);">{it.label}:</span> {it.value}</div>
+                  ))}
+                </div>
+              ))
+            ) : (
+              <p style="margin:0;font-family:var(--body);font-style:italic;color:var(--ash);font-size:0.96rem;">Nothing archived yet — this is the first snapshot since launch. Real entries land here the next time the block above actually changes, not before.</p>
+            )}
+          </div>
+        </details>
+      </div>
     </div>
   </section>
 
@@ -115,6 +144,9 @@ const principles = [
 
 <style>
   a.charge[href="/colophon/"]:hover { color: var(--ember); }
+  .now-history summary::-webkit-details-marker { display: none; }
+  .now-history[open] .now-history-chev { transform: rotate(90deg); }
+  .now-history summary:hover { color: var(--bone); }
 </style>
 
 <script>
