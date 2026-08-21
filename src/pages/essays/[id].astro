@@ -95,7 +95,7 @@ const epistemicLabel: Record<string, string> = {
 
   <div id="highlight-popover" class="no-print" style="position:absolute;display:none;z-index:9000;transform:translate(-50%,-100%);margin-top:-10px;">
     <div id="highlight-actions" style="display:flex;background:var(--bone);white-space:nowrap;">
-      <button type="button" id="highlight-copy-btn" style="background:none;color:var(--coal);font-family:var(--mono);font-size:0.64rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;border:none;border-right:1px solid rgba(41,28,15,0.2);padding:9px 16px;cursor:pointer;display:flex;align-items:center;gap:8px;">
+      <button type="button" id="highlight-copy-btn" style="background:none;color:var(--coal);font-family:var(--mono);font-size:0.64rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;border:none;border-right:1px solid color-mix(in srgb, var(--coal) 20%, transparent);padding:9px 16px;cursor:pointer;display:flex;align-items:center;gap:8px;">
         <span style={`width:6px;height:6px;background:${accentVar};transform:rotate(45deg);display:inline-block;`}></span>
         Copy quote
       </button>
@@ -104,7 +104,7 @@ const epistemicLabel: Record<string, string> = {
       </button>
     </div>
     <div id="note-composer" style="display:none;background:var(--bone);padding:10px;width:240px;">
-      <textarea id="note-composer-input" rows="2" placeholder="Why? (just for you)" style="width:100%;resize:vertical;background:var(--coal);color:var(--bone);border:1px solid rgba(41,28,15,0.3);font-family:var(--body);font-size:0.9rem;padding:8px;box-sizing:border-box;"></textarea>
+      <textarea id="note-composer-input" rows="2" placeholder="Why? (just for you)" style="width:100%;resize:vertical;background:var(--coal);color:var(--bone);border:1px solid var(--coal-line);font-family:var(--body);font-size:0.9rem;padding:8px;box-sizing:border-box;"></textarea>
       <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:8px;">
         <button type="button" id="note-composer-cancel" style="background:none;border:none;color:var(--coal);opacity:0.7;font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;padding:6px 4px;">Cancel</button>
         <button type="button" id="note-composer-save" style="background:var(--coal);color:var(--bone);border:none;font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;padding:6px 12px;">Save</button>
@@ -242,7 +242,7 @@ const epistemicLabel: Record<string, string> = {
 
 <style>
   .back-link:hover { gap: 15px; }
-  #highlight-note-btn:hover, #highlight-copy-btn:hover { background: rgba(41,28,15,0.06); }
+  #highlight-note-btn:hover, #highlight-copy-btn:hover { background: color-mix(in srgb, var(--coal) 6%, transparent); }
   #note-composer-save:hover { background: var(--acc, var(--ember)); }
   .reader-note {
     margin: 0.9rem 0 1.6rem;
@@ -307,7 +307,15 @@ const epistemicLabel: Record<string, string> = {
     if (!body || !node) return -1;
     let el = node.nodeType === 3 ? node.parentElement : node;
     while (el && el.parentElement !== body) el = el.parentElement;
-    return el ? Array.from(body.children).indexOf(el) : -1;
+    if (!el || el.classList.contains('reader-note')) return -1;
+    // Indexed against content children only, excluding any already-rendered
+    // .reader-note divs -- those are real DOM siblings once inserted, and
+    // renderRebuttals() itself always strips them before recomputing
+    // indices, so a second note added in the same page view (after the
+    // first is already on the page) must count against that same
+    // notes-excluded numbering or it saves the wrong paragraph's index.
+    const contentChildren = Array.from(body.children).filter((c) => !c.classList.contains('reader-note'));
+    return contentChildren.indexOf(el);
   }
 
   // ---- Listen to this essay (Web Speech API, no dependency) ----
@@ -653,7 +661,15 @@ const epistemicLabel: Record<string, string> = {
         actionsRow.style.display = 'flex';
         composer.style.display = 'none';
       };
-      const onSelectionEnd = () => {
+      const onSelectionEnd = (e) => {
+        // A click on the popover's own buttons (Note, Cancel, Save, the
+        // textarea) bubbles the same mouseup this listener is on. Without
+        // this guard, mouseup fires first (event order), sees the browser's
+        // own selection already cleared by that click, and calls hide() a
+        // beat before the button's click handler runs -- which is why
+        // clicking "Note" used to close the whole popover instead of
+        // opening the composer.
+        if (e && e.target && popover.contains(e.target)) return;
         const sel = window.getSelection();
         const text = sel ? sel.toString().trim() : '';
         if (!text || sel.rangeCount === 0 || !body.contains(sel.anchorNode)) { hide(); return; }
