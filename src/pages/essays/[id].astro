@@ -699,11 +699,22 @@ const epistemicLabel: Record<string, string> = {
         actionsRow.style.display = 'none';
         composer.style.display = 'block';
         composerInput.value = '';
+        composerInput.style.borderColor = '';
+        composerInput.placeholder = 'Why? (just for you)';
         composerInput.focus();
       };
       const onComposerSave = () => {
         const text = composerInput.value.trim();
-        if (!text || !pending || pending.index < 0) { hide(); return; }
+        if (!pending || pending.index < 0) { hide(); return; }
+        if (!text) {
+          // Don't silently discard the reader's intent -- keep the composer
+          // open, cue the empty field, and put focus back so retrying is
+          // just "type and hit Save again."
+          composerInput.style.borderColor = 'var(--acc, var(--ember))';
+          composerInput.placeholder = 'Write something first';
+          composerInput.focus();
+          return;
+        }
         let list = [];
         try { list = JSON.parse(localStorage.getItem('rebuttals-' + essayMeta.id) || '[]'); } catch (e) { list = []; }
         list.push({ index: pending.index, quote: pending.quote, text, ts: Date.now() });
