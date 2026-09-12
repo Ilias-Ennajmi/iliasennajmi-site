@@ -55,7 +55,10 @@
     <div style="margin-top:0.7rem;font-family:var(--mono);font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);">— a Hacker News commenter, not wrong</div>
   </div>
 
-  <a href="#fork" id="cc-cue" aria-label="Jump to the Fork — choose Ulysses or Ilias" style="position:absolute;left:50%;bottom:clamp(16px,2.6vh,28px);transform:translateX(-50%);z-index:3;">
+  <!-- The visual falling-dot line is intentionally 1px wide; the tappable
+       area is padded well beyond it on every side so the hit target clears
+       44px without changing where the dot itself appears to fall. -->
+  <a href="#fork" id="cc-cue" aria-label="Jump to the Fork — choose Ulysses or Ilias" style="position:absolute;left:50%;bottom:clamp(16px,2.6vh,28px);transform:translateX(-50%);z-index:3;display:inline-flex;align-items:flex-end;justify-content:center;padding:26px 24px 6px;">
     <span style="position:relative;display:block;width:1px;height:38px;background:var(--coal-line);overflow:hidden;"><span style="position:absolute;left:-1px;top:0;width:3px;height:11px;background:var(--ember);animation:cc-fall 2.2s ease-in-out infinite;"></span></span>
   </a>
 </section>
