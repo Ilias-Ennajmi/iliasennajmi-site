@@ -12,12 +12,6 @@ const iliasEntries = await getPublishedCollection('ilias');
 const latestU = ulyssesEntries[0];
 const latestI = iliasEntries[0];
 
-// Whichever strand's newest essay is actually more recent, for the hero's
-// direct read-now link -- ties (same month) fall back to Ulysses, arbitrary
-// but deterministic.
-const latestOverall = latestI && (!latestU || new Date(latestI.data.date) > new Date(latestU.data.date)) ? latestI : latestU;
-const latestEssay = latestOverall ? { href: `/essays/${latestOverall.data.id}/`, title: latestOverall.data.title } : null;
-
 const startHere = await getStartHerePath();
 const startHereMinutes = startHere.reduce((sum, x) => sum + readMinutesOf(x.entry), 0);
 
@@ -92,7 +86,7 @@ const jsonLd = {
 <main id="main-content" style="position:relative;">
 
   <SectionPath />
-  <HeroTitlePage latestEssay={latestEssay} />
+  <HeroTitlePage />
 
   <!-- ============ 01 — ABOUT (grounding band) ============ -->
   <section id="about" style="position:relative;border-top:1px solid var(--coal-line);background:var(--coal-soft);">

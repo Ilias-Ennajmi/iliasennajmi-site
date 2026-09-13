@@ -42,13 +42,21 @@ const links = [
         {readGroup.label}
         {readActive && <span style={`position:absolute;left:0;right:0;bottom:-6px;height:1.5px;background:${active === 'ulysses' ? 'var(--tide)' : 'var(--ember)'};`}></span>}
       </button>
-      <div id="sn-read-panel" class="sn-group-panel" style="position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:18px;min-width:180px;background:var(--coal);border:1px solid var(--coal-line);padding:6px;">
-        {readGroup.children.map((c) => (
-          <a href={c.href} class="sn-read-item" style={`display:flex;flex-direction:column;gap:2px;padding:11px 14px;text-decoration:none;color:${active === c.key ? 'var(--bone)' : 'var(--ash)'};`}>
-            <span style={`font-family:var(--mono);font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:${active === c.key ? (c.key === 'ulysses' ? 'var(--tide)' : 'var(--ember)') : 'inherit'};`}>{c.label}</span>
-            <span style="font-family:var(--body);font-style:italic;font-size:0.78rem;letter-spacing:0;text-transform:none;color:var(--ash);">{c.sub}</span>
-          </a>
-        ))}
+      <!-- The 18px gap between trigger and card is padding (not margin) on
+           this outer wrapper deliberately -- padding stays part of the
+           element's own hoverable box, so the mouse never crosses a "dead"
+           zone with nothing under it on the way from the trigger to the
+           card. A margin-based gap here would drop :hover the instant the
+           cursor left the trigger, closing the panel before it was reached. -->
+      <div id="sn-read-panel" class="sn-group-panel" style="position:absolute;top:100%;left:50%;padding-top:14px;">
+        <div style="min-width:180px;background:var(--coal);border:1px solid var(--coal-line);padding:6px;">
+          {readGroup.children.map((c) => (
+            <a href={c.href} class="sn-read-item" style={`display:flex;flex-direction:column;gap:2px;padding:11px 14px;text-decoration:none;color:${active === c.key ? 'var(--bone)' : 'var(--ash)'};`}>
+              <span style={`font-family:var(--mono);font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:${active === c.key ? (c.key === 'ulysses' ? 'var(--tide)' : 'var(--ember)') : 'inherit'};`}>{c.label}</span>
+              <span style="font-family:var(--body);font-style:italic;font-size:0.78rem;letter-spacing:0;text-transform:none;color:var(--ash);">{c.sub}</span>
+            </a>
+          ))}
+        </div>
       </div>
     </div>
 
@@ -129,13 +137,15 @@ const links = [
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition: opacity .18s ease;
+    transform: translateX(-50%) translateY(-4px);
+    transition: opacity .2s cubic-bezier(.2,.7,.2,1), transform .2s cubic-bezier(.2,.7,.2,1), visibility .2s;
   }
   .sn-group:hover .sn-group-panel,
   .sn-group[data-open="1"] .sn-group-panel {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
   }
   .sn-read-item:hover { color: var(--bone) !important; background: var(--coal-soft); }
   .sn-drawer-group summary::-webkit-details-marker { display: none; }
