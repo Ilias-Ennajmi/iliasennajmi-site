@@ -51,21 +51,20 @@ const nextHref = `/essays/${next.entry.data.id}/`;
 const ogImage = `/og/${entry.data.id}.png`;
 
 const publishedDate = new Date(entry.data.date);
+const canonicalUrl = new URL(`/essays/${entry.data.id}/`, Astro.site).toString();
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Article',
   headline: entry.data.title,
   description: entry.data.standfirst,
-  author: { '@type': 'Person', name: 'Ilias Ennajmi' },
+  author: { '@type': 'Person', name: 'Ilias Ennajmi', url: new URL('/about/', Astro.site).toString() },
   ...(isNaN(publishedDate.getTime()) ? {} : { datePublished: publishedDate.toISOString() }),
   wordCount: wordCount(entry.body ?? ''),
   articleSection: strandLabel,
   keywords: entry.data.tag,
-  mainEntityOfPage: { '@type': 'WebPage', '@id': `/essays/${entry.data.id}/` },
-  image: ogImage,
+  mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
+  image: new URL(ogImage, Astro.site).toString(),
 };
-
-const canonicalUrl = new URL(`/essays/${entry.data.id}/`, Astro.site).toString();
 const citation = `Ennajmi, Ilias. "${entry.data.title}." Ilias Ennajmi, ${entry.data.date}. ${canonicalUrl}.`;
 const share = shareLinks(canonicalUrl, entry.data.title);
 

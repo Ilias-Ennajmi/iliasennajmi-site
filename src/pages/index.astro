@@ -5,6 +5,7 @@ import HeroTitlePage from '../components/HeroTitlePage.astro';
 import NewsletterSignup from '../components/NewsletterSignup.astro';
 import SectionPath from '../components/SectionPath.astro';
 import { getPublishedCollection, getStartHerePath, readMinutesOf } from '../lib/essays';
+import { SITE } from '../lib/site';
 
 const ulyssesEntries = await getPublishedCollection('ulysses');
 const iliasEntries = await getPublishedCollection('ilias');
@@ -39,11 +40,34 @@ const threads = [
   { text: 'Willpower is a budget. Most ads wait for you to overdraw it.', tag: 'ON ATTENTION' },
   { text: 'You didn’t choose the playlist. It chose the version of you that buys.', tag: 'ON DEFAULTS' },
 ];
+
+const sameAs = Object.values(SITE.social).filter((url): url is string => Boolean(url));
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': new URL('/', Astro.site).toString(),
+      name: 'Ilias Ennajmi',
+      description: 'Essays on the hidden mechanics of choice: what makes people act, and who profits when they do.',
+      url: new URL('/', Astro.site).toString(),
+    },
+    {
+      '@type': 'Person',
+      '@id': new URL('/about/', Astro.site).toString(),
+      name: 'Ilias Ennajmi',
+      jobTitle: 'Marketing Strategist',
+      url: new URL('/about/', Astro.site).toString(),
+      sameAs,
+    },
+  ],
+};
 ---
 <BaseLayout
   title="Ilias Ennajmi — Why people act, who profits"
   description="Essays on the hidden mechanics of choice: what makes people act, and who profits when they do."
   active="home"
+  jsonLd={jsonLd}
 >
 <main id="main-content" style="position:relative;">
 
