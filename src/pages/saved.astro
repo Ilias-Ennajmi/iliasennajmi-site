@@ -16,7 +16,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <span style="width:28px;height:1px;background:var(--ember);"></span>For later
       </div>
       <h1 style="margin:0;font-family:var(--display);font-weight:500;font-size:clamp(3rem,9vw,6.5rem);line-height:0.94;letter-spacing:-0.015em;">Saved<span style="color:var(--ember-vivid);">.</span></h1>
-      <p style="font-family:var(--body);font-weight:300;font-style:italic;font-size:clamp(1.15rem,2.2vw,1.5rem);color:var(--bone);opacity:0.82;max-width:52ch;margin:1.6rem 0 0;line-height:1.5;text-wrap:pretty;">Essays you set aside to read later. They live in this browser only — no account, no cloud, no one watching.</p>
+      <p style="font-family:var(--body);font-weight:300;font-style:italic;font-size:clamp(1.15rem,2.2vw,1.5rem);color:var(--bone);opacity:0.82;max-width:52ch;margin:1.6rem 0 0;line-height:1.5;text-wrap:pretty;">Essays you set aside to read later. They live in this browser only: no account, no cloud, no one watching.</p>
     </div>
   </header>
 
@@ -106,7 +106,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
     if (!log.length) {
       root.innerHTML = `<div style="padding:clamp(2rem,4vw,3rem) 0;text-align:center;">
-        <p style="margin:0;font-family:var(--body);font-style:italic;color:var(--ash);font-size:1.05rem;">Nothing recorded yet — finish an essay and it shows up here.</p>
+        <p style="margin:0;font-family:var(--body);font-style:italic;color:var(--ash);font-size:1.05rem;">Nothing recorded yet. Finish an essay and it shows up here.</p>
       </div>`;
       return;
     }

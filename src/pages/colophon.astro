@@ -27,7 +27,7 @@ const daysSinceLaunch = Math.max(0, Math.floor((Date.now() - LAUNCH_DATE.getTime
         <span style="width:28px;height:1px;background:var(--ember);"></span>What this is made of
       </div>
       <h1 style="margin:0;font-family:var(--display);font-weight:500;font-size:clamp(3rem,9vw,6.5rem);line-height:0.94;letter-spacing:-0.015em;">Colophon<span style="color:var(--ember-vivid);">.</span></h1>
-      <p style="font-family:var(--body);font-weight:300;font-style:italic;font-size:clamp(1.15rem,2.2vw,1.5rem);color:var(--bone);opacity:0.82;max-width:56ch;margin:1.6rem 0 0;line-height:1.5;text-wrap:pretty;">A running tally, updated on every deploy — because a site about incentives should be honest about its own.</p>
+      <p style="font-family:var(--body);font-weight:300;font-style:italic;font-size:clamp(1.15rem,2.2vw,1.5rem);color:var(--bone);opacity:0.82;max-width:56ch;margin:1.6rem 0 0;line-height:1.5;text-wrap:pretty;">A running tally, updated on every deploy, because a site about incentives should be honest about its own.</p>
     </div>
   </header>
 
@@ -39,10 +39,10 @@ const daysSinceLaunch = Math.max(0, Math.floor((Date.now() - LAUNCH_DATE.getTime
       {/* Astro/JSX trims whitespace-only text that spans a newline down to
           nothing (not down to a space) -- {' '} forces a real space at each
           sentence boundary instead of relying on source line breaks. */}
-      <span style="font-weight:500;color:var(--ember);">{all.length}</span> essays published — {ulysses.length} Ulysses, {ilias.length} Ilias.{' '}
+      <span style="font-weight:500;color:var(--ember);">{all.length}</span> essays published: {ulysses.length} Ulysses, {ilias.length} Ilias.{' '}
       <span style="font-weight:500;color:var(--ember);">{totalWords.toLocaleString()}</span> words written, essay bodies only; doesn't count the drafts that never made it.{' '}
       <span style="font-weight:500;color:var(--ember);">{totalMinutes}</span> minutes, cover to cover, at roughly 220 words a minute.{' '}
-      And <span style="font-weight:500;color:var(--ember);">{daysSinceLaunch}</span> days since launch — built slowly, on purpose.
+      And <span style="font-weight:500;color:var(--ember);">{daysSinceLaunch}</span> days since launch, built slowly, on purpose.
     </p>
   </section>
 
@@ -53,10 +53,10 @@ const daysSinceLaunch = Math.max(0, Math.floor((Date.now() - LAUNCH_DATE.getTime
         <span class="cc-rule"></span>
       </div>
       <div data-reveal style="font-family:var(--body);font-size:clamp(1.05rem,1.8vw,1.22rem);line-height:1.8;color:var(--tide);">
-        <p style="margin:0 0 1rem;">Astro, statically generated — no server to keep alive, no database to worry about.</p>
+        <p style="margin:0 0 1rem;">Astro, statically generated: no server to keep alive, no database to worry about.</p>
         <p style="margin:0 0 1rem;">Type set in Fraunces, EB Garamond and Space Grotesk, self-hosted as variable fonts, so nothing here depends on a third party to render.</p>
-        <p style="margin:0 0 1rem;">Essays edited from a browser via Decap CMS, authenticated through DecapBridge, committed straight to Git — no database for content either.</p>
-        <p style="margin:0;">Hosted on Netlify, deployed automatically on every push to <code>main</code>.</p>
+        <p style="margin:0 0 1rem;">Essays edited from a browser via Decap CMS, authenticated through DecapBridge, committed straight to Git, with no database for content either.</p>
+        <p style="margin:0;">Hosted on Vercel, deployed automatically on every push to <code>main</code>.</p>
       </div>
     </div>
   </section>

@@ -101,7 +101,7 @@
     const results = document.getElementById('cmdk-results');
     if (!results) return;
     if (!filtered.length) {
-      results.innerHTML = '<div class="cmdk-empty">No matches — try another word.</div>';
+      results.innerHTML = '<div class="cmdk-empty">No matches. Try another word.</div>';
       return;
     }
     let lastGroup: string | undefined;

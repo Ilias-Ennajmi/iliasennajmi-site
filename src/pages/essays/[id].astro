@@ -421,8 +421,8 @@ const epistemicLabel: Record<string, string> = {
       let msg;
       if (actualMin < 0.2) return; // too fast to mean anything (e.g. a bounce that still fired the event)
       if (Math.abs(diff) < 0.5) msg = `You read this in almost exactly the estimated ${estMin} min.`;
-      else if (diff > 0) msg = `You read this in about ${Math.max(1, Math.round(actualMin))} min — ${Math.round(diff)} faster than the estimate.`;
-      else msg = `You read this in about ${Math.round(actualMin)} min — ${Math.round(-diff)} slower than the estimate. No judgment; attention isn't a stopwatch.`;
+      else if (diff > 0) msg = `You read this in about ${Math.max(1, Math.round(actualMin))} min, ${Math.round(diff)} faster than the estimate.`;
+      else msg = `You read this in about ${Math.round(actualMin)} min, ${Math.round(-diff)} slower than the estimate. No judgment; attention isn't a stopwatch.`;
       el.textContent = msg;
       el.style.opacity = '1';
     };

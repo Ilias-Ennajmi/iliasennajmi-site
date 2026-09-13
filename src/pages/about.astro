@@ -17,10 +17,10 @@ const now = [
 const nowHistory: Array<{ date: string; items: { label: string; value: string }[] }> = [];
 
 const principles = [
-  { no: '01', to: 1, title: 'The default is the decision.', body: 'Most choices are settled by whatever required no choice at all. Understand the defaults and you understand the behavior — everything after is theater.' },
+  { no: '01', to: 1, title: 'The default is the decision.', body: 'Most choices are settled by whatever required no choice at all. Understand the defaults and you understand the behavior. Everything after is theater.' },
   { no: '02', to: 2, title: 'Follow the money, then follow the attention.', body: 'Every nudge has a beneficiary. Asking who profits is not cynicism, it is just reading the incentives honestly before they read you.' },
   { no: '03', to: 3, title: 'Write to find out, not to look right.', body: 'I don’t write things I’ve concluded; I write to figure out what I think. If a piece doesn’t surprise me halfway through, it isn’t finished.' },
-  { no: '04', to: 4, title: 'Build slowly, on purpose.', body: 'No growth hacks, no content treadmill. Fewer, better things — made at the speed they actually deserve.' },
+  { no: '04', to: 4, title: 'Build slowly, on purpose.', body: 'No growth hacks, no content treadmill. Fewer, better things, made at the speed they actually deserve.' },
 ];
 ---
 <BaseLayout
@@ -41,7 +41,7 @@ const principles = [
         <span style="width:28px;height:1px;background:var(--ember);"></span>About — The person behind it
       </div>
       <h1 style="margin:0;font-family:var(--display);font-weight:500;font-size:clamp(3.2rem,10vw,7.6rem);line-height:0.92;letter-spacing:-0.015em;text-wrap:balance;">Who's speaking<span style="font-style:italic;color:var(--ember-vivid);">?</span></h1>
-      <p style="font-family:var(--body);font-weight:400;font-size:clamp(1.2rem,2.4vw,1.7rem);color:var(--bone);opacity:0.78;max-width:50ch;margin:1.8rem 0 0;line-height:1.5;text-wrap:pretty;">A marketing strategist who spends his off-hours reverse-engineering the same persuasion he does for a living — and writes the findings down before he can talk himself out of them.</p>
+      <p style="font-family:var(--body);font-weight:400;font-size:clamp(1.2rem,2.4vw,1.7rem);color:var(--bone);opacity:0.78;max-width:50ch;margin:1.8rem 0 0;line-height:1.5;text-wrap:pretty;">A marketing strategist who spends his off-hours reverse-engineering the same persuasion he does for a living, then writes the findings down before he can talk himself out of them.</p>
     </div>
   </header>
 
@@ -49,8 +49,8 @@ const principles = [
   <section style="max-width:1180px;margin:0 auto;padding:clamp(2.5rem,5vw,4rem) clamp(22px,6vw,64px) clamp(4.5rem,9vw,7.5rem);">
     <div style="display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(2.6rem,5vw,4.8rem);align-items:start;">
       <div data-reveal>
-        <p style="font-family:var(--display);font-weight:400;font-size:clamp(1.55rem,3.2vw,2.4rem);line-height:1.24;margin:0 0 1.8rem;letter-spacing:-0.005em;text-wrap:pretty;">I'm <span style="font-style:italic;">Ilias Ennajmi</span> — based in Casablanca, working wherever the interesting problems are.</p>
-        <p style="font-family:var(--body);font-weight:400;font-size:clamp(1.08rem,1.8vw,1.26rem);line-height:1.62;color:var(--tide);margin:0 0 1.4rem;max-width:60ch;text-wrap:pretty;">By day I work in marketing strategy: figuring out how to make people want things, and how to get out of the way once they do. It's a craft built on a slightly uncomfortable premise — that most decisions are made for us long before we think we're making them.</p>
+        <p style="font-family:var(--display);font-weight:400;font-size:clamp(1.55rem,3.2vw,2.4rem);line-height:1.24;margin:0 0 1.8rem;letter-spacing:-0.005em;text-wrap:pretty;">I'm <span style="font-style:italic;">Ilias Ennajmi</span>, based in Casablanca, working wherever the interesting problems are.</p>
+        <p style="font-family:var(--body);font-weight:400;font-size:clamp(1.08rem,1.8vw,1.26rem);line-height:1.62;color:var(--tide);margin:0 0 1.4rem;max-width:60ch;text-wrap:pretty;">By day I work in marketing strategy: figuring out how to make people want things, and how to get out of the way once they do. It's a craft built on a slightly uncomfortable premise: that most decisions are made for us long before we think we're making them.</p>
         <p style="font-family:var(--body);font-weight:400;font-size:clamp(1.08rem,1.8vw,1.26rem);line-height:1.62;color:var(--tide);margin:0 0 1.4rem;max-width:60ch;text-wrap:pretty;">That premise is also what I can't stop writing about. <span style="font-style:italic;">Ulysses</span> is where I take the slow road — psychology, behavior, philosophy, the question of why people act at all. <span style="font-style:italic;">Ilias</span> is the louder half — marketing and strategy, who profits when they do. Same machine, looked at from both ends.</p>
         <p style="font-family:var(--body);font-weight:400;font-size:clamp(1.08rem,1.8vw,1.26rem);line-height:1.62;color:var(--tide);margin:0;max-width:60ch;text-wrap:pretty;">This site is where the two habits argue with each other in public. No newsletter funnel, no course, no five-step framework. Just the thinking, built slowly, on purpose.</p>
       </div>
@@ -93,7 +93,7 @@ const principles = [
                 </div>
               ))
             ) : (
-              <p style="margin:0;font-family:var(--body);font-style:italic;color:var(--ash);font-size:0.96rem;">Nothing archived yet — this is the first snapshot since launch. Real entries land here the next time the block above actually changes, not before.</p>
+              <p style="margin:0;font-family:var(--body);font-style:italic;color:var(--ash);font-size:0.96rem;">Nothing archived yet. This is the first snapshot since launch. Real entries land here the next time the block above actually changes, not before.</p>
             )}
           </div>
         </details>
@@ -129,7 +129,7 @@ const principles = [
       <div data-reveal style="display:flex;flex-wrap:wrap;gap:clamp(24px,5vw,56px);margin-bottom:clamp(1.8rem,3.5vw,2.6rem);">
         <ContactLinks />
       </div>
-      <p data-reveal style="font-family:var(--body);font-weight:300;font-style:italic;color:var(--ash);font-size:clamp(0.95rem,1.6vw,1.1rem);max-width:52ch;margin:0 0 clamp(3.5rem,7vw,5.5rem);line-height:1.5;">Also open to strategy consulting, if the incentives line up. <a href="mailto:hello@iliasennajmi.com?subject=Consulting%20inquiry" class="charge" style="color:var(--ember);text-decoration:underline;text-decoration-color:var(--coal-line);text-underline-offset:3px;">Say so in the subject line</a> and skip the deck — that's not a funnel, just an inbox.</p>
+      <p data-reveal style="font-family:var(--body);font-weight:300;font-style:italic;color:var(--ash);font-size:clamp(0.95rem,1.6vw,1.1rem);max-width:52ch;margin:0 0 clamp(3.5rem,7vw,5.5rem);line-height:1.5;">Also open to strategy consulting, if the incentives line up. <a href="mailto:hello@iliasennajmi.com?subject=Consulting%20inquiry" class="charge" style="color:var(--ember);text-decoration:underline;text-decoration-color:var(--coal-line);text-underline-offset:3px;">Say so in the subject line</a> and skip the deck. That's not a funnel, just an inbox.</p>
       <div data-reveal style="display:flex;flex-wrap:wrap;gap:clamp(10px,2vw,20px);align-items:baseline;font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ash);">
         <a href="/colophon/" class="charge" style="color:inherit;transition:color .25s;">Colophon →</a>
         <span style="width:14px;height:1px;background:var(--coal-line);align-self:center;"></span>

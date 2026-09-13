@@ -14,12 +14,12 @@ export const GET: APIRoute = async ({ site }) => {
 > A personal essay site by Ilias Ennajmi, a marketing strategist writing about the psychology of choice and the business of exploiting it. Essays split into two strands: Ulysses asks why people act; Ilias asks who profits when they do.
 
 ## Ulysses — Why people act
-Psychology, behavior, and philosophy — the slow questions about why we do the things we do.
+Psychology, behavior, and philosophy: the slow questions about why we do the things we do.
 
 ${listEssays(ulysses)}
 
 ## Ilias — Who profits
-Marketing and strategy — how attention gets bought, priced, and resold.
+Marketing and strategy: how attention gets bought, priced, and resold.
 
 ${listEssays(ilias)}
 
