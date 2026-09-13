@@ -12,8 +12,28 @@ const iliasEntries = await getPublishedCollection('ilias');
 const latestU = ulyssesEntries[0];
 const latestI = iliasEntries[0];
 
+// Whichever strand's newest essay is actually more recent, for the hero's
+// direct read-now link -- ties (same month) fall back to Ulysses, arbitrary
+// but deterministic.
+const latestOverall = latestI && (!latestU || new Date(latestI.data.date) > new Date(latestU.data.date)) ? latestI : latestU;
+const latestEssay = latestOverall ? { href: `/essays/${latestOverall.data.id}/`, title: latestOverall.data.title } : null;
+
 const startHere = await getStartHerePath();
 const startHereMinutes = startHere.reduce((sum, x) => sum + readMinutesOf(x.entry), 0);
+
+// Data for the homepage's "next step" pill: default server-rendered state is
+// the Start Here promo below, but a returning visitor's own localStorage
+// (reading-log / recent-essays, already used elsewhere for the nav's read
+// count) lets client-side JS swap it to "continue reading X" instead --
+// no account, no server-side tracking, just reusing what's already stored.
+const allEssays = [...ulyssesEntries, ...iliasEntries];
+const essayInfo: Record<string, { href: string; title: string }> = {};
+const pairMap: Record<string, string | null> = {};
+for (const e of allEssays) {
+  essayInfo[e.data.id] = { href: `/essays/${e.data.id}/`, title: e.data.title };
+  pairMap[e.data.id] = e.data.pairsWith ?? null;
+}
+const allEssayIds = allEssays.map((e) => e.data.id);
 
 const shelves = [
   { label: 'My latest reads', items: [
@@ -72,7 +92,7 @@ const jsonLd = {
 <main id="main-content" style="position:relative;">
 
   <SectionPath />
-  <HeroTitlePage />
+  <HeroTitlePage latestEssay={latestEssay} />
 
   <!-- ============ 01 — ABOUT (grounding band) ============ -->
   <section id="about" style="position:relative;border-top:1px solid var(--coal-line);background:var(--coal-soft);">
@@ -133,13 +153,52 @@ const jsonLd = {
       </a>
     </div>
 
-    {startHere.length > 0 && (
-      <a href="/start/" class="charge pill-cta pill-cta-icon start-pill" data-reveal style="margin-top:clamp(1.8rem,3vw,2.6rem);color:var(--ash);">
+    {allEssayIds.length > 0 && (
+      <a href={startHere.length > 0 ? '/start/' : '/topics/'} id="next-step-pill" class="charge pill-cta pill-cta-icon start-pill" data-reveal style="margin-top:clamp(1.8rem,3vw,2.6rem);color:var(--ash);">
         <span style="width:6px;height:6px;background:var(--ash);transform:rotate(45deg);flex:none;"></span>
-        New here? Start Here — {startHere.length} essays, ~{startHereMinutes} min →
+        <span id="next-step-text">{startHere.length > 0 ? `New here? Start Here — ${startHere.length} essays, ~${startHereMinutes} min →` : 'Browse the essays →'}</span>
       </a>
     )}
   </section>
+
+  <script define:vars={{ essayInfo, pairMap, allEssayIds }}>
+    // Swaps the Start Here pill for a "continue reading" one, using
+    // reading-log / recent-essays localStorage already written by the essay
+    // page -- see boot() below for when this runs.
+    function personalizeNextStep() {
+      const pill = document.getElementById('next-step-pill');
+      const textEl = document.getElementById('next-step-text');
+      if (!pill || !textEl) return;
+
+      let finishedRaw = [];
+      let recentRaw = [];
+      try { finishedRaw = JSON.parse(localStorage.getItem('reading-log') || '[]'); } catch (e) { /* private mode */ }
+      try { recentRaw = JSON.parse(localStorage.getItem('recent-essays') || '[]'); } catch (e) { /* private mode */ }
+      const finishedIds = new Set((Array.isArray(finishedRaw) ? finishedRaw : []).map((r) => r && r.id).filter(Boolean));
+      const recentIds = (Array.isArray(recentRaw) ? recentRaw : []).map((r) => r && r.id).filter(Boolean);
+      if (finishedIds.size === 0 && recentIds.length === 0) return; // first-time visitor: leave the default Start Here pill
+
+      const setPill = (href, text) => { pill.setAttribute('href', href); textEl.textContent = text; };
+
+      const mostRecentId = recentIds[0];
+      if (mostRecentId && !finishedIds.has(mostRecentId) && essayInfo[mostRecentId]) {
+        setPill(essayInfo[mostRecentId].href, `Continue reading — ${essayInfo[mostRecentId].title} →`);
+        return;
+      }
+      const pairedId = mostRecentId ? pairMap[mostRecentId] : null;
+      if (pairedId && !finishedIds.has(pairedId) && essayInfo[pairedId]) {
+        setPill(essayInfo[pairedId].href, `Read the other half — ${essayInfo[pairedId].title} →`);
+        return;
+      }
+      const nextUnread = allEssayIds.find((id) => !finishedIds.has(id));
+      if (nextUnread && essayInfo[nextUnread]) {
+        setPill(essayInfo[nextUnread].href, `Next up — ${essayInfo[nextUnread].title} →`);
+        return;
+      }
+      setPill('/topics/', `You've read all ${allEssayIds.length} essays — browse by topic →`);
+    }
+    document.addEventListener('astro:page-load', personalizeNextStep);
+  </script>
 
   <!-- ============ 03 — LOOSE THREADS (marquee) ============ -->
   <section style="padding:clamp(4.5rem,9vw,7.5rem) 0;border-top:1px solid var(--coal-line);overflow:hidden;">

@@ -1,4 +1,8 @@
 ---
+interface Props {
+  latestEssay?: { href: string; title: string } | null;
+}
+const { latestEssay = null } = Astro.props;
 ---
 <section style="position:relative;min-height:100svh;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:clamp(6rem,11vh,8rem) clamp(20px,5vw,40px) clamp(4rem,8vh,6rem);">
   <div style="position:absolute;inset:0;z-index:0;background:radial-gradient(80% 90% at 0% 24%, rgba(117,89,56,0.07), transparent 56%),radial-gradient(80% 90% at 100% 76%, rgba(117,89,56,0.06), transparent 56%),linear-gradient(180deg,var(--paper-hi) 0%,var(--paper-mid) 56%,var(--coal) 100%);"></div>
@@ -31,6 +35,12 @@
 
     <blockquote style="margin:clamp(1.6rem,3vh,2.2rem) 0 0;font-family:var(--display);font-weight:400;font-style:italic;font-size:clamp(1.1rem,2.2vw,1.4rem);line-height:1.4;color:var(--bone);max-width:38ch;text-wrap:pretty;">&ldquo;Guy realizes free will isn&rsquo;t real, immediately monetizes the observation.&rdquo;</blockquote>
     <div style="margin-top:0.7rem;font-family:var(--mono);font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);">— a Hacker News commenter, not wrong</div>
+
+    {latestEssay && (
+      <a href={latestEssay.href} class="charge hero-read-link" style="display:inline-flex;align-items:center;gap:8px;margin-top:clamp(1.8rem,3.5vh,2.4rem);font-family:var(--mono);font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ember);text-decoration:none;transition:gap .3s;">
+        Or start reading: {latestEssay.title} <span style="font-family:var(--display);font-size:1.1em;line-height:0;">→</span>
+      </a>
+    )}
   </div>
 
   <!-- The visual falling-dot line is intentionally 1px wide; the tappable
@@ -44,6 +54,7 @@
 <style>
   @keyframes hero-rule-draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
   .hero-rule { animation: hero-rule-draw 1s .5s cubic-bezier(.2,.7,.2,1) both; }
+  .hero-read-link:hover { gap: 14px; }
 </style>
 
 <script>
