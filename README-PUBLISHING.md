@@ -25,7 +25,7 @@ All three options are cookieless, so none of them needs a cookie banner. Set the
 
 **Read-completion** (the interesting metric): the site fires `read-25`, `read-50`, `read-75` and `read-complete` events per essay, plus `anchor-answered` / `anchor-completed` for the interactive demo. **Cloudflare's free tier has no custom-event API**, so these only show up if you also set `PUBLIC_GOATCOUNTER` or `PUBLIC_PLAUSIBLE_DOMAIN`. Running Cloudflare for traffic and GoatCounter for events is free and works fine — both can be set at once.
 
-**Newsletter signups** need no analytics at all: Netlify counts every submission under Forms in the dashboard, and each signup also lands on `/thanks/`, so that page's view count is your conversion number. Turn on Forms → Settings → notifications or the submissions just sit there unseen.
+**Newsletter signups** need no analytics at all: the form posts to [Web3Forms](https://web3forms.com) (free, 250 submissions/month), which emails each submission straight to the configured address — no dashboard to remember to check. Each signup also lands on `/thanks/`, so that page's view count is your conversion number.
 
 Events are dispatched through `window.track()`, defined in `src/components/Analytics.astro`. It stays silent when no event-capable provider is configured, so nothing breaks either way.
 
