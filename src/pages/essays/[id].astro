@@ -243,6 +243,9 @@ const epistemicLabel: Record<string, string> = {
 <style>
   .back-link:hover { gap: 15px; }
   #highlight-note-btn:hover, #highlight-copy-btn:hover { background: color-mix(in srgb, var(--coal) 6%, transparent); }
+  .save-btn { display: inline-block; }
+  .save-btn.cc-just-saved { animation: cc-snap .42s ease; color: var(--acc); }
+  @media (prefers-reduced-motion: reduce) { .save-btn.cc-just-saved { animation: none; } }
   #note-composer-save:hover { background: var(--acc, var(--ember)); }
   .reader-note {
     margin: 0.9rem 0 1.6rem;
@@ -617,13 +620,26 @@ const epistemicLabel: Record<string, string> = {
       const loadSaved = () => { try { return JSON.parse(localStorage.getItem('saved-essays') || '[]'); } catch (e) { return []; } };
       const renderSave = () => { saveBtn.textContent = loadSaved().some((s) => s.id === essayMeta.id) ? 'Saved ◆' : 'Save'; };
       saveBtn.addEventListener('click', () => {
+        let justSaved = false;
         try {
           let list = loadSaved();
-          if (list.some((s) => s.id === essayMeta.id)) list = list.filter((s) => s.id !== essayMeta.id);
-          else list.unshift(essayMeta);
+          if (list.some((s) => s.id === essayMeta.id)) {
+            list = list.filter((s) => s.id !== essayMeta.id);
+          } else {
+            list.unshift(essayMeta);
+            justSaved = true;
+          }
           localStorage.setItem('saved-essays', JSON.stringify(list));
         } catch (e) { /* private mode */ }
         renderSave();
+        // Only the add transition earns the pulse — removing a save is a
+        // quiet undo, not a moment worth acknowledging.
+        if (justSaved && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          saveBtn.classList.remove('cc-just-saved');
+          void saveBtn.offsetWidth;
+          saveBtn.classList.add('cc-just-saved');
+          saveBtn.addEventListener('animationend', () => saveBtn.classList.remove('cc-just-saved'), { once: true });
+        }
       });
       renderSave();
     }
