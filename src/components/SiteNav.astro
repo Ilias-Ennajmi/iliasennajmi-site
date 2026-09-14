@@ -28,7 +28,15 @@ const links = [
 ];
 ---
 
-<nav id="sn-bar" aria-label="Primary" style="position:fixed;top:0;left:0;right:0;z-index:7000;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:18px clamp(22px,5vw,52px);background:linear-gradient(180deg,var(--nav-scrim-a),var(--nav-scrim-b));font-family:var(--mono);">
+<!-- The scrim used to fade to fully transparent right at the nav's own
+     bottom edge, so scrolling display-sized headlines would collide with
+     nav text at exactly the point their opacity had faded low enough to
+     read through. Keeping it solid through the nav's own content and only
+     fading in the last quarter, plus a blur so even that fade zone can't
+     render legible text behind it, fixes both breakpoints where this was
+     confirmed (the About headline behind desktop nav, "Who's speaking?"
+     behind the mobile MENU label). -->
+<nav id="sn-bar" aria-label="Primary" style="position:fixed;top:0;left:0;right:0;z-index:7000;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:18px clamp(22px,5vw,52px);background:linear-gradient(180deg,var(--nav-scrim-a) 75%,var(--nav-scrim-b) 100%);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);font-family:var(--mono);">
   <a href="/" id="sn-wordmark" style="font-family:var(--display);font-style:italic;font-weight:500;font-size:1.45rem;letter-spacing:0.01em;line-height:1;color:var(--bone);text-decoration:none;">Ilias Ennajmi</a>
 
   <div id="sn-links" style="display:flex;align-items:center;gap:clamp(16px,3vw,40px);font-size:0.68rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ash);white-space:nowrap;">
@@ -59,6 +67,12 @@ const links = [
         </div>
       </div>
     </div>
+
+    <!-- Hairline divider: groups [Index, Read me] as the site's actual
+         content from [Topics, The Shelf, Saved, About], which are utility/
+         secondary pages -- without it all 6 links plus the Read me group
+         read as one flat row of equal-weight targets. -->
+    <span aria-hidden="true" style="width:1px;height:14px;background:var(--coal-line);flex:none;"></span>
 
     {links.slice(1).map((l) => (
       <a href={l.href} class="sn-link" style={`position:relative;color:${active === l.key ? 'var(--bone)' : 'var(--ash)'};text-decoration:none;transition:color .25s;`}>

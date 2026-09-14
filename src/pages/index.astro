@@ -47,12 +47,18 @@ const shelves = [
   ] },
 ];
 
+// A thread only gets an href when it genuinely is the seed of a published
+// essay, not just a topically-adjacent tag match -- three of these five
+// don't have an honest match yet (their closest essays are either drafts
+// or cover a different angle), so they stay as plain, unlinked notebook
+// fragments rather than pointing somewhere that doesn't actually deliver on
+// the thread's specific claim.
 const threads = [
-  { text: "Pricing isn't math. It's a story about what you think you deserve.", tag: 'ON VALUE' },
+  { text: "Pricing isn't math. It's a story about what you think you deserve.", tag: 'ON VALUE', href: '/essays/first-number/' },
   { text: 'Every free trial bets you’ll forget to cancel. They usually win.', tag: 'ON FRICTION' },
   { text: 'Nobody picks the middle option, so they add one for you to skip.', tag: 'ON CHOICE' },
   { text: 'Willpower is a budget. Most ads wait for you to overdraw it.', tag: 'ON ATTENTION' },
-  { text: 'You didn’t choose the playlist. It chose the version of you that buys.', tag: 'ON DEFAULTS' },
+  { text: 'You didn’t choose the playlist. It chose the version of you that buys.', tag: 'ON DEFAULTS', href: '/essays/defaults/' },
 ];
 
 const sameAs = Object.values(SITE.social).filter((url): url is string => Boolean(url));
@@ -130,7 +136,10 @@ const jsonLd = {
           <p style="font-family:var(--body);font-style:italic;font-weight:300;color:var(--ash);font-size:clamp(1.05rem,1.6vw,1.3rem);margin:1.1rem 0 0;max-width:34ch;line-height:1.45;">Psychology, behavior, philosophy. The long way home, basically.</p>
         </div>
         {latestU && (
-          <div style="font-family:var(--mono);font-size:0.62rem;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);display:flex;align-items:baseline;gap:10px;"><span style="color:var(--tide);">Latest</span><span style="font-family:var(--body);font-style:italic;text-transform:none;letter-spacing:0;font-size:0.95rem;color:var(--bone);">{latestU.data.title}</span></div>
+          <div style="display:flex;flex-direction:column;gap:0.4rem;">
+            <div style="font-family:var(--mono);font-size:0.62rem;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);display:flex;align-items:baseline;gap:10px;"><span style="color:var(--tide);">Latest</span><span style="font-family:var(--body);font-style:italic;text-transform:none;letter-spacing:0;font-size:0.95rem;color:var(--bone);">{latestU.data.title}</span></div>
+            <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--ash);">{latestU.data.tag} · {readMinutesOf(latestU)} min</div>
+          </div>
         )}
         <span class="fork-underline" style="position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--tide);transform:scaleX(0);transform-origin:left center;transition:transform .55s cubic-bezier(.2,.7,.2,1);"></span>
       </a>
@@ -141,7 +150,10 @@ const jsonLd = {
           <p style="font-family:var(--body);font-style:italic;font-weight:300;color:var(--ash);font-size:clamp(1.05rem,1.6vw,1.3rem);margin:1.1rem 0 0;max-width:34ch;line-height:1.45;">Marketing and strategy, before the click. Follow the money.</p>
         </div>
         {latestI && (
-          <div style="font-family:var(--mono);font-size:0.62rem;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);display:flex;align-items:baseline;gap:10px;"><span style="color:var(--ember);">Latest</span><span style="font-family:var(--body);font-style:italic;text-transform:none;letter-spacing:0;font-size:0.95rem;color:var(--bone);">{latestI.data.title}</span></div>
+          <div style="display:flex;flex-direction:column;gap:0.4rem;">
+            <div style="font-family:var(--mono);font-size:0.62rem;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);display:flex;align-items:baseline;gap:10px;"><span style="color:var(--ember);">Latest</span><span style="font-family:var(--body);font-style:italic;text-transform:none;letter-spacing:0;font-size:0.95rem;color:var(--bone);">{latestI.data.title}</span></div>
+            <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--ash);">{latestI.data.tag} · {readMinutesOf(latestI)} min</div>
+          </div>
         )}
         <span class="fork-underline-ember" style="position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--ember);transform:scaleX(0);transform-origin:left center;transition:transform .55s cubic-bezier(.2,.7,.2,1);"></span>
       </a>
@@ -207,7 +219,12 @@ const jsonLd = {
     <div class="marqrow" style="margin-top:clamp(2.6rem,4.5vw,3.8rem);display:flex;width:max-content;animation:cc-marqL 64s linear infinite;cursor:default;">
       {[0, 1].map(() => (
         threads.map((thread) => (
-          <span style="display:inline-flex;align-items:baseline;gap:16px;padding:0 clamp(22px,3vw,46px);white-space:nowrap;font-family:var(--display);font-style:italic;font-weight:400;font-size:clamp(1.4rem,3vw,2.3rem);color:var(--bone);">{thread.text}<span style="font-family:var(--mono);font-style:normal;font-size:0.56rem;font-weight:500;letter-spacing:0.16em;color:var(--ember);align-self:center;">{thread.tag}</span><span style="color:var(--coal-line);font-style:normal;">◆</span></span>
+          <span style="display:inline-flex;align-items:baseline;gap:16px;padding:0 clamp(22px,3vw,46px);white-space:nowrap;font-family:var(--display);font-style:italic;font-weight:400;font-size:clamp(1.4rem,3vw,2.3rem);color:var(--bone);">
+            {thread.href ? (
+              <a href={thread.href} class="charge thread-link" style="color:inherit;text-decoration:none;">{thread.text}</a>
+            ) : thread.text}
+            <span style="font-family:var(--mono);font-style:normal;font-size:0.56rem;font-weight:500;letter-spacing:0.16em;color:var(--ember);align-self:center;">{thread.tag}</span><span style="color:var(--coal-line);font-style:normal;">◆</span>
+          </span>
         ))
       ))}
     </div>
@@ -276,6 +293,8 @@ const jsonLd = {
   .js-ilias:hover .fork-title-ember { color: var(--ember); }
   .js-ilias:hover .fork-underline-ember { transform: scaleX(1); }
   .shelf-link:hover { letter-spacing: 0.22em; }
+  .thread-link { border-bottom: 1px solid transparent; transition: border-color .25s; }
+  .thread-link:hover { border-bottom-color: var(--ember); }
 </style>
 
 <script>
