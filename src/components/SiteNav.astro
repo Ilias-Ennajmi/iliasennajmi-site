@@ -224,6 +224,23 @@ const links = [
       // rapid re-clicking can't stack overlays.
       let activePour = null;
 
+      // First manual toggle only: the theme already silently defaults to
+      // system preference, so a reader's first deliberate override *is*
+      // the essay's thesis, performed rather than just described. One-shot
+      // via localStorage; never shown again once seen.
+      const noteDefaultOverride = () => {
+        try { if (localStorage.getItem('seen-default-note')) return; } catch (err) { return; }
+        const note = document.createElement('a');
+        note.href = '/essays/defaults/';
+        note.textContent = 'You just overrode a default. That’s essay #1. →';
+        note.style.cssText = 'position:fixed;right:clamp(14px,3vw,26px);top:70px;z-index:7100;background:var(--bone);color:var(--coal);font-family:var(--mono);font-size:0.62rem;letter-spacing:0.08em;padding:10px 16px;max-width:240px;text-decoration:none;opacity:0;transform:translateY(-6px);transition:opacity .4s ease,transform .4s ease;';
+        document.body.appendChild(note);
+        requestAnimationFrame(() => { note.style.opacity = '1'; note.style.transform = 'none'; });
+        const dismiss = () => { note.style.opacity = '0'; note.style.transform = 'translateY(-6px)'; setTimeout(() => note.remove(), 400); };
+        setTimeout(dismiss, 6000);
+        try { localStorage.setItem('seen-default-note', '1'); } catch (err) { /* private mode */ }
+      };
+
       themeBtn.addEventListener('click', (e) => {
         const root = document.documentElement;
         const toInk = root.getAttribute('data-theme') !== 'ink';
@@ -235,6 +252,7 @@ const links = [
           const meta = document.querySelector('meta[name="theme-color"]');
           if (meta) meta.setAttribute('content', toInk ? '#1e1a15' : '#ebe5db');
         };
+        noteDefaultOverride();
 
         if (reduceMotion()) { applyTheme(); return; }
         if (activePour) { activePour(); activePour = null; }

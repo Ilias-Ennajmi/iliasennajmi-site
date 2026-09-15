@@ -72,6 +72,27 @@ body { overflow-x: hidden; }
 
 ::selection { background: rgba(217, 46, 28, 0.20); color: var(--bone); }
 
+/* Thin ink-toned scrollbar -- a default OS scrollbar was the one obviously
+   unstyled surface on an otherwise fully-considered page. Firefox via the
+   standard property, WebKit/Blink via the legacy pseudo-elements; both are
+   purely cosmetic and no-op harmlessly wherever unsupported (notably most
+   mobile browsers, which manage their own overlay scrollbars regardless). */
+html { scrollbar-width: thin; scrollbar-color: var(--ash) transparent; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--coal-line); border: 2px solid var(--coal); background-clip: padding-box; }
+::-webkit-scrollbar-thumb:hover { background: var(--ash); background-clip: padding-box; }
+
+/* Custom cursor: a small diamond replaces the pointer over anything
+   clickable, echoing the site's diamond motif. Scoped to fine-pointer
+   devices with real hover -- touch screens get no cursor at all, so this
+   must never apply there (and doesn't try to). */
+@media (hover: hover) and (pointer: fine) {
+  a, button, [role="button"], summary, input, textarea {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'%3E%3Crect x='4' y='4' width='10' height='10' fill='%23a52716' transform='rotate(45 9 9)'/%3E%3C/svg%3E") 9 9, pointer;
+  }
+}
+
 a { color: inherit; text-decoration: none; }
 
 a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
@@ -275,7 +296,10 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
   font-size: 0.92em;
   line-height: 1.5;
   color: var(--ash);
+  animation: cc-unfurl .4s cubic-bezier(.2,.7,.2,1) both;
+  transform-origin: top left;
 }
+@keyframes cc-unfurl { 0% { opacity: 0; transform: scaleY(0.6) translateY(-4px); } 100% { opacity: 1; transform: none; } }
 .sidenote-inline p { margin: 0; font-size: inherit; color: inherit; font-family: inherit; font-style: inherit; }
 .footnote-toggle { cursor: pointer; }
 .essay-body blockquote {
@@ -371,6 +395,16 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
   .essay-body blockquote p { color: #000 !important; }
   .essay-body a { color: #000 !important; text-decoration: underline; }
   .essay-body img { border: none !important; }
+  .essay-body::after {
+    content: "You printed a website about digital behavior. Bold move. — iliasennajmi.com";
+    display: block;
+    margin-top: 2.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #ccc;
+    font-size: 0.7rem;
+    font-style: italic;
+    color: #666 !important;
+  }
   header[data-cursor-light] {
     padding: 0 0 1.5rem !important;
     background: none !important;
