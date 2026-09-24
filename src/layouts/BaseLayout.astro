@@ -11,7 +11,6 @@ import '../styles/global.css';
 // preload below is guaranteed to match what the CSS actually requests —
 // never a stale hardcoded /_astro/ filename that would silently double-
 // download after the next build.
-import ebGaramondNormalUrl from '@fontsource-variable/eb-garamond/files/eb-garamond-latin-wght-normal.woff2?url';
 import ebGaramondItalicUrl from '@fontsource-variable/eb-garamond/files/eb-garamond-latin-wght-italic.woff2?url';
 import frauncesNormalUrl from '@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2?url';
 import frauncesItalicUrl from '@fontsource-variable/fraunces/files/fraunces-latin-wght-italic.woff2?url';
@@ -51,7 +50,13 @@ const {
 
 const favicon = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23ebe5db'/%3E%3Cpath d='M16 6l10 10-10 10L6 16z' fill='%23a52716'/%3E%3C/svg%3E";
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
-const resolvedOgImage = ogImage ? new URL(ogImage, Astro.site).toString() : undefined;
+const resolvedOgImage = new URL(ogImage ?? '/og/site.png', Astro.site).toString();
+// Every page shows the Fraunces-italic wordmark and Space Grotesk nav above
+// the fold, plus an EB Garamond italic lede. Upright Fraunces sets every
+// page title except the homepage's. Upright EB Garamond (essay body text)
+// starts below the fold, so it loads normally instead of competing with the
+// first paint.
+const isHome = Astro.url.pathname === '/';
 ---
 
 <!DOCTYPE html>
@@ -59,14 +64,10 @@ const resolvedOgImage = ogImage ? new URL(ogImage, Astro.site).toString() : unde
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- Reading-comfort site: the type IS the product, so its files jump the
-       queue ahead of everything else in <head>, including prefetch. Only
-       the Latin subset + the weights actually painted above the fold. -->
-  <link rel="preload" as="font" type="font/woff2" href={ebGaramondNormalUrl} crossorigin />
-  <link rel="preload" as="font" type="font/woff2" href={ebGaramondItalicUrl} crossorigin />
-  <link rel="preload" as="font" type="font/woff2" href={frauncesNormalUrl} crossorigin />
   <link rel="preload" as="font" type="font/woff2" href={frauncesItalicUrl} crossorigin />
   <link rel="preload" as="font" type="font/woff2" href={spaceGroteskNormalUrl} crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href={ebGaramondItalicUrl} crossorigin />
+  {!isHome && <link rel="preload" as="font" type="font/woff2" href={frauncesNormalUrl} crossorigin />}
   <title>{title}</title>
   <meta name="description" content={description} />
   {noindex && <meta name="robots" content="noindex,follow" />}
@@ -75,17 +76,15 @@ const resolvedOgImage = ogImage ? new URL(ogImage, Astro.site).toString() : unde
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:url" content={canonicalUrl} />
+  <meta property="og:site_name" content="Ilias Ennajmi" />
+  <meta property="og:locale" content="en_US" />
   <meta name="twitter:title" content={title} />
   <meta name="twitter:description" content={description} />
-  {resolvedOgImage ? (
-    <Fragment>
-      <meta property="og:image" content={resolvedOgImage} />
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:image" content={resolvedOgImage} />
-    </Fragment>
-  ) : (
-    <meta name="twitter:card" content="summary" />
-  )}
+  <meta property="og:image" content={resolvedOgImage} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content={resolvedOgImage} />
   <link rel="icon" href={favicon} />
   <link rel="manifest" href="/manifest.webmanifest" />
   <meta name="theme-color" content="#ebe5db" />

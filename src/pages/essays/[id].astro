@@ -52,8 +52,15 @@ const ogImage = `/og/${entry.data.id}.png`;
 
 const publishedDate = new Date(entry.data.date);
 const canonicalUrl = new URL(`/essays/${entry.data.id}/`, Astro.site).toString();
-const jsonLd = {
-  '@context': 'https://schema.org',
+const breadcrumbs = {
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: new URL('/', Astro.site).toString() },
+    { '@type': 'ListItem', position: 2, name: strandLabel, item: new URL(strandHref, Astro.site).toString() },
+    { '@type': 'ListItem', position: 3, name: entry.data.title, item: canonicalUrl },
+  ],
+};
+const article = {
   '@type': 'Article',
   headline: entry.data.title,
   description: entry.data.standfirst,
@@ -64,7 +71,10 @@ const jsonLd = {
   keywords: entry.data.tag,
   mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
   image: new URL(ogImage, Astro.site).toString(),
+  publisher: { '@type': 'Person', name: 'Ilias Ennajmi', url: new URL('/about/', Astro.site).toString() },
+  inLanguage: 'en',
 };
+const jsonLd = { '@context': 'https://schema.org', '@graph': [article, breadcrumbs] };
 const citation = `Ennajmi, Ilias. "${entry.data.title}." Ilias Ennajmi, ${entry.data.date}. ${canonicalUrl}.`;
 const share = shareLinks(canonicalUrl, entry.data.title);
 

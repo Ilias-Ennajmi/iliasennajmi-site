@@ -20,7 +20,7 @@ Two things reinforce each other, roughly equally, and neither alone is the real 
 
 ## Operating Context
 
-Astro static site + Decap CMS (git-backed, DecapBridge auth) for essay authoring, deployed to Netlify (`iliasennajmi-site.netlify.app`, auto-deploy on push to `main`). Content lives as markdown in `src/content/{ulysses,ilias}/` with a `draft` flag and a `pairsWith` field linking cross-strand essays. Reader-facing tools: ⌘K command palette, sidenotes, cite/highlight-share, TTS read-aloud, save-for-later + honest reading-log stats, ink/paper theme toggle, OG image generation, RSS/llms.txt.
+Astro static site + Decap CMS (git-backed, DecapBridge auth) for essay authoring, deployed to Vercel (`www.ennajmi.space`, auto-deploy on push to `main`; the apex redirects to www, and the retired Netlify project 301s everything here). Content lives as markdown in `src/content/{ulysses,ilias}/` with a `draft` flag and a `pairsWith` field linking cross-strand essays. Reader-facing tools: ⌘K command palette, sidenotes, cite/highlight-share, TTS read-aloud, save-for-later + honest reading-log stats, ink/paper theme toggle, OG image generation, RSS/llms.txt.
 
 ## Capabilities and Constraints
 

@@ -429,23 +429,31 @@ const jsonLd = {
     if (touchOnly) row.addEventListener('click', onToggle);
     if (toggleBtn) toggleBtn.addEventListener('click', onToggle);
     window.addEventListener('scroll', onScroll, { passive: true });
+    const anim = row.getAnimations ? row.getAnimations()[0] : undefined;
     const tick = () => {
-      const anims = row.getAnimations ? row.getAnimations() : [];
-      const a = anims[0];
-      if (a) {
+      if (anim) {
         if (marqHover) {
-          if (a.playState !== 'paused') a.pause();
+          if (anim.playState !== 'paused') anim.pause();
         } else {
-          if (a.playState === 'paused') a.play();
-          a.playbackRate = 1 + marqBoost;
+          if (anim.playState === 'paused') anim.play();
+          anim.playbackRate = 1 + marqBoost;
         }
       }
       marqBoost *= 0.9;
       if (marqBoost < 0.01) marqBoost = 0;
       rafId = requestAnimationFrame(tick);
     };
-    rafId = requestAnimationFrame(tick);
+    // The per-frame loop only exists to couple speed to scroll velocity, so
+    // it runs only while the row is on screen; off screen the CSS animation
+    // carries on by itself at its base speed.
+    const visibility = new IntersectionObserver(([entry]) => {
+      cancelAnimationFrame(rafId);
+      if (entry.isIntersecting) rafId = requestAnimationFrame(tick);
+      else { marqBoost = 0; if (anim) anim.playbackRate = 1; }
+    });
+    visibility.observe(row);
     cleanupMarquee = () => {
+      visibility.disconnect();
       row.removeEventListener('mouseenter', onEnter);
       row.removeEventListener('mouseleave', onLeave);
       if (touchOnly) row.removeEventListener('click', onToggle);

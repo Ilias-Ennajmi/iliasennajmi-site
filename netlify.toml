@@ -1,3 +1,7 @@
+# This site is served from Vercel (www.ennajmi.space). The old Netlify
+# project still builds this repo on every push; without this redirect it
+# serves a full duplicate of the site that search engines can index in
+# place of the real one. Everything here now 301s to the canonical domain.
 [build]
   command = "npm run build"
   publish = "dist"
@@ -5,10 +9,8 @@
 [build.environment]
   NODE_VERSION = "22"
 
-[[headers]]
-  for = "/*"
-  [headers.values]
-    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "strict-origin-when-cross-origin"
-    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+[[redirects]]
+  from = "/*"
+  to = "https://www.ennajmi.space/:splat"
+  status = 301
+  force = true
