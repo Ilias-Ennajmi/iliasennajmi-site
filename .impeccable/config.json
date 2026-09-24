@@ -67,6 +67,16 @@
         ],
         "createdAt": "2026-08-20T15:58:52.354Z",
         "reason": "Inside @media print -- the printed footnote-URL annotation's color, a muted print-only gray with no on-screen equivalent needed."
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#ccc",
+        "createdAt": "2026-09-24T23:43:17.552Z"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#666",
+        "createdAt": "2026-09-24T23:43:18.016Z"
       }
     ]
   }

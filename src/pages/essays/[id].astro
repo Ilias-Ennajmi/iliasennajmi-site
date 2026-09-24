@@ -125,7 +125,7 @@ const epistemicLabel: Record<string, string> = {
     <!-- ARTICLE HEADER -->
     <header data-cursor-light style="position:relative;overflow:hidden;padding:clamp(8rem,16vh,12rem) clamp(22px,6vw,64px) clamp(2.5rem,5vw,4rem);">
       <div style="position:absolute;inset:0;z-index:0;background:radial-gradient(110% 80% at 18% 6%, rgba(117,89,56,0.10), transparent 56%),linear-gradient(180deg,var(--paper-hi) 0%,var(--coal) 70%);"></div>
-      <div style="position:relative;z-index:1;max-width:760px;margin:0 auto;animation:cc-rise .9s ease both;">
+      <div style="position:relative;z-index:1;max-width:calc(760px - 2 * clamp(22px,6vw,64px));margin:0 auto;animation:cc-rise .9s ease both;">
         <a href={strandHref} class="charge back-link" style="display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:0.62rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--acc);margin-bottom:clamp(2rem,4vw,3rem);transition:gap .3s;">← {strandLabel}</a>
         <div style="display:flex;flex-wrap:wrap;align-items:center;gap:13px;margin-bottom:clamp(1.4rem,2.5vw,2rem);font-family:var(--mono);font-size:0.6rem;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--ash);">
           <span style="color:var(--acc);">{entry.data.tag}</span>
@@ -156,7 +156,7 @@ const epistemicLabel: Record<string, string> = {
             <a href={share.x} class="charge share-link" target="_blank" rel="noopener noreferrer">X</a>
             <a href={share.linkedin} class="charge share-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
           </div>
-          <span style="width:1px;height:14px;background:var(--coal-line);flex:none;"></span>
+          <span class="share-divider" style="width:1px;height:14px;background:var(--coal-line);flex:none;"></span>
           <div style="display:flex;align-items:center;gap:14px;">
             <button type="button" class="charge share-link cite-btn" data-citation={citation} style="background:none;border:none;padding:0;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;cursor:pointer;">Cite</button>
             <span style="width:3px;height:3px;border-radius:50%;background:var(--acc);"></span>
@@ -171,7 +171,7 @@ const epistemicLabel: Record<string, string> = {
     </div>
 
     {toc.length >= 3 && (
-      <div class="no-print" style="max-width:680px;margin:0 auto;padding:clamp(2.4rem,4.5vw,3.4rem) clamp(22px,6vw,64px) 0;">
+      <div class="no-print" style="max-width:760px;margin:0 auto;padding:clamp(2.4rem,4.5vw,3.4rem) clamp(22px,6vw,64px) 0;">
         <details class="essay-toc" style="border:1px solid var(--coal-line);background:var(--coal-soft);">
           <summary style="display:flex;align-items:center;gap:11px;padding:14px 18px;cursor:pointer;font-family:var(--mono);font-size:0.62rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--ash);list-style:none;-webkit-tap-highlight-color:transparent;">
             <span style="width:6px;height:6px;background:var(--acc);transform:rotate(45deg);display:inline-block;flex:none;"></span>
@@ -193,7 +193,7 @@ const epistemicLabel: Record<string, string> = {
     )}
 
     <!-- BODY -->
-    <article class="essay-body" style="max-width:680px;margin:0 auto;padding:clamp(3rem,6vw,5rem) clamp(22px,6vw,64px) clamp(4rem,7vw,6rem);">
+    <article class="essay-body" style="max-width:760px;margin:0 auto;padding:clamp(3rem,6vw,5rem) clamp(22px,6vw,64px) clamp(4rem,7vw,6rem);">
       <Content />
 
       {/* Rendered here, then moved by JS to wherever ::interactive:: sits in the

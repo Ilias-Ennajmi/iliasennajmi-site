@@ -247,6 +247,36 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 .contact-link.contact-ember:hover { border-color: var(--ember); color: var(--ember); }
 .contact-link.contact-tide:hover { border-color: var(--tide); color: var(--tide); }
 
+/* Touch targets. The small mono labels (essay actions, footer links, inline
+   "→" links) render 12-14px tall, far under a thumb. On touch devices they
+   get a 44px hit area: real height where they sit in a row with
+   neighbours (so wrapped rows can't overlap), an invisible ::before hit
+   area where they stand alone (so nothing on screen moves). */
+@media (pointer: coarse) {
+  .share-link, .footer-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    min-width: 32px;
+  }
+  .more-link, .shelf-link, .back-link, .tap { position: relative; }
+  .more-link::before, .shelf-link::before, .back-link::before, .tap::before {
+    content: '';
+    position: absolute;
+    left: -6px;
+    right: -6px;
+    top: 50%;
+    height: 44px;
+    transform: translateY(-50%);
+  }
+}
+@media (max-width: 640px) {
+  /* The share | cite divider only makes sense on one line; wrapped, it
+     dangled at the end of the first row. */
+  .share-divider { display: none; }
+}
+
 /* essay pull-quote breakout */
 @media (min-width: 1040px) { .essay-body blockquote { width: calc(100% + 130px) !important; margin-left: -130px !important; } }
 .kb-hint { display: none; }
