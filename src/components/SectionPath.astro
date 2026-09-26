@@ -73,6 +73,16 @@
     const main = document.getElementById('main-content');
     const fill = document.querySelector('.sp-fill') as SVGLineElement | null;
     if (!root || !main || !fill) return;
+    // Only drawn at >=1360px (see the CSS above). Below that it's display:none,
+    // but its scroll handler used to keep measuring every section header on
+    // every frame anyway, which was measurable scroll cost on phones.
+    const wide = window.matchMedia('(min-width: 1360px)');
+    if (!wide.matches) {
+      const onChange = () => { if (wide.matches) setupSectionPath(); };
+      wide.addEventListener('change', onChange);
+      cleanupSectionPath = () => wide.removeEventListener('change', onChange);
+      return;
+    }
 
     // The five numbered section header rows, in document order.
     const markers = Array.from(main.querySelectorAll('.cc-num')) as HTMLElement[];
@@ -124,16 +134,11 @@
       const scrolledPast = -mainTop; // px scrolled since main's top entered
       const span = Math.max(1, spanEnd - spanStart);
       const progress = Math.min(1, Math.max(0, (scrolledPast - spanStart) / span));
+      // All reads, then all writes: a write between two reads forces a layout.
+      const toLight = markers.map((m, i) => !litFlags[i] && m.getBoundingClientRect().top <= innerHeight * 0.92);
       fill.setAttribute('stroke-dashoffset', String(100 * (1 - progress)));
-
       const nodes = nodeEls();
-      markers.forEach((m, i) => {
-        if (litFlags[i]) return;
-        if (m.getBoundingClientRect().top <= innerHeight * 0.92) {
-          litFlags[i] = true;
-          nodes[i]?.classList.add('is-lit');
-        }
-      });
+      toLight.forEach((light, i) => { if (light) { litFlags[i] = true; nodes[i]?.classList.add('is-lit'); } });
     };
 
     let ticking = false;
@@ -161,5 +166,5 @@
     };
   }
 
-  document.addEventListener('astro:page-load', setupSectionPath);
+  document.addEventListener('site:ready', setupSectionPath);
 </script>

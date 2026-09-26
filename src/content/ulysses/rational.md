@@ -6,12 +6,22 @@ date: "Dec 2025"
 order: 6
 pairsWith: "first-number"
 startHereOrder: 3
-standfirst: "Economics assumes a person who has never existed. What happens to a theory when its central character is fiction."
+standfirst: "Economics built its models around a person who has never existed. Then acted surprised when real people showed up."
 ---
-At the center of a great deal of economics stands a character who has never been seen in the wild: a person with stable preferences, perfect information, and the cold consistency to act on both. He is convenient, tractable, and entirely imaginary, and we have built much of the modern world on the assumption that he is us.
+There's a guy at the center of a lot of economics. He knows what he wants, he'll want the same thing tomorrow, he has all the information, and he acts on it without flinching. Economists call him the rational actor.
 
-Real people are not irrational so much as differently rational. We are loss-averse, present-biased, exquisitely sensitive to how a thing is framed and who is watching. These are not bugs in the human; they are the human. The model is not describing us badly. It is describing someone else.
+I've never met him. Neither have you.
 
-> A theory whose central character is fiction will predict a world that does not arrive.
+He's useful, I'll give him that. He makes the math work. The problem is that a good part of the modern world got built on the assumption that he's us, and he isn't.
 
-The fix is not to abandon models (we cannot think without them) but to remember they are maps, and to stay loyal to the territory when the two disagree. The map that insists the river is not there does not move the river.
+Real people aren't irrational, exactly. We're rational about different things. We hate losing money more than we enjoy winning the same amount, which behavioral economists call loss aversion and have tested more times than anyone can count. We'd take something now over more of it later. We change our answer depending on how the question is framed, and on who's watching. Daniel Kahneman spent a career writing this stuff down and got a Nobel for it. In economics, which tells you something.
+
+None of that is a bug. That's just what people are. The model isn't describing us badly. It's describing someone else.
+
+> A theory built around a fictional person will keep predicting a world that never shows up.
+
+You figure this out fast in marketing, because the rational actor doesn't buy anything interesting. He doesn't pay extra for the brand. He doesn't get talked into the bigger size. He never grabs anything at the till. Most businesses that make real money from real people are, in some way, betting against him.
+
+I'm not saying throw the models out. You can't think without some kind of model. I'm saying remember what they are.
+
+A map is useful right up until it tells you there's no river, and you're standing in the river.

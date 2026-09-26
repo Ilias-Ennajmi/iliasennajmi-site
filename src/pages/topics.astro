@@ -48,7 +48,7 @@ const marks = [
 const markFor = (i: number) => marks[i % marks.length];
 ---
 <BaseLayout
-  title="Topics — Ilias Ennajmi"
+  title="Topics · Ilias Ennajmi"
   description="Every essay, browsable by topic, across both Ulysses and Ilias, no strand required."
   active="topics"
   siteFx
@@ -105,8 +105,3 @@ const markFor = (i: number) => marks[i % marks.length];
   .topic-row:hover { background: var(--coal-soft); }
 </style>
 
-<script>
-  document.addEventListener('astro:page-load', () => {
-    window.pageBoot({ strand: null, progress: 'page' });
-  });
-</script>

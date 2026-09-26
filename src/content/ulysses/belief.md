@@ -6,12 +6,20 @@ date: "Jan 2026"
 order: 5
 pairsWith: "say-no"
 draft: true
-standfirst: "Intelligence does not protect you from bad beliefs — it just gives you better tools to defend them. On motivated reasoning and the comfort of being right."
+standfirst: "Being smart doesn't protect you from bad beliefs. It just makes you a better lawyer for them."
 ---
-It is tempting to think bad beliefs are a problem of insufficient intelligence — that the cure for nonsense is simply more thinking. But the smartest people are often the most spectacularly wrong, and for a specific reason: intelligence is a better lawyer, not a better judge.
+We like to think bad beliefs come from not thinking hard enough. More information, more intelligence, problem solved.
 
-Give a clever person a conclusion they want to reach and they will build a cathedral of argument to get there. The reasoning is real, rigorous, often dazzling. It is also entirely in service of a verdict that was settled before the trial began.
+Spend some time around very smart people and you'll see it doesn't work like that. Some of the most confidently wrong people I've come across were also the sharpest people in the room.
 
-> Reason is far better at defending where we already stand than at deciding where to stand.
+There's a reason for it. Intelligence makes you a better lawyer, not a better judge.
 
-The only defense is structural: seek out the people who disagree with you and are not stupid, and sit with how uncomfortable that is. If every smart person you know already agrees with you, that is not evidence you are right. It is evidence you have stopped looking.
+Give a clever person a conclusion they want to reach and they'll build an argument to get there. A good one, usually. Careful, well sourced, hard to poke holes in. It's also working backwards from a verdict that was settled before any thinking happened. Psychologists call this motivated reasoning. The name makes it sound like a rare malfunction. It's closer to the factory setting.
+
+Some research suggests it gets worse with skill, not better. In one study, people who were good with numbers read a table of data more accurately when the topic was skin cream, and less accurately when the same numbers were about gun control and the answer went against their politics. They didn't get dumber for that one question. They pointed the same brain at a different job.
+
+> Reason is much better at defending where you already stand than at deciding where to stand.
+
+I don't have a clean fix for this, and I'm suspicious of anyone who says they do. The best I've got is structural. Go find people who disagree with you and aren't stupid. Read them in good faith. Notice how uncomfortable that is.
+
+If every smart person you know already agrees with you, that's not proof you're right. It might just mean you stopped looking.

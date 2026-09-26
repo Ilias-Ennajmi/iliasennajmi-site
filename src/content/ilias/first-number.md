@@ -7,14 +7,22 @@ order: 1
 pairsWith: "rational"
 startHereOrder: 4
 interactive: "anchor"
-standfirst: "Every price after the first is read in relation to it. How anchoring quietly decides what a thing is worth before anyone does the math."
+standfirst: "The first price you see decides what every price after it feels like. That's not an accident."
 ---
-Show someone a price and you have not just made an offer. You have set a reference point that every later number will be measured against. The first figure does not describe the value of the thing. It manufactures the scale on which the thing will be judged.
+The moment someone shows you a price, they haven't just made an offer. They've handed you the ruler every other number is going to be measured with.
 
-This is why the menu lists a dish nobody buys at a price nobody pays. It is not there to sell. It is there to make the second-most-expensive option feel reasonable, which it only does because the first one moved the goalposts before you noticed there were any.
+Look at a restaurant menu. There's usually one dish near the top that almost nobody orders, at a price almost nobody pays. It isn't there to sell. It's there so the second most expensive thing on the page looks sensible. Most pricing pages do the same thing with the enterprise plan.
+
+Before I explain why that works, try this.
 
 ::interactive::
 
-> A discount is a confession about the first price. Someone decided what you would tolerate, then let you feel clever for paying less.
+Behavioral economists call it anchoring. The first number you see sticks, even when it has nothing to do with anything, even when you know it has nothing to do with anything. It doesn't tell you what the thing is worth. It sets the scale you'll judge it on.
 
-You cannot opt out of anchoring, but you can choose your own anchor before someone chooses it for you. Decide what a thing is worth to you in advance, in your own units, and the seller’s opening number becomes information instead of instruction.
+> A discount tells you something about the original price. Someone decided what you'd put up with, then let you feel smart for paying less.
+
+You can't switch anchoring off. Knowing about it helps a little, not a lot. Working in marketing doesn't make you immune either. It mostly means you notice it happening to you slightly after it's too late.
+
+What you can do is get there first. Decide what something is worth to you before you see their number, in your own terms. Hours of work, weeks of groceries, whatever actually means something to you.
+
+Then their opening number is just information. It stops being an instruction.

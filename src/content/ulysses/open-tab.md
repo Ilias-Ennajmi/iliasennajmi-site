@@ -6,16 +6,24 @@ date: "May 2026"
 order: 1
 pairsWith: "attention-rent"
 startHereOrder: 1
-standfirst: "We mistake having options for having freedom. A look at why more choices reliably make us less happy, and what the brain is actually optimizing for when it stalls."
+standfirst: "Having options feels like freedom. Mostly it feels like thirty tabs you're scared to close."
 ---
-We like to believe a choice is the moment we feel most ourselves: weighing options, sovereign, free. But the more carefully you watch the moment of deciding, the more it dissolves. The options were chosen for you. Their order was chosen for you. The version of you doing the choosing was, to a degree that should bother you, arranged in advance.
+Look at your browser. Somewhere up there is a tab you opened weeks ago. An article you were going to read, a product you were going to compare, a recipe for a dinner that never happened.
 
-Consider the open tab. Not a metaphor: the literal browser tab you left open because closing it felt like a decision and opening something else felt like progress. You did not choose to keep it open. You chose, at some earlier point, to never quite choose, and the tab is what that non-decision looks like three weeks later.
+You're not going to read it. You're also not going to close it.
 
-> The default is the decision. Everything after it is theater we put on for ourselves.
+We like to think of choosing as the moment we're most ourselves. Weighing things up, free, in control. Watch that moment closely and it gets a lot less flattering. The options were picked for you. So was the order they showed up in. And the tab didn't stay open because you decided to keep it. It stayed open because closing it felt like a decision, and leaving it felt like nothing.
 
-## The cost of an open loop
+That's the trick. Not deciding feels free. It isn't.
 
-An unmade choice does not sit quietly. It runs in the background, drawing down attention you do not notice you are spending. Psychologists have a tidy name for the residue: the Zeigarnik effect, our tendency to remember unfinished things more vividly than finished ones. The unfinished tab is not free. It is a small standing tax on the part of you that could have been thinking about something else.
+Psychology has a name for part of this, the Zeigarnik effect. We remember unfinished things better than finished ones. A half-done task keeps a small process running in the background, pulling at your attention whether you notice or not. One open tab is nothing. Thirty of them, plus the email you haven't answered, plus the subscription you keep meaning to cancel, is a lot of background noise for a brain that already has a day job.
 
-None of this is an argument for despair. It is an argument for paying attention to who is setting your defaults, because someone always is, and it may as well sometimes be you. Close the tab. Not because it matters, but because deciding to is practice for the times it will.
+> The default is the decision. Whatever you didn't choose, someone else did.
+
+Barry Schwartz wrote a whole book about this, The Paradox of Choice. More options were supposed to make us happier. Past a certain point they just make us slower, and less sure we picked right. There's the famous jam study: a tasting table with twenty-four flavors got more people to stop, and the one with six got more people to actually buy jam. It's had its doubters since. Anyone who has stood in a cereal aisle for too long doesn't need the replication.
+
+I'm not going to pretend there's a system for this. There's no app that fixes it, and if there were, it would open in a new tab.
+
+What I do think is that somebody is always setting your defaults. The browser, the feed, the store, the version of you from three weeks ago who couldn't be bothered. It might as well be you, at least some of the time.
+
+So close the tab. Not because that tab matters. Because deciding gets easier the more you do it, and a browser tab is a cheap place to practice.

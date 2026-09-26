@@ -144,7 +144,9 @@
 <script>
   const LOW = 12000;
   const HIGH = 180000;
-  const money = (n: number) => '€' + n.toLocaleString('en-US');
+  // Grouping by hand: the first toLocaleString() call makes the browser load
+  // its number-formatting data, which blocked the main thread ~300 ms on a phone.
+  const money = (n: number) => '€' + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
   let cleanupAnchor: (() => void) | null = null;
 
@@ -230,5 +232,5 @@
     cleanupAnchor = () => listeners.forEach((off) => off());
   }
 
-  document.addEventListener('astro:page-load', setupAnchorDemo);
+  document.addEventListener('site:ready', setupAnchorDemo);
 </script>

@@ -14,7 +14,7 @@ const LAUNCH_DATE = new Date('2026-07-17T00:00:00Z');
 const daysSinceLaunch = Math.max(0, Math.floor((Date.now() - LAUNCH_DATE.getTime()) / 86400000));
 ---
 <BaseLayout
-  title="Colophon — Ilias Ennajmi"
+  title="Colophon · Ilias Ennajmi"
   description="What this site is made of, and a running tally of what's in it."
   active="colophon"
   siteFx
@@ -42,7 +42,7 @@ const daysSinceLaunch = Math.max(0, Math.floor((Date.now() - LAUNCH_DATE.getTime
       <span style="font-weight:500;color:var(--ember);">{all.length}</span> essays published: {ulysses.length} Ulysses, {ilias.length} Ilias.{' '}
       <span style="font-weight:500;color:var(--ember);">{totalWords.toLocaleString()}</span> words written, essay bodies only; doesn't count the drafts that never made it.{' '}
       <span style="font-weight:500;color:var(--ember);">{totalMinutes}</span> minutes, cover to cover, at roughly 220 words a minute.{' '}
-      And <span style="font-weight:500;color:var(--ember);">{daysSinceLaunch}</span> days since launch, built slowly, on purpose.
+      And <span style="font-weight:500;color:var(--ember);">{daysSinceLaunch}</span> days since launch.
     </p>
   </section>
 
@@ -57,15 +57,10 @@ const daysSinceLaunch = Math.max(0, Math.floor((Date.now() - LAUNCH_DATE.getTime
         <p style="margin:0 0 1rem;">Type set in Fraunces, EB Garamond and Space Grotesk, self-hosted as variable fonts, so nothing here depends on a third party to render.</p>
         <p style="margin:0 0 1rem;">Essays edited from a browser via Decap CMS, authenticated through DecapBridge, committed straight to Git, with no database for content either.</p>
         <p style="margin:0 0 1rem;">Hosted on Vercel, deployed automatically on every push to <code>main</code>.</p>
-        <p style="margin:0;">Analytics are opt-in and cookieless, off entirely unless explicitly configured — a strange thing for a marketing strategist to build, and exactly the point.</p>
+        <p style="margin:0;">Analytics are opt-in and cookieless, off entirely unless I switch them on. An odd thing for someone in marketing to build. That's sort of the point.</p>
       </div>
     </div>
   </section>
 </main>
 </BaseLayout>
 
-<script>
-  document.addEventListener('astro:page-load', () => {
-    window.pageBoot({ strand: null, progress: 'page' });
-  });
-</script>

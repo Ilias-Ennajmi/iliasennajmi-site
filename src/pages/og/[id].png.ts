@@ -63,7 +63,7 @@ export const GET: APIRoute = async ({ props }) => {
                       textTransform: 'uppercase',
                       color: accent,
                     },
-                    children: `${strandLabel} — ${tag}`,
+                    children: `${strandLabel} · ${tag}`,
                   },
                 },
               ],

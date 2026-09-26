@@ -6,7 +6,7 @@ const startHere = await getStartHerePath();
 const first = startHere[0];
 ---
 <BaseLayout
-  title="You're on the list — Ilias Ennajmi"
+  title="You're on the list · Ilias Ennajmi"
   description="Subscription confirmed. New essays will arrive when they're finished, and not before."
   active="home"
   siteFx
@@ -47,8 +47,3 @@ const first = startHere[0];
   .thanks-cta:hover { border-color: var(--ember); letter-spacing: 0.24em; }
 </style>
 
-<script>
-  document.addEventListener('astro:page-load', () => {
-    window.pageBoot({ strand: null, progress: 'page' });
-  });
-</script>

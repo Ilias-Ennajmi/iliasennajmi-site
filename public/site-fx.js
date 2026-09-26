@@ -1,8 +1,16 @@
-// Shared behavior layer for the subpages (ulysses / ilias / essay / about / shelf).
-// Owns: scroll-reveal, scroll-progress rail, parallax, divider/numeral/underline draw,
-// cursor header light, and the essay reading meter. The Homepage keeps its own bespoke
-// logic (marquee-velocity coupling, hero seam, card ripple) and does not load this file.
-// Honors prefers-reduced-motion and a page-supplied `motion` flag. All effects idempotent.
+// Shared behavior layer for the subpages (ulysses / ilias / essay / about / shelf ...).
+// Owns: scroll-reveal, scroll-progress rail, parallax, divider/numeral/underline
+// draw, cursor header light, and the essay reading meter. Started and torn down
+// by page-boot.js; the homepage keeps its own bespoke logic.
+//
+// Scroll performance rules this file follows (each one fixed a measured
+// per-frame cost):
+// - one passive scroll listener, one requestAnimationFrame per frame;
+// - within a frame, every layout read happens before any style write;
+// - geometry (article box, page height) is cached and refreshed by a
+//   ResizeObserver instead of being re-read on every frame;
+// - the progress rail moves with transform: scaleY, never height;
+// - the reading meter writes to the DOM only when its value changes.
 (function () {
   'use strict';
 
@@ -15,13 +23,17 @@
   var SiteFX = {
     // opts: { strand, motion, progress: 'page'|'article'|false }
     init: function (opts) {
+      this.destroy();
       opts = opts || {};
-      this.strand = opts.strand || null;                       // 'ulysses' | 'ilias' | null
+      this.strand = opts.strand || null;
       this.accent = this.strand === 'ulysses' ? 'var(--tide)' : 'var(--ember)';
       this.rgb    = this.strand === 'ulysses' ? '117,89,56' : '165,39,22';
       this.motion = (opts.motion !== undefined ? opts.motion : !RM());
       this.progressMode = (opts.progress === undefined) ? 'page' : opts.progress;
+      this._cleanups = [];
+      this._geom = false;
 
+      this._observeGeometry();
       this._tintRail();
       this._activate();
       this._cursorLight();
@@ -30,11 +42,50 @@
       this._scroll();
     },
 
+    destroy: function () {
+      (this._cleanups || []).forEach(function (fn) { try { fn(); } catch (e) {} });
+      this._cleanups = [];
+      if (this._actIO) { this._actIO.disconnect(); this._actIO = null; }
+      if (this._revIO) { this._revIO.disconnect(); this._revIO = null; }
+      if (this._ro) this._ro.disconnect();
+      this._meter = null;
+      this._frame = null;
+    },
+
     // re-run after a component re-render (e.g. filtered list) so new nodes animate in
     refresh: function () {
       this._reveals();
       this._activate();
-      this._revealCheck();
+      this._schedule();
+    },
+
+    _on: function (target, type, fn, opts) {
+      target.addEventListener(type, fn, opts);
+      this._cleanups.push(function () { target.removeEventListener(type, fn, opts); });
+    },
+
+    // ---- cached geometry ----
+    // Read inside ResizeObserver callbacks, which run right after the
+    // browser's own layout, so reading geometry there is free. Reading it
+    // during start-up instead forced an extra full layout while web fonts
+    // were still loading, then another once they arrived.
+    _observeGeometry: function () {
+      var self = this;
+      this._art = document.querySelector('article');
+      if (!('ResizeObserver' in window)) { this._readGeometry(); return; }
+      if (!this._ro) this._ro = new ResizeObserver(function () { self._readGeometry(); self._schedule(); });
+      this._ro.disconnect();
+      this._ro.observe(document.body);
+      if (this._art) this._ro.observe(this._art);
+    },
+
+    _readGeometry: function () {
+      var art = this._art;
+      this._artTop = art ? art.getBoundingClientRect().top + (window.scrollY || 0) : 0;
+      this._artHeight = art ? art.offsetHeight : 0;
+      this._maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+      this._vh = window.innerHeight || 800;
+      this._geom = true;
     },
 
     _tintRail: function () {
@@ -62,53 +113,46 @@
           el.style.transform = 'scaleX(1)';
         }
       };
+      this._draw = draw;
       if (RM() || !('IntersectionObserver' in window)) { [].forEach.call(targets, draw); return; }
       if (!this._actIO) {
-        var io = new IntersectionObserver(function (ents) {
+        this._actIO = new IntersectionObserver(function (ents, io) {
           ents.forEach(function (e) { if (e.isIntersecting) { draw(e.target); io.unobserve(e.target); } });
         }, { rootMargin: '0px 0px -6% 0px' });
-        this._actIO = io;
       }
-      var self = this;
-      [].forEach.call(targets, function (t) { if (!t.dataset.fxObs) { t.dataset.fxObs = '1'; self._actIO.observe(t); } });
-      // scroll/raf fallback — IntersectionObserver can be unreliable in some embeds.
-      // Self-cleans once every target has been drawn.
-      if (!this._actCheck) {
-        var check = function () {
-          var vh = window.innerHeight || 800, pending = 0;
-          [].forEach.call(document.querySelectorAll('.cc-rule,.cc-num,.cc-uline'), function (t) {
-            if (t.dataset.fx) return;
-            if (t.getBoundingClientRect().top < vh * 0.96) draw(t);
-            else pending++;
-          });
-          if (!pending) { window.removeEventListener('scroll', check); self._actCheck = null; }
-        };
-        this._actCheck = check;
-        window.addEventListener('scroll', check, { passive: true });
-        requestAnimationFrame(check);
-        setTimeout(check, 300);
-      }
+      var io = this._actIO;
+      [].forEach.call(targets, function (t) { if (!t.dataset.fx) io.observe(t); });
     },
 
-    // ---- cursor-following warm light on big headers ----
+    // ---- cursor-following warm light on big headers (mouse only) ----
     _cursorLight: function () {
       if (!this.motion) return;
+      if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
       var self = this;
       [].forEach.call(document.querySelectorAll('[data-cursor-light]'), function (h) {
-        if (h.dataset.fxLight) return; h.dataset.fxLight = '1';
         if (getComputedStyle(h).position === 'static') h.style.position = 'relative';
-        var glow = document.createElement('div');
-        glow.style.cssText = 'position:absolute;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity .6s ease;mix-blend-mode:multiply;';
-        h.insertBefore(glow, h.firstChild);
+        var glow = h.querySelector(':scope > .fx-glow');
+        if (!glow) {
+          glow = document.createElement('div');
+          glow.className = 'fx-glow';
+          glow.style.cssText = 'position:absolute;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity .6s ease;mix-blend-mode:multiply;';
+          h.insertBefore(glow, h.firstChild);
+        }
         var wm = h.querySelector('[data-watermark]');
-        h.addEventListener('pointermove', function (e) {
+        var x = 0, y = 0, queued = false;
+        var paint = function () {
+          queued = false;
+          glow.style.background = 'radial-gradient(320px 320px at ' + x + 'px ' + y + 'px, rgba(' + self.rgb + ',0.16), transparent 70%)';
+        };
+        self._on(h, 'pointermove', function (e) {
           if (e.pointerType === 'touch') return;
           var r = h.getBoundingClientRect();
-          glow.style.background = 'radial-gradient(320px 320px at ' + (e.clientX - r.left) + 'px ' + (e.clientY - r.top) + 'px, rgba(' + self.rgb + ',0.16), transparent 70%)';
+          x = e.clientX - r.left; y = e.clientY - r.top;
+          if (!queued) { queued = true; requestAnimationFrame(paint); }
           glow.style.opacity = '1';
           if (wm) { wm.style.transition = 'color .6s ease'; wm.style.color = 'rgba(' + self.rgb + ',0.12)'; }
         });
-        h.addEventListener('pointerleave', function () {
+        self._on(h, 'pointerleave', function () {
           glow.style.opacity = '0';
           if (wm) wm.style.color = '';
         });
@@ -116,144 +160,135 @@
     },
 
     // ---- essay "X min left" chip ----
-    // Re-bound on every init() (each page navigation), so the previous
-    // page's listener (closed over its own meter/article nodes) is torn
-    // down first \u2014 otherwise soft navigation (view transitions) would
-    // stack up one stale scroll/resize listener per essay visited.
     _readingMeter: function () {
-      if (this._meterUpd) {
-        window.removeEventListener('scroll', this._meterUpd);
-        window.removeEventListener('resize', this._meterUpd);
-        this._meterUpd = null;
-      }
       var meter = document.querySelector('[data-reading-meter]');
       if (!meter) return;
-      var total = parseFloat(meter.getAttribute('data-minutes')) || 0;
-      var label = meter.querySelector('[data-meter-label]');
-      var fill = meter.querySelector('[data-meter-fill]');
-      var diamond = meter.querySelector('span');
-      var art = document.querySelector('article');
-
-      // Read-depth analytics ride along on the meter's existing progress
-      // figure rather than adding a second scroll listener. `fired` is
-      // per-call, and _readingMeter re-runs on every navigation, so
-      // milestones reset for each essay automatically.
       var essay = (location.pathname.match(/\/essays\/([^/]+)/) || [])[1] || location.pathname;
-      var marks = [[0.25, 'read-25'], [0.5, 'read-50'], [0.75, 'read-75'], [0.98, 'read-complete']];
-      var fired = {};
+      this._meter = {
+        el: meter,
+        total: parseFloat(meter.getAttribute('data-minutes')) || 0,
+        label: meter.querySelector('[data-meter-label]'),
+        diamond: meter.querySelector('span'),
+        essay: essay,
+        // Read-depth analytics ride on the meter's progress figure instead of
+        // a second scroll listener; reset per essay since init runs per page.
+        marks: [[0.25, 'read-25'], [0.5, 'read-50'], [0.75, 'read-75'], [0.98, 'read-complete']],
+        fired: {},
+        lastLabel: null,
+        lastOpacity: null,
+      };
+    },
 
-      var upd = function () {
-        if (!art) return;
-        var y = window.scrollY || 0;
-        var startY = art.offsetTop - window.innerHeight * 0.5;
-        var endY = art.offsetTop + art.offsetHeight - window.innerHeight * 0.6;
-        var p = (endY > startY) ? (y - startY) / (endY - startY) : 0;
-        p = Math.min(1, Math.max(0, p));
-        if (fill) fill.style.width = (p * 100).toFixed(1) + '%';
-        if (label) {
-          var left = Math.max(0, Math.round(total * (1 - p)));
-          label.textContent = p >= 0.992 ? 'Finished' : (left <= 0 ? '\u2039 1 min left' : left + ' min left');
-        }
-        meter.style.opacity = (p > 0.015 && p < 0.999) ? '1' : (p >= 0.999 ? '0.55' : '0');
+    _meterFrame: function (y) {
+      var m = this._meter;
+      if (!m || !this._art) return;
+      var vh = this._vh;
+      var startY = this._artTop - vh * 0.5;
+      var endY = this._artTop + this._artHeight - vh * 0.6;
+      var p = (endY > startY) ? (y - startY) / (endY - startY) : 0;
+      p = Math.min(1, Math.max(0, p));
+      if (m.label) {
+        var left = Math.max(0, Math.round(m.total * (1 - p)));
+        var text = p >= 0.992 ? 'Finished' : (left <= 0 ? '‹ 1 min left' : left + ' min left');
+        if (text !== m.lastLabel) { m.label.textContent = text; m.lastLabel = text; }
+      }
+      var op = (p > 0.015 && p < 0.999) ? '1' : (p >= 0.999 ? '0.55' : '0');
+      if (op !== m.lastOpacity) { m.el.style.opacity = op; m.lastOpacity = op; }
 
-        for (var i = 0; i < marks.length; i++) {
-          if (p >= marks[i][0] && !fired[marks[i][1]]) {
-            fired[marks[i][1]] = 1;
-            if (typeof window.track === 'function') window.track(marks[i][1], { essay: essay });
-            // A single quiet flash on the meter's own diamond the instant an
-            // essay is actually finished — not a reward banner, just the one
-            // marker that's already there briefly catching light. `fired`
-            // above makes this naturally one-shot per view.
-            if (marks[i][1] === 'read-complete' && diamond) {
-              diamond.classList.remove('meter-flash');
-              void diamond.offsetWidth;
-              diamond.classList.add('meter-flash');
-              // Generic event, not analytics-specific: essays/[id].astro's
-              // own script (which already has strand/tag/minutes in scope)
-              // listens for this to build the local reading log, so this
-              // file doesn't need to know anything about that feature.
-              window.dispatchEvent(new CustomEvent('cc:essay-complete', { detail: { essay: essay } }));
+      for (var i = 0; i < m.marks.length; i++) {
+        var id = m.marks[i][1];
+        if (p >= m.marks[i][0] && !m.fired[id]) {
+          m.fired[id] = 1;
+          if (typeof window.track === 'function') window.track(id, { essay: m.essay });
+          // One quiet flash on the meter's own diamond when an essay is
+          // actually finished, and a generic event the essay page listens
+          // for to update the local reading log.
+          if (id === 'read-complete') {
+            if (m.diamond) {
+              m.diamond.classList.remove('meter-flash');
+              void m.diamond.offsetWidth;
+              m.diamond.classList.add('meter-flash');
             }
+            window.dispatchEvent(new CustomEvent('cc:essay-complete', { detail: { essay: m.essay } }));
           }
         }
-      };
-      this._meterUpd = upd;
-      window.addEventListener('scroll', upd, { passive: true });
-      window.addEventListener('resize', upd, { passive: true });
-      upd();
+      }
     },
 
     // ---- scroll-reveal ----
+    // Anything already on screen (or above it) when the page starts stays
+    // exactly as painted: hiding it only to fade it back in made the first
+    // screen flash, and delayed Largest Contentful Paint by ~1.2s.
     _reveals: function () {
       var els = document.querySelectorAll('[data-reveal]');
       if (!els.length) return;
-      var self = this;
-      if (!this.motion) {
-        [].forEach.call(els, function (el) { el.style.opacity = ''; el.style.transform = ''; el.dataset.shown = '1'; });
-        return;
-      }
-      if (!this._revIO && 'IntersectionObserver' in window) {
-        var io = new IntersectionObserver(function (ents) {
-          ents.forEach(function (e) { if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'none'; e.target.dataset.shown = '1'; io.unobserve(e.target); } });
-        }, { rootMargin: '0px 0px -8% 0px' });
-        this._revIO = io;
-      }
-      [].forEach.call(els, function (el) {
-        if (el.dataset.shown) { el.style.opacity = '1'; el.style.transform = 'none'; return; }
-        if (el.dataset.rev) return; el.dataset.rev = '1';
+      var show = function (el) { el.style.opacity = '1'; el.style.transform = 'none'; el.dataset.shown = '1'; };
+      var hide = function (el) {
         el.style.opacity = '0';
         el.style.transform = 'translateY(' + (el.hasAttribute('data-bigrise') ? '64px' : '24px') + ')';
         el.style.transition = 'transform .8s cubic-bezier(.2,.7,.2,1), opacity .8s ease';
-        if (self._revIO) self._revIO.observe(el); else { el.style.opacity = '1'; el.style.transform = 'none'; el.dataset.shown = '1'; }
-      });
-      this._revealCheck();
-    },
-
-    _revealCheck: function () {
-      var vh = window.innerHeight || 800;
-      [].forEach.call(document.querySelectorAll('[data-reveal]'), function (el) {
-        if (el.dataset.shown) return;
-        if (el.getBoundingClientRect().top < vh * 0.95) { el.dataset.shown = '1'; el.style.opacity = '1'; el.style.transform = 'none'; }
-      });
-    },
-
-    // ---- unified scroll handler: reveal-check + parallax + progress rail ----
-    // Rebuilt on every init() — each page navigation has its own progress
-    // rail/parallax layers/progressMode, so the previous page's handler
-    // (and its captured references) must be torn down first.
-    _scroll: function () {
-      if (this._onScroll) window.removeEventListener('scroll', this._onScroll);
-      var self = this;
-      var prog = this.progressMode ? document.getElementById('cc-prog') : null;
-      var layers = this.motion ? [].slice.call(document.querySelectorAll('[data-pll]')) : [];
-      var ticking = false;
-      this._onScroll = function () {
-        self._revealCheck();
-        if (ticking) return; ticking = true;
-        requestAnimationFrame(function () {
-          var y = window.scrollY || window.pageYOffset || 0;
-          if (layers.length) layers.forEach(function (el) {
-            var s = parseFloat(el.getAttribute('data-pll')) || 0;
-            el.style.transform = 'translate3d(0,' + (y * s).toFixed(1) + 'px,0)';
-          });
-          if (prog) {
-            if (self.progressMode === 'article') {
-              var art = document.querySelector('article');
-              if (art) {
-                var total = art.offsetHeight - window.innerHeight * 0.6;
-                var p = total > 0 ? (y - art.offsetTop + window.innerHeight * 0.6) / total : (y > art.offsetTop ? 1 : 0);
-                prog.style.height = (Math.min(1, Math.max(0, p)) * 100).toFixed(2) + '%';
-              }
-            } else {
-              var max = document.documentElement.scrollHeight - window.innerHeight;
-              prog.style.height = (max > 0 ? (y / max) * 100 : 0).toFixed(2) + '%';
-            }
-          }
-          ticking = false;
-        });
       };
-      window.addEventListener('scroll', this._onScroll, { passive: true });
-      this._onScroll();
+      if (!this.motion || !('IntersectionObserver' in window)) { [].forEach.call(els, show); return; }
+      if (!this._revIO) {
+        // The observer's first report for each element says where it is,
+        // computed during the browser's own rendering step (no forced
+        // layout): anything below the viewport is hidden to animate in
+        // later; anything on screen or above it stays exactly as painted.
+        this._revIO = new IntersectionObserver(function (ents, io) {
+          // read once: innerHeight after a style write forces a layout
+          var vh = window.innerHeight;
+          ents.forEach(function (e) {
+            var el = e.target;
+            if (!el.dataset.rev) {
+              el.dataset.rev = '1';
+              if (e.boundingClientRect.top >= vh) { hide(el); return; }
+              el.dataset.shown = '1'; io.unobserve(el); return;
+            }
+            if (e.isIntersecting) { show(el); io.unobserve(el); }
+          });
+        }, { rootMargin: '0px 0px -8% 0px' });
+      }
+      var io = this._revIO;
+      [].forEach.call(els, function (el) { if (!el.dataset.shown) io.observe(el); });
+    },
+
+    // ---- the one scroll handler: parallax + progress rail + reading meter ----
+    _scroll: function () {
+      var self = this;
+      this._prog = this.progressMode ? document.getElementById('cc-prog') : null;
+      this._layers = this.motion ? [].slice.call(document.querySelectorAll('[data-pll]')) : [];
+      this._lastProg = -1;
+      this._ticking = false;
+      this._frame = function () {
+        self._ticking = false;
+        var y = window.scrollY || 0;
+        for (var i = 0; i < self._layers.length; i++) {
+          var s = parseFloat(self._layers[i].getAttribute('data-pll')) || 0;
+          self._layers[i].style.transform = 'translate3d(0,' + (y * s).toFixed(1) + 'px,0)';
+        }
+        if (!self._geom) return;
+        if (self._prog) {
+          var p;
+          if (self.progressMode === 'article' && self._art) {
+            var total = self._artHeight - self._vh * 0.6;
+            p = total > 0 ? (y - self._artTop + self._vh * 0.6) / total : (y > self._artTop ? 1 : 0);
+          } else {
+            p = self._maxScroll > 0 ? y / self._maxScroll : 0;
+          }
+          p = Math.round(Math.min(1, Math.max(0, p)) * 1000) / 1000;
+          if (p !== self._lastProg) { self._prog.style.transform = 'scaleY(' + p + ')'; self._lastProg = p; }
+        }
+        self._meterFrame(y);
+      };
+      this._on(window, 'scroll', function () { self._schedule(); }, { passive: true });
+      this._on(window, 'resize', function () { self._geom && self._readGeometry(); self._schedule(); }, { passive: true });
+      this._schedule();
+    },
+
+    _schedule: function () {
+      if (this._ticking || !this._frame) return;
+      this._ticking = true;
+      requestAnimationFrame(this._frame);
     }
   };
 

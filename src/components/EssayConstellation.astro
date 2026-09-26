@@ -73,7 +73,7 @@ const edges = left
 
     {[...left.map((n) => ({ n, side: 'l' as const })), ...right.map((n) => ({ n, side: 'r' as const }))].map(({ n, side }) => (
       <a href={n.href} class="cn-node" data-node={n.id} data-pair={n.pairsWith}>
-        <title>{n.title} — {n.tag}</title>
+        <title>{n.title} · {n.tag}</title>
         <rect
           x={n.x - 6} y={n.y - 6} width="12" height="12"
           transform={`rotate(45 ${n.x} ${n.y})`}
@@ -222,5 +222,5 @@ const edges = left
     cleanupConstellation = () => { listeners.forEach((off) => off()); clear(); };
   }
 
-  document.addEventListener('astro:page-load', setupConstellation);
+  document.addEventListener('site:ready', setupConstellation);
 </script>

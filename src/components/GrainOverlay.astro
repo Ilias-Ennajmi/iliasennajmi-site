@@ -1,3 +1,32 @@
 ---
+// The paper grain. It used to be grey noise laid over the page with
+// mix-blend-mode (multiply on paper, screen on ink), which makes the browser
+// re-blend the whole page under this full-screen fixed layer on every scroll
+// frame. Blending grey noise at a fixed opacity is mathematically the same
+// as painting pure black (or white) at a per-pixel alpha, so the noise now
+// carries that alpha itself and composites normally. Coefficients were
+// calibrated so mean and spread of the darkening match the old grain
+// (paper 0.0162 / 0.0044, ink 0.0256 / 0.0063).
+const noise = (matrix: string) =>
+  `url("data:image/svg+xml,${encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120"><filter id="n" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2"/><feColorMatrix values="${matrix}"/></filter><rect width="100%" height="100%" filter="url(#n)"/></svg>`
+  )}")`;
+const paper = noise('0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -0.023 -0.023 -0.023 0 0.0507');
+const ink = noise('0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0.033 0.033 0.033 0 -0.0239');
 ---
-<div class="grain-overlay" style="position:fixed;inset:0;pointer-events:none;z-index:8500;opacity:0.12;mix-blend-mode:multiply;background-image:url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22%3E%3Cfilter id=%22n%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%222%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/%3E%3C/svg%3E');background-size:160px;"></div>
+<div class="grain-overlay" aria-hidden="true" style={`--grain-paper:${paper};--grain-ink:${ink};`}></div>
+
+<style is:global>
+  .grain-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 8500;
+    background-image: var(--grain-paper);
+    background-size: 160px;
+    /* its own compositor layer: scrolling never repaints it */
+    will-change: transform;
+    contain: strict;
+  }
+  :root[data-theme="ink"] .grain-overlay { background-image: var(--grain-ink); }
+</style>

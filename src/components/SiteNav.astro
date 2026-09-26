@@ -347,5 +347,5 @@ const links = [
     document.addEventListener('keydown', onKeydown);
     cleanupKeydown = () => document.removeEventListener('keydown', onKeydown);
   }
-  document.addEventListener('astro:page-load', initNav);
+  document.addEventListener('site:ready', initNav);
 </script>

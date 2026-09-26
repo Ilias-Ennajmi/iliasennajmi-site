@@ -1,0 +1,55 @@
+---
+// Prefetch for phones. The site-wide default prefetches a link when the
+// pointer hovers it, which never happens on a touch screen, so on phones
+// every tap used to wait for a full network round trip. Here, on devices
+// that can't hover, an internal link is prefetched once it has been on
+// screen for a moment. Astro's prefetch() de-duplicates, and skips entirely
+// on Save-Data or 2G connections.
+---
+<script>
+  import { prefetch } from 'astro:prefetch';
+
+  const life = () => (window as any).__life;
+
+  function setup() {
+    if (!window.matchMedia('(hover: none)').matches) return;
+    const timers = new WeakMap<Element, number>();
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        const a = e.target as HTMLAnchorElement;
+        if (e.isIntersecting) {
+          timers.set(a, window.setTimeout(() => { io.unobserve(a); prefetch(a.href); }, 350));
+        } else {
+          clearTimeout(timers.get(a));
+        }
+      }
+    });
+    document.querySelectorAll<HTMLAnchorElement>('a[href^="/"]').forEach((a) => {
+      if (a.dataset.astroPrefetch === 'false' || a.hasAttribute('download')) return;
+      // pages only (every page URL ends in a slash), not feeds or files
+      if (!a.pathname.endsWith('/') || a.pathname.startsWith('/admin')) return;
+      if (a.pathname === location.pathname) return;
+      io.observe(a);
+    });
+    life()?.onLeave(() => io.disconnect());
+  }
+
+  // Only once the reader actually engages (first touch or scroll), and never
+  // during the page's own first load: a visitor who just glances at the page
+  // costs no extra data, and prefetches can't compete with the first paint.
+  const whenEngaged = (fn: () => void) => {
+    let done = false;
+    const go = () => {
+      if (done) return; done = true;
+      window.removeEventListener('touchstart', go);
+      window.removeEventListener('scroll', go);
+      const idle = () => ('requestIdleCallback' in window ? requestIdleCallback(fn, { timeout: 2000 }) : setTimeout(fn, 300));
+      if (document.readyState === 'complete') idle();
+      else window.addEventListener('load', idle, { once: true });
+    };
+    window.addEventListener('touchstart', go, { passive: true, once: true });
+    window.addEventListener('scroll', go, { passive: true, once: true });
+    life()?.onLeave(() => { done = true; window.removeEventListener('touchstart', go); window.removeEventListener('scroll', go); });
+  };
+  document.addEventListener('site:ready', () => whenEngaged(setup));
+</script>

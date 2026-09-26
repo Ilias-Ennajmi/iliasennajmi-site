@@ -87,7 +87,7 @@ const epistemicLabel: Record<string, string> = {
 };
 ---
 <BaseLayout
-  title={`${entry.data.title} — Ilias Ennajmi`}
+  title={`${entry.data.title} · Ilias Ennajmi`}
   description={entry.data.standfirst}
   active="essay"
   ogType="article"
@@ -95,6 +95,8 @@ const epistemicLabel: Record<string, string> = {
   ogImage={ogImage}
   jsonLd={jsonLd}
   siteFx
+  fxStrand={strand}
+  fxProgress="article"
 >
 <div style={`--acc:${accentVar};`}>
   <div data-reading-meter data-minutes={readMinutes} style="position:fixed;left:clamp(14px,2vw,26px);bottom:clamp(14px,2.4vh,24px);z-index:7200;opacity:0;transition:opacity .5s ease;pointer-events:none;font-family:var(--mono);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--acc);display:flex;align-items:center;gap:9px;">
@@ -465,7 +467,7 @@ const epistemicLabel: Record<string, string> = {
       const label = document.createElement('span');
       label.className = 'reader-note-label';
       label.textContent = n.quote
-        ? `Your note — on "${n.quote.length > 60 ? n.quote.slice(0, 60) + '…' : n.quote}"`
+        ? `Your note on "${n.quote.length > 60 ? n.quote.slice(0, 60) + '…' : n.quote}"`
         : 'Your note';
 
       const p = document.createElement('p');
@@ -512,7 +514,13 @@ const epistemicLabel: Record<string, string> = {
     const wide = window.matchMedia('(min-width: 1280px)').matches;
 
     if (wide) {
+      // Measure every anchor first, then insert: interleaving reads with
+      // appendChild forced one layout per footnote.
       const artRect = article.getBoundingClientRect();
+      const tops = new Map(refs.map((ref) => {
+        const sup = ref.closest('sup');
+        return [ref, sup ? sup.getBoundingClientRect().top - artRect.top : 0];
+      }));
       refs.forEach((ref) => {
         const id = ref.getAttribute('href').slice(1);
         const content = notes[id];
@@ -521,7 +529,7 @@ const epistemicLabel: Record<string, string> = {
         const note = document.createElement('span');
         note.className = 'sidenote';
         note.innerHTML = content;
-        note.style.top = (sup.getBoundingClientRect().top - artRect.top) + 'px';
+        note.style.top = tops.get(ref) + 'px';
         article.appendChild(note);
         created.push(note);
         const onClick = (e) => e.preventDefault();
@@ -575,7 +583,11 @@ const epistemicLabel: Record<string, string> = {
     else source.parentElement?.insertBefore(widget, source);
   }
 
-  document.addEventListener('astro:page-load', () => {
+  // Page-scoped (see BaseLayout's __life): this script re-executes on every
+  // visit to an essay, so registering on a global event made each visited
+  // essay's handlers pile up and keep running on later pages (saving essay B
+  // also saved essay A; arrow keys kept navigating from any page).
+  window.__life.onReady(() => {
     placeInteractive();
 
     // <Content /> renders as opaque HTML (real markdown, not hand-built
@@ -583,8 +595,6 @@ const epistemicLabel: Record<string, string> = {
     // here instead of in the template, to keep the same staggered
     // scroll-reveal per paragraph/quote/heading as before.
     document.querySelectorAll('.essay-body > *').forEach((el) => el.setAttribute('data-reveal', ''));
-    window.pageBoot({ strand, progress: 'article' });
-    window.scrollTo(0, 0);
 
     setupSidenotes();
     setupListen();
@@ -682,6 +692,7 @@ const epistemicLabel: Record<string, string> = {
     if (popover && copyBtn && noteBtn && actionsRow && composer && composerInput && composerCancel && composerSave && body) {
       let pending = null; // { index, quote }
       const hide = () => {
+        if (popover.style.display === 'none') return;
         popover.style.display = 'none';
         actionsRow.style.display = 'flex';
         composer.style.display = 'none';
@@ -710,7 +721,7 @@ const epistemicLabel: Record<string, string> = {
       };
       const onCopyClick = async () => {
         const quote = copyBtn.dataset.quote || '';
-        const text = `"${quote}" — Ilias Ennajmi, "${essayTitle}"\n${canonicalUrl}`;
+        const text = `"${quote}"\nIlias Ennajmi, "${essayTitle}"\n${canonicalUrl}`;
         try {
           await navigator.clipboard.writeText(text);
           copyBtn.lastChild.textContent = ' Copied';
@@ -760,5 +771,10 @@ const epistemicLabel: Record<string, string> = {
         document.removeEventListener('scroll', hide);
       };
     }
+
+    window.__life.onLeave(() => {
+      [cleanupKeydown, cleanupHighlight, cleanupSidenotes, cleanupSidenoteResize, cleanupListen, cleanupReadingLog, cleanupPace]
+        .forEach((fn) => { if (fn) fn(); });
+    });
   });
 </script>

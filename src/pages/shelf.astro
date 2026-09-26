@@ -42,7 +42,7 @@ const shelves = [
 // search query isn't a recommendation, so unlinked items render as text.
 ---
 <BaseLayout
-  title="The Shelf — Ilias Ennajmi"
+  title="The Shelf · Ilias Ennajmi"
   description="Books, essays, and other things that shaped how I think about why people act and who profits."
   active="shelf"
   siteFx
@@ -56,10 +56,10 @@ const shelves = [
     <div style="position:relative;z-index:1;max-width:1180px;margin:0 auto;animation:cc-rise .9s ease both;">
       <div data-pll="0.10" data-watermark class="wm wm-left" style="top:8%;font-size:clamp(5rem,15vw,14rem);">04</div>
       <div style="display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:0.68rem;letter-spacing:0.24em;text-transform:uppercase;color:var(--ash);margin-bottom:clamp(1.6rem,3vw,2.4rem);">
-        <span style="width:28px;height:1px;background:var(--ember);"></span><span class="cc-num" data-to="4">04</span> — The Shelf
+        <span style="width:28px;height:1px;background:var(--ember);"></span><span class="cc-num" data-to="4">04</span> · The Shelf
       </div>
       <h1 style="margin:0;font-family:var(--display);font-weight:500;font-size:clamp(3.4rem,11vw,8.5rem);line-height:0.9;letter-spacing:-0.015em;">The Shelf<span style="color:var(--ember-vivid);">.</span></h1>
-      <p style="font-family:var(--body);font-weight:300;font-style:italic;font-size:clamp(1.2rem,2.4vw,1.7rem);color:var(--bone);opacity:0.82;max-width:48ch;margin:1.6rem 0 0;line-height:1.45;text-wrap:pretty;">Everything currently feeding the work: books, sound, tools and a few rabbit holes. Updated whenever something earns its place. Last touched {SITE.nowUpdated}.</p>
+      <p style="font-family:var(--body);font-weight:300;font-style:italic;font-size:clamp(1.2rem,2.4vw,1.7rem);color:var(--bone);opacity:0.82;max-width:48ch;margin:1.6rem 0 0;line-height:1.45;text-wrap:pretty;">What I'm reading, listening to and using right now, plus a few rabbit holes. Updated when something new sticks. Last touched {SITE.nowUpdated}.</p>
     </div>
   </header>
 
@@ -129,8 +129,3 @@ const shelves = [
   .shelf-link:hover { color: var(--ember); }
 </style>
 
-<script>
-  document.addEventListener('astro:page-load', () => {
-    window.pageBoot({ strand: null, progress: 'page' });
-  });
-</script>

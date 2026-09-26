@@ -6,12 +6,20 @@ date: "Dec 2025"
 order: 6
 pairsWith: "belief"
 draft: true
-standfirst: "A plan that excludes nothing is a wish list. The discipline of deciding, on purpose, who you are not for."
+standfirst: "A plan that rules nothing out is a wish list. Strategy starts where the no's start."
 ---
-Most documents called strategy are inventories of ambition — every market, every segment, every opportunity, pursued at once. That is not a strategy. It is a list of things you would like to be true, and lists do not force the hard part: choosing what to give up.
+Most documents called "strategy" are really lists of ambitions. Every market, every segment, every opportunity, all at once, with a nice cover slide.
 
-Strategy only begins where the noes begin. To stand for something is to stand against the alternatives; to be the right answer for someone is to be the wrong answer for everyone else, on purpose, and with your eyes open. A position that excludes nobody attracts nobody.
+That's a list of things you'd like to be true. Lists don't make you do the hard part, which is choosing what to give up.
 
-> Show me what you have chosen not to do, and I’ll tell you whether you actually have a strategy.
+I've read a lot of these, and the tell is always the same. Nothing in them costs anything. Every option stays open, every audience is a target, and nobody had to lose an argument to write it.
 
-The test is uncomfortable and clarifying: name the customer you are happy to lose, the feature you will never build, the revenue you will refuse. If the answer is none of them, you do not have a strategy yet. You have a hope.
+Strategy starts where the no's start. If you want to be the right answer for someone, you have to be the wrong answer for someone else, and you have to mean it. A brand that's trying not to put anyone off usually ends up not pulling anyone in either.
+
+Michael Porter wrote it down back in 1996: the essence of strategy is choosing what not to do. It gets quoted in every business school and ignored in most boardrooms, mostly because saying no feels like losing money you haven't made yet.
+
+> Show me what you've decided not to do, and I'll tell you if you have a strategy.
+
+There's a simple test. Name the customer you're happy to lose. The feature you'll never build. The money you'd turn down.
+
+If you can't name any of them, you don't have a strategy yet. You have a hope, and a slide deck.

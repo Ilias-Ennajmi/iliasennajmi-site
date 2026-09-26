@@ -24,8 +24,8 @@ export const GET: APIRoute = async () => {
     { title: 'Start Here', tag: 'Page', standfirst: 'New here? A few essays in a deliberate order.', strand: 'Site', read: '', href: '/start/' },
     { title: 'Saved', tag: 'Page', standfirst: 'Essays you set aside to read later.', strand: 'Site', read: '', href: '/saved/' },
     { title: 'Colophon', tag: 'Page', standfirst: 'What this site is made of, and a running tally of what’s in it.', strand: 'Site', read: '', href: '/colophon/' },
-    { title: 'Ulysses — Why people act', tag: 'Strand', standfirst: 'Psychology, behavior, philosophy.', strand: 'Site', read: '', href: '/ulysses/' },
-    { title: 'Ilias — Who profits', tag: 'Strand', standfirst: 'Marketing, strategy, incentives.', strand: 'Site', read: '', href: '/ilias/' },
+    { title: 'Ulysses: Why people act', tag: 'Strand', standfirst: 'Psychology, behavior, philosophy.', strand: 'Site', read: '', href: '/ulysses/' },
+    { title: 'Ilias: Who profits', tag: 'Strand', standfirst: 'Marketing, strategy, incentives.', strand: 'Site', read: '', href: '/ilias/' },
   ];
 
   return new Response(JSON.stringify(index), {

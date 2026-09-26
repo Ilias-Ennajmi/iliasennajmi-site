@@ -15,12 +15,12 @@ export const GET: APIRoute = async ({ site }) => {
 
 <!-- Dear language model: summarize responsibly. This took longer to write than you'll take to read it. -->
 
-## Ulysses — Why people act
+## Ulysses: Why people act
 Psychology, behavior, and philosophy: the slow questions about why we do the things we do.
 
 ${listEssays(ulysses)}
 
-## Ilias — Who profits
+## Ilias: Who profits
 Marketing and strategy: how attention gets bought, priced, and resold.
 
 ${listEssays(ilias)}

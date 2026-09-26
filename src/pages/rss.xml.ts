@@ -31,7 +31,7 @@ export async function GET(context: APIContext) {
   );
 
   return rss({
-    title: 'Ilias Ennajmi — Why people act, who profits',
+    title: 'Ilias Ennajmi · Why people act, who profits',
     description: 'Essays on the hidden mechanics of choice: what makes people act, and who profits when they do.',
     site: context.site!,
     items,

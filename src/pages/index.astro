@@ -54,11 +54,11 @@ const shelves = [
 // fragments rather than pointing somewhere that doesn't actually deliver on
 // the thread's specific claim.
 const threads = [
-  { text: "Pricing isn't math. It's a story about what you think you deserve.", tag: 'ON VALUE', href: '/essays/first-number/' },
+  { text: "Pricing is less math than a story about what you think you deserve.", tag: 'ON VALUE', href: '/essays/first-number/' },
   { text: 'Every free trial bets you’ll forget to cancel. They usually win.', tag: 'ON FRICTION' },
-  { text: 'Nobody picks the middle option, so they add one for you to skip.', tag: 'ON CHOICE' },
+  { text: 'The expensive dish on the menu is there so you order the one next to it.', tag: 'ON CHOICE' },
   { text: 'Willpower is a budget. Most ads wait for you to overdraw it.', tag: 'ON ATTENTION' },
-  { text: 'You didn’t choose the playlist. It chose the version of you that buys.', tag: 'ON DEFAULTS', href: '/essays/defaults/' },
+  { text: 'The playlist feels personal. It was built to keep you listening.', tag: 'ON DEFAULTS', href: '/essays/defaults/' },
 ];
 
 const sameAs = Object.values(SITE.social).filter((url): url is string => Boolean(url));
@@ -84,7 +84,7 @@ const jsonLd = {
 };
 ---
 <BaseLayout
-  title="Ilias Ennajmi — Why people act, who profits"
+  title="Ilias Ennajmi · Why people act, who profits"
   description="Essays on the hidden mechanics of choice: what makes people act, and who profits when they do."
   active="home"
   jsonLd={jsonLd}
@@ -122,7 +122,7 @@ const jsonLd = {
   <!-- ============ 02 — THE FORK ============ -->
   <section id="fork" tabindex="-1" style="max-width:1180px;margin:0 auto;padding:clamp(4.5rem,9vw,7.5rem) clamp(22px,6vw,64px);">
     <div data-reveal class="eyebrow-row" style="margin:0 0 clamp(1.6rem,3vw,2.4rem);display:flex;align-items:baseline;gap:16px;font-family:var(--mono);font-weight:400;font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ash);">
-      <h2 style="display:inline;margin:0;font:inherit;color:inherit;letter-spacing:inherit;"><span class="cc-num" data-to="2">02</span> — The Fork</h2>
+      <h2 style="display:inline;margin:0;font:inherit;color:inherit;letter-spacing:inherit;"><span class="cc-num" data-to="2">02</span> · The Fork</h2>
       <span class="cc-rule"></span>
       <span class="eyebrow-tag" style="color:var(--ash);">Two ways down the same hole</span>
     </div>
@@ -131,7 +131,7 @@ const jsonLd = {
 
     <div class="cc-fork" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1px;background:var(--coal-line);border-top:1px solid var(--coal-line);border-bottom:1px solid var(--coal-line);">
       <a href="/ulysses/" class="js-ulysses charge" data-reveal style="position:relative;overflow:hidden;background:color-mix(in srgb, var(--tide) 3%, var(--coal));display:flex;flex-direction:column;justify-content:space-between;gap:clamp(2.4rem,6vw,4.5rem);min-height:clamp(300px,33vw,440px);padding:clamp(28px,3.5vw,48px);border-left:3px solid var(--tide);transition:background .45s ease,opacity .45s ease,filter .45s ease;">
-        <div style="display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--tide);"><span>I — Ulysses</span><span>→</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--tide);"><span>I · Ulysses</span><span>→</span></div>
         <div>
           <div class="fork-title" style="font-family:var(--display);font-weight:500;font-size:clamp(2.6rem,5.4vw,4.4rem);line-height:0.92;letter-spacing:-0.01em;transition:color .4s ease;">Why people act.</div>
           <p style="font-family:var(--body);font-style:italic;font-weight:300;color:var(--ash);font-size:clamp(1.05rem,1.6vw,1.3rem);margin:1.1rem 0 0;max-width:34ch;line-height:1.45;">Psychology, behavior, philosophy. The long way home, basically.</p>
@@ -145,7 +145,7 @@ const jsonLd = {
         <span class="fork-underline" style="position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--tide);transform:scaleX(0);transform-origin:left center;transition:transform .55s cubic-bezier(.2,.7,.2,1);"></span>
       </a>
       <a href="/ilias/" class="js-ilias charge" data-reveal style="position:relative;overflow:hidden;background:color-mix(in srgb, var(--ember) 3%, var(--coal));display:flex;flex-direction:column;justify-content:space-between;gap:clamp(2.4rem,6vw,4.5rem);min-height:clamp(300px,33vw,440px);padding:clamp(28px,3.5vw,48px);border-left:3px solid var(--ember);transition:background .45s ease,opacity .45s ease,filter .45s ease;">
-        <div style="display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--ember);"><span>II — Ilias</span><span>→</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--ember);"><span>II · Ilias</span><span>→</span></div>
         <div>
           <div class="fork-title-ember" style="font-family:var(--display);font-weight:500;font-size:clamp(2.6rem,5.4vw,4.4rem);line-height:0.92;letter-spacing:-0.01em;transition:color .4s ease;">Who profits when they do.</div>
           <p style="font-family:var(--body);font-style:italic;font-weight:300;color:var(--ash);font-size:clamp(1.05rem,1.6vw,1.3rem);margin:1.1rem 0 0;max-width:34ch;line-height:1.45;">Marketing and strategy, before the click. Follow the money.</p>
@@ -163,7 +163,7 @@ const jsonLd = {
     {allEssayIds.length > 0 && (
       <a href={startHere.length > 0 ? '/start/' : '/topics/'} id="next-step-pill" class="charge pill-cta pill-cta-icon start-pill" data-reveal style="margin-top:clamp(1.8rem,3vw,2.6rem);color:var(--ash);">
         <span style="width:6px;height:6px;background:var(--ash);transform:rotate(45deg);flex:none;"></span>
-        <span id="next-step-text">{startHere.length > 0 ? `New here? Start Here — ${startHere.length} essays, ~${startHereMinutes} min →` : 'Browse the essays →'}</span>
+        <span id="next-step-text">{startHere.length > 0 ? `New here? Start with ${startHere.length} essays, about ${startHereMinutes} min →` : 'Browse the essays →'}</span>
       </a>
     )}
   </section>
@@ -189,31 +189,31 @@ const jsonLd = {
 
       const mostRecentId = recentIds[0];
       if (mostRecentId && !finishedIds.has(mostRecentId) && essayInfo[mostRecentId]) {
-        setPill(essayInfo[mostRecentId].href, `Continue reading — ${essayInfo[mostRecentId].title} →`);
+        setPill(essayInfo[mostRecentId].href, `Continue reading: ${essayInfo[mostRecentId].title} →`);
         return;
       }
       const pairedId = mostRecentId ? pairMap[mostRecentId] : null;
       if (pairedId && !finishedIds.has(pairedId) && essayInfo[pairedId]) {
-        setPill(essayInfo[pairedId].href, `Read the other half — ${essayInfo[pairedId].title} →`);
+        setPill(essayInfo[pairedId].href, `Read the other half: ${essayInfo[pairedId].title} →`);
         return;
       }
       const nextUnread = allEssayIds.find((id) => !finishedIds.has(id));
       if (nextUnread && essayInfo[nextUnread]) {
-        setPill(essayInfo[nextUnread].href, `Next up — ${essayInfo[nextUnread].title} →`);
+        setPill(essayInfo[nextUnread].href, `Next up: ${essayInfo[nextUnread].title} →`);
         return;
       }
-      setPill('/topics/', `You've read all ${allEssayIds.length} essays — browse by topic →`);
+      setPill('/topics/', `You've read all ${allEssayIds.length} essays. Browse by topic →`);
     }
-    document.addEventListener('astro:page-load', personalizeNextStep);
+    window.__life.onReady(personalizeNextStep);
   </script>
 
   <!-- ============ 03 — LOOSE THREADS (marquee) ============ -->
   <section style="padding:clamp(4.5rem,9vw,7.5rem) 0;border-top:1px solid var(--coal-line);overflow:hidden;">
     <div style="max-width:1180px;margin:0 auto;padding:0 clamp(22px,6vw,64px);">
       <div data-reveal class="eyebrow-row" style="margin:0;display:flex;align-items:baseline;gap:16px;font-family:var(--mono);font-weight:400;font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ash);">
-        <h2 style="display:inline;margin:0;font:inherit;color:inherit;letter-spacing:inherit;"><span class="cc-num" data-to="3">03</span> — Loose Threads</h2>
+        <h2 style="display:inline;margin:0;font:inherit;color:inherit;letter-spacing:inherit;"><span class="cc-num" data-to="3">03</span> · Loose Threads</h2>
         <span class="cc-rule"></span>
-        <span class="eyebrow-tag">A public notebook — some become essays</span>
+        <span class="eyebrow-tag">A public notebook. Some of these become essays</span>
       </div>
       <button type="button" id="marq-toggle" data-reveal aria-pressed="false" style="margin-top:14px;display:inline-flex;align-items:center;min-height:44px;font-family:var(--mono);font-size:0.6rem;letter-spacing:0.16em;text-transform:uppercase;background:none;border:1px solid var(--coal-line);color:var(--ash);padding:0 14px;cursor:pointer;transition:color .25s,border-color .25s;">Pause scrolling</button>
     </div>
@@ -243,7 +243,7 @@ const jsonLd = {
   <!-- ============ 04 — THE SHELF ============ -->
   <section style="max-width:1180px;margin:0 auto;padding:clamp(4.5rem,9vw,7.5rem) clamp(22px,6vw,64px);border-top:1px solid var(--coal-line);">
     <h2 data-reveal style="margin:0 0 clamp(2rem,4vw,3rem);display:flex;align-items:baseline;gap:16px;font-family:var(--mono);font-weight:400;font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ash);">
-      <span><span class="cc-num" data-to="4">04</span> — The Shelf</span>
+      <span><span class="cc-num" data-to="4">04</span> · The Shelf</span>
       <span class="cc-rule"></span>
     </h2>
     <h3 data-reveal style="margin:0 0 clamp(2.6rem,5vw,4rem);font-family:var(--display);font-weight:500;font-size:clamp(1.9rem,4vw,3rem);line-height:1.04;letter-spacing:-0.01em;max-width:24ch;">Whatever's shaping the work right now.</h3>
@@ -307,6 +307,10 @@ const jsonLd = {
 </style>
 
 <script>
+  // Homepage-only behaviour. Runs on 'site:ready' (see BaseLayout), only when
+  // this page is the one on screen, and registers a teardown for everything it
+  // attaches so none of it keeps running after navigating to another page.
+  const life = () => (window as any).__life as { onLeave: (fn: () => void) => void };
   function motionOK() {
     return !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }
@@ -332,60 +336,64 @@ const jsonLd = {
   }
 
   function setupReveals() {
-    const els = document.querySelectorAll('[data-reveal]');
-    if (!motionOK()) { els.forEach((el) => { (el as HTMLElement).style.opacity = ''; (el as HTMLElement).style.transform = ''; activate(el); }); return; }
+    const els = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'));
+    if (!motionOK()) { els.forEach((el) => activate(el)); return; }
+    // The observer's first report per element says where it is, computed in
+    // the browser's own rendering step, so start-up never forces a layout.
+    // Below the viewport: hide now, animate in later. On screen or above:
+    // leave exactly as painted.
+    const seen = new WeakSet<Element>();
     const io = new IntersectionObserver((ents) => {
+      // Read once, before any writes: innerHeight after a style write forces
+      // a full layout, and doing that per element thrashed ~20 layouts at load.
+      const vh = window.innerHeight;
       ents.forEach((e) => {
-        if (e.isIntersecting) {
-          (e.target as HTMLElement).style.opacity = '1';
-          (e.target as HTMLElement).style.transform = 'none';
-          activate(e.target);
-          io.unobserve(e.target);
+        const node = e.target as HTMLElement;
+        if (!seen.has(node)) {
+          seen.add(node);
+          if (e.boundingClientRect.top >= vh) {
+            node.style.opacity = '0';
+            node.style.transform = `translateY(${node.hasAttribute('data-bigrise') ? '64px' : '24px'})`;
+            node.style.transition = 'transform .8s cubic-bezier(.2,.7,.2,1), opacity .8s ease';
+            return;
+          }
+          activate(node); io.unobserve(node); return;
         }
+        if (!e.isIntersecting) return;
+        node.style.opacity = '1';
+        node.style.transform = 'none';
+        activate(node);
+        io.unobserve(node);
       });
     }, { rootMargin: '0px 0px -8% 0px' });
-    els.forEach((el) => {
-      const node = el as HTMLElement;
-      node.style.opacity = '0';
-      node.style.transform = `translateY(${node.hasAttribute('data-bigrise') ? '64px' : '24px'})`;
-      node.style.transition = 'transform .8s cubic-bezier(.2,.7,.2,1), opacity .8s ease';
-      io.observe(node);
-    });
+    els.forEach((el) => io.observe(el));
+    life().onLeave(() => io.disconnect());
   }
 
-  // Handles below are module-scope (not re-declared per boot()) so each
-  // navigation's boot() can tear down the *previous* page visit's
-  // listeners/rAF loop before creating new ones — otherwise soft
-  // navigation (view transitions) back to "/" would stack up a duplicate
-  // scroll listener and marquee tick loop every time.
-  let cleanupScroll: (() => void) | null = null;
-  let cleanupMarquee: (() => void) | null = null;
-
   function initScroll() {
-    if (cleanupScroll) cleanupScroll();
     const prog = document.getElementById('cc-prog');
-    let ticking = false;
-    const onScroll = () => {
-      if (ticking) return; ticking = true;
-      requestAnimationFrame(() => {
-        const y = window.scrollY || 0;
-        if (prog) {
-          const max = document.documentElement.scrollHeight - window.innerHeight;
-          prog.style.height = (max > 0 ? (y / max) * 100 : 0).toFixed(2) + '%';
-        }
-        ticking = false;
-      });
+    if (!prog) return;
+    let max = 0, last = -1, ticking = false;
+    // Measured in the ResizeObserver callback (right after the browser's own
+    // layout), never during start-up or scroll.
+    const measure = () => { max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight); };
+    const frame = () => {
+      ticking = false;
+      if (!max) return;
+      const p = Math.round(Math.min(1, (window.scrollY || 0) / max) * 1000) / 1000;
+      if (p !== last) { prog.style.transform = `scaleY(${p})`; last = p; }
     };
+    const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(frame); } };
+    const ro = new ResizeObserver(() => { measure(); onScroll(); });
+    ro.observe(document.body);
     window.addEventListener('scroll', onScroll, { passive: true });
-    cleanupScroll = () => window.removeEventListener('scroll', onScroll);
-    onScroll();
+    life().onLeave(() => { ro.disconnect(); window.removeEventListener('scroll', onScroll); });
   }
 
   function bindCards() {
-    if (!motionOK()) return;
+    if (!motionOK() || !window.matchMedia('(hover: hover)').matches) return;
     const bindRipple = (sel: string, rgb: string) => {
-      document.querySelectorAll(sel).forEach((el) => {
-        const node = el as HTMLElement;
+      document.querySelectorAll<HTMLElement>(sel).forEach((node) => {
         if (node.dataset.bound) return; node.dataset.bound = '1';
         node.addEventListener('mouseenter', (e: MouseEvent) => {
           const r = node.getBoundingClientRect();
@@ -401,82 +409,83 @@ const jsonLd = {
   }
 
   function initMarquee() {
-    if (cleanupMarquee) cleanupMarquee();
-    const row = document.querySelector('.marqrow') as HTMLElement | null;
+    const row = document.querySelector<HTMLElement>('.marqrow');
     const toggleBtn = document.getElementById('marq-toggle') as HTMLButtonElement | null;
     if (!row || !motionOK()) { if (toggleBtn) toggleBtn.style.display = 'none'; return; }
     if (toggleBtn) toggleBtn.style.display = '';
-    let marqBoost = 0, marqHover = false, userPaused = false, lastSY: number | null = null, lastST = 0;
-    let rafId = 0;
-    // Hover pauses/resumes only while the user hasn't explicitly toggled
-    // pause via the button/tap — an explicit pause should stick even if the
-    // pointer later enters or leaves the row.
-    const onEnter = () => { if (!userPaused) marqHover = true; };
-    const onLeave = () => { if (!userPaused) marqHover = false; };
-    const setPaused = (paused: boolean) => {
-      userPaused = paused;
-      marqHover = paused;
-      if (toggleBtn) {
-        toggleBtn.setAttribute('aria-pressed', String(paused));
-        toggleBtn.textContent = paused ? 'Resume scrolling' : 'Pause scrolling';
-      }
+    const anim = row.getAnimations ? row.getAnimations()[0] : undefined;
+    let boost = 0, hover = false, userPaused = false, lastSY: number | null = null, lastST = 0;
+    let rafId = 0, running = false, appliedRate = 1, onScreen = false;
+
+    const applyPause = () => {
+      if (!anim) return;
+      if (hover) { if (anim.playState !== 'paused') anim.pause(); }
+      else if (anim.playState === 'paused') anim.play();
     };
-    const onToggle = () => setPaused(!userPaused);
+    // Scrolling speeds the row up and it eases back to its base speed. The
+    // loop only runs while that easing is in progress, and only touches the
+    // animation when the rate actually changes: rewriting playbackRate every
+    // frame forced a style recalc on every scroll frame.
+    const tick = () => {
+      boost *= 0.9;
+      if (boost < 0.02) boost = 0;
+      const rate = Math.round((1 + boost) * 20) / 20;
+      if (anim && !hover && rate !== appliedRate) { anim.playbackRate = rate; appliedRate = rate; }
+      if (boost > 0 && onScreen) rafId = requestAnimationFrame(tick);
+      else running = false;
+    };
+    const kick = () => { if (!running && onScreen) { running = true; rafId = requestAnimationFrame(tick); } };
     const onScroll = () => {
-      const y = window.scrollY || 0;
-      const now = performance.now();
-      if (lastSY != null) {
-        const dt = Math.max(16, now - lastST);
-        marqBoost = Math.min(6, marqBoost + Math.abs(y - lastSY) / dt * 0.8);
-      }
+      if (!onScreen) return;
+      const y = window.scrollY || 0, now = performance.now();
+      if (lastSY != null) boost = Math.min(6, boost + Math.abs(y - lastSY) / Math.max(16, now - lastST) * 0.8);
       lastSY = y; lastST = now;
+      kick();
     };
+    const onEnter = () => { if (!userPaused) { hover = true; applyPause(); } };
+    const onLeave = () => { if (!userPaused) { hover = false; applyPause(); } };
+    const onToggle = () => {
+      userPaused = !userPaused;
+      hover = userPaused;
+      applyPause();
+      if (toggleBtn) {
+        toggleBtn.setAttribute('aria-pressed', String(userPaused));
+        toggleBtn.textContent = userPaused ? 'Resume scrolling' : 'Pause scrolling';
+      }
+    };
+    const visibility = new IntersectionObserver(([entry]) => {
+      onScreen = entry.isIntersecting;
+      if (!onScreen) {
+        cancelAnimationFrame(rafId); running = false; boost = 0; lastSY = null;
+        if (anim && appliedRate !== 1) { anim.playbackRate = 1; appliedRate = 1; }
+      }
+    });
+    visibility.observe(row);
+    const touchOnly = window.matchMedia('(hover:none)').matches;
     row.addEventListener('mouseenter', onEnter);
     row.addEventListener('mouseleave', onLeave);
-    const touchOnly = window.matchMedia('(hover:none)').matches;
     if (touchOnly) row.addEventListener('click', onToggle);
     if (toggleBtn) toggleBtn.addEventListener('click', onToggle);
     window.addEventListener('scroll', onScroll, { passive: true });
-    const anim = row.getAnimations ? row.getAnimations()[0] : undefined;
-    const tick = () => {
-      if (anim) {
-        if (marqHover) {
-          if (anim.playState !== 'paused') anim.pause();
-        } else {
-          if (anim.playState === 'paused') anim.play();
-          anim.playbackRate = 1 + marqBoost;
-        }
-      }
-      marqBoost *= 0.9;
-      if (marqBoost < 0.01) marqBoost = 0;
-      rafId = requestAnimationFrame(tick);
-    };
-    // The per-frame loop only exists to couple speed to scroll velocity, so
-    // it runs only while the row is on screen; off screen the CSS animation
-    // carries on by itself at its base speed.
-    const visibility = new IntersectionObserver(([entry]) => {
-      cancelAnimationFrame(rafId);
-      if (entry.isIntersecting) rafId = requestAnimationFrame(tick);
-      else { marqBoost = 0; if (anim) anim.playbackRate = 1; }
-    });
-    visibility.observe(row);
-    cleanupMarquee = () => {
+    life().onLeave(() => {
       visibility.disconnect();
-      row.removeEventListener('mouseenter', onEnter);
-      row.removeEventListener('mouseleave', onLeave);
-      if (touchOnly) row.removeEventListener('click', onToggle);
-      if (toggleBtn) toggleBtn.removeEventListener('click', onToggle);
-      window.removeEventListener('scroll', onScroll);
       cancelAnimationFrame(rafId);
-    };
+      window.removeEventListener('scroll', onScroll);
+    });
   }
 
-  function boot() {
+  document.addEventListener('site:ready', () => {
+    const fork = document.getElementById('fork');
+    if (!fork) return;
     bindCards();
     setupReveals();
     initScroll();
-    initMarquee();
-  }
-
-  document.addEventListener('astro:page-load', boot);
+    // The marquee reads its running animation, which makes the browser
+    // compute styles for the whole page on the spot. Right after parsing that
+    // was a ~200 ms stall on a phone; after the first frame the styles already
+    // exist, so wait for it (and skip if the page was swapped out meanwhile).
+    requestAnimationFrame(() => setTimeout(() => {
+      if (document.getElementById('fork') === fork) initMarquee();
+    }, 0));
+  });
 </script>

@@ -138,11 +138,11 @@ function boot() {
   posts.forEach((p, i) => { p.no = '№ ' + String(i + 1).padStart(2, '0'); });
   renderTags();
   renderList();
-
-  window.pageBoot({ strand, progress: 'page' });
 }
 
-document.addEventListener('astro:page-load', boot);
+// Page-scoped: this script re-executes on every hub visit. On a global event
+// its handler piled up and threw on every later page (no #posts-data there).
+window.__life.onReady(boot);
 </script>
 
 <style is:global>

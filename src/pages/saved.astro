@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 <BaseLayout
-  title="Saved — Ilias Ennajmi"
+  title="Saved · Ilias Ennajmi"
   description="Essays you've saved for later. Stored in your browser, nowhere else."
   active="saved"
   siteFx
@@ -16,7 +16,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <span style="width:28px;height:1px;background:var(--ember);"></span>For later
       </div>
       <h1 style="margin:0;font-family:var(--display);font-weight:500;font-size:clamp(3rem,9vw,6.5rem);line-height:0.94;letter-spacing:-0.015em;">Saved<span style="color:var(--ember-vivid);">.</span></h1>
-      <p style="font-family:var(--body);font-weight:300;font-style:italic;font-size:clamp(1.15rem,2.2vw,1.5rem);color:var(--bone);opacity:0.82;max-width:52ch;margin:1.6rem 0 0;line-height:1.5;text-wrap:pretty;">Essays you set aside to read later. They live in this browser only: no account, no cloud, no one watching.</p>
+      <p style="font-family:var(--body);font-weight:300;font-style:italic;font-size:clamp(1.15rem,2.2vw,1.5rem);color:var(--bone);opacity:0.82;max-width:52ch;margin:1.6rem 0 0;line-height:1.5;text-wrap:pretty;">Essays you set aside to read later. They're stored in this browser and nowhere else. No account needed.</p>
     </div>
   </header>
 
@@ -143,8 +143,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     root.innerHTML = html;
   }
 
-  document.addEventListener('astro:page-load', () => {
-    (window as any).pageBoot({ strand: null, progress: 'page' });
+  document.addEventListener('site:ready', () => {
+    if (!document.getElementById('saved-root')) return;
     renderSaved();
     renderReadingLog();
   });

@@ -5,12 +5,22 @@ tag: "On Identity"
 date: "Apr 2026"
 order: 2
 pairsWith: "nobody-wants"
-standfirst: "Most of who you are was never chosen. It was inherited, assigned, or never questioned. On the quiet power of the settings nobody changes."
+standfirst: "Most of who you are was never chosen. It came pre-installed."
 ---
-Ask someone why they bank where they bank, vote how they vote, or take their coffee the way they take it, and you will usually get a reason invented on the spot. The honest answer is almost always the same: it was the setting they were handed, and changing a setting requires a reason, while keeping one requires nothing at all.
+Ask someone why they use the bank they use. Or why they vote the way they vote, or take their coffee the way they take it. You'll get an answer, and it'll sound reasonable. It was also probably made up on the spot.
 
-We treat identity as a series of decisions. It is closer to a series of decisions never made. The country you were born in, the language your thoughts arrive in, the assumptions you mistake for common sense: none of it was selected from a menu. It was the menu.
+The honest answer is usually boring. It was the setting they were handed. Changing a setting needs a reason. Keeping one needs nothing at all.
 
-> A preference you have never questioned is not a preference. It is an inheritance you are still paying interest on.
+In marketing this is one of the few things everybody agrees on. Defaults win. Organ donation rates look wildly different between neighboring countries, and a big part of the gap comes down to which box is pre-ticked on the form. Pension savings jump when you're enrolled automatically and have to opt out, instead of the other way around. Nobody sat down and chose. The form chose, and people went along with it.
 
-The useful move is not to burn it all down. That is just choosing the opposite default. It is to audit. Pick one setting you have never examined and ask whether you would choose it again from scratch. Most days the answer is yes, and that is fine. The point is that, for once, it was an answer.
+We think of identity as a list of decisions. I'm starting to think it's closer to a list of decisions nobody made. The country you were born in. The language your thoughts show up in. The things you call common sense, which are mostly the things nobody around you ever questioned.
+
+None of it came off a menu. It was the menu.
+
+> A preference you've never questioned isn't really a preference. It's an inheritance.
+
+I don't think the answer is to burn it all down. Rebelling against every default is just picking the opposite default and calling it a personality.
+
+The useful thing is smaller. Pick one setting you've never looked at and ask if you'd pick it again today, from scratch. Most of the time the answer is yes, and that's fine. You keep the bank. You keep the coffee.
+
+The difference is that this time, it was an answer.

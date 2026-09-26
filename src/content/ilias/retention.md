@@ -6,12 +6,18 @@ date: "Jan 2026"
 order: 5
 pairsWith: "past"
 draft: true
-standfirst: "Acquisition gets the headlines, but the spreadsheet lives and dies on the people who stay. Why most growth is just churn you haven’t noticed yet."
+standfirst: "Growth gets the headlines. The people who stay pay the bills."
 ---
-Growth is the most flattering number a company tracks, and the easiest to fake. Pour enough money into the top of the funnel and the chart goes up regardless of whether anyone stays. It is a bucket and a tap: you can fill a leaking bucket fast enough to look full, right up until the water bill arrives.
+Growth is the most flattering number a company has, and one of the easiest to fake. Pour enough money into ads and the chart goes up, whether or not anyone sticks around.
 
-Retention is the unglamorous truth underneath. A business that keeps the people it wins compounds; one that replaces them compounds nothing, it just runs to stand still. Most growth stories are really churn stories told before the churn shows up.
+Picture a bucket with a hole in it. Turn the tap up high enough and the bucket looks full. It keeps looking full right up until someone opens the water bill.
 
-> Acquisition is a loan. Retention is income. Confusing the two is how confident companies go quietly broke.
+Retention is the less exciting number underneath. Nobody puts it in the press release. But a business that keeps the people it wins gets to build on them. A business that keeps replacing them is running to stand still, and paying more every year to do it, because the cost of getting new customers rarely goes down.
 
-The discipline is to fix the leak before you turn up the tap — to earn the second visit, the renewal, the unprompted return, before spending another currency on the first. Growth that outruns retention is not growth. It is a countdown.
+A lot of growth stories are really churn stories. They just got told before the churn showed up.
+
+> Acquisition is a loan. Retention is income. Mixing them up is how confident companies go broke.
+
+The boring fix is to plug the hole before you turn up the tap. Earn the second visit, the renewal, the customer who comes back without an email nagging them to.
+
+It's slower, and it makes for terrible launch posts. It's also the only kind of growth that doesn't come with a countdown.
