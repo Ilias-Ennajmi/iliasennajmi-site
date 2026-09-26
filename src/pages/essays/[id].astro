@@ -207,6 +207,11 @@ const epistemicLabel: Record<string, string> = {
         <span style="width:8px;height:8px;background:var(--acc);transform:rotate(45deg);display:inline-block;"></span>
         <span>{endLabel}</span>
       </div>
+      {entry.data.substackUrl && (
+        <p class="no-print" style="margin:0.9rem 0 0;font-family:var(--body);font-style:italic;font-size:0.98rem;color:var(--ash);">
+          First published on <a href={entry.data.substackUrl} rel="noopener" class="charge" style="color:var(--ember);text-decoration:underline;text-decoration-color:var(--coal-line);text-underline-offset:3px;">Substack</a>, where the comments are.
+        </p>
+      )}
       {/* Filled in only once the reader actually finishes -- see the
           visibility-gated timer in the script below. Never shown for a
           skim/scroll-past, only a real completion. */}

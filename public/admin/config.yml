@@ -30,6 +30,7 @@ collections:
       - { label: "Pairs with (other strand)", name: "pairsWith", widget: "string", required: false, hint: "URL slug of the best-matching essay in the OTHER strand — powers the cross-strand 'read next' suggestion" }
       - { label: "Start Here order", name: "startHereOrder", widget: "number", value_type: "int", required: false, hint: "Set 1-4 to include this essay in the curated 'Start Here' path, in this order. Leave blank otherwise." }
       - { label: "Interactive widget", name: "interactive", widget: "select", options: ["anchor"], required: false, hint: "Optional. Adds an interactive demo where you put ::interactive:: on its own line in the body." }
+      - { label: "Substack link", name: "substackUrl", widget: "string", required: false, hint: "Optional. If this essay first ran on Substack, paste its link. Adds a first-published-on-Substack line at the end." }
       - { label: "Body", name: "body", widget: "markdown", buttons: ["bold", "italic", "link", "quote", "heading-two", "bulleted-list", "numbered-list", "code"], hint: "Plain paragraphs. Use “quote” for a pull-quote, “H2” for a section heading. For a margin/sidenote, type it manually as text[^1] plus a [^1]: note line at the end of the essay." }
 
   - name: "ilias"

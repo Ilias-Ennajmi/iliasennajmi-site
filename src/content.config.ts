@@ -12,6 +12,8 @@ const essaySchema = z.object({
   pairsWith: z.string().optional(),
   startHereOrder: z.coerce.number().optional(),
   interactive: z.enum(['anchor']).optional(),
+  // Where the essay first ran, if it was published elsewhere first.
+  substackUrl: z.string().url().optional(),
   // Optional, author-set only -- an editorial confidence claim about your
   // own writing isn't something to infer or default. Absent means no tag
   // renders, same nullable-field convention as SITE.social.

@@ -5,7 +5,6 @@ tag: "On Choice"
 date: "May 2026"
 order: 1
 pairsWith: "attention-rent"
-startHereOrder: 1
 standfirst: "Having options feels like freedom. Mostly it feels like thirty tabs you're scared to close."
 ---
 Look at your browser. Somewhere up there is a tab you opened weeks ago. An article you were going to read, a product you were going to compare, a recipe for a dinner that never happened.

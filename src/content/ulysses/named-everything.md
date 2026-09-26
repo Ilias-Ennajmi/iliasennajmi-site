@@ -4,6 +4,8 @@ title: "We named everything and fixed nothing"
 tag: "On Labels"
 date: "Jun 2026"
 order: 0
+startHereOrder: 1
+substackUrl: "https://iliasennajmi.substack.com/p/we-named-everything-and-fixed-nothing"
 standfirst: "Twenty years ago, nobody had their boundaries violated. Then the carousels showed up."
 ---
 I'm not a psychologist. Not a therapist, not a researcher, not someone with letters after their name. I work in marketing, which means I spend a lot of time thinking about why people feel what they feel and do what they do. Every once in a while that bleeds into something more personal. Call it an occupational side effect.
