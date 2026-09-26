@@ -3,7 +3,9 @@
     "ignoreRules": [
       "design-system-font-size"
     ],
-    "ignoreFiles": [],
+    "ignoreFiles": [
+      "src/styles/specimen-mock.css"
+    ],
     "ignoreValues": [
       {
         "rule": "layout-transition",

@@ -1,0 +1,110 @@
+---
+// Experiment: loss aversion. The reader names the smallest win that would
+// make them accept a fair coin flip against a €100 loss. The ratio is their
+// own loss-aversion coefficient; Kahneman reports it usually lands between
+// 1.5 and 2.5 ("Thinking, Fast and Slow", 2011). The slider starts at the
+// break-even point, which the reveal admits is itself an anchor.
+---
+<div class="lab-box" data-lab="loss">
+  <div data-step="1">
+    <p class="lab-q">A fair coin. <strong>Tails, you lose €100.</strong> What's the smallest amount heads would have to win you before you'd take the bet?</p>
+    <div class="lab-slider">
+      <div class="lab-slider-value"><span data-value>€100</span><small data-ratio>even money</small></div>
+      <input class="lab-range" type="range" min="50" max="400" step="5" value="100" aria-label="Smallest win that would make you take the bet, in euros" data-range />
+      <div class="lab-scale" aria-hidden="true"><span>€50</span><span>€100</span><span>€200</span><span>€300</span><span>€400</span></div>
+    </div>
+    <div class="lab-actions"><button type="button" class="lab-btn lab-btn-go" data-submit>That's my number</button></div>
+  </div>
+
+  <div data-step="2" hidden>
+    <p class="lab-lead" data-lead></p>
+    <p class="lab-p" data-explain></p>
+    <div class="lab-study">
+      Daniel Kahneman, who spent a career on this: in experiments like this one, most people need a win of 1.5 to 2.5 times the loss before they'll take the bet. Losing €100 simply hurts more than winning €100 feels good.
+      <cite>Kahneman, Thinking, Fast and Slow (2011)</cite>
+    </div>
+    <p class="lab-fine" style="margin-top:0;">One confession: the slider started at €100, the fair price. That was an anchor too. Most people who move it still move it up.</p>
+    <div class="lab-coin-stage">
+      <div class="lab-coin" data-coin aria-hidden="true"><span>Heads</span><span>Tails</span></div>
+      <p class="lab-coin-result" data-coin-result aria-live="polite">Want to flip it anyway? Nothing real is at stake.</p>
+    </div>
+    <div class="lab-actions">
+      <button type="button" class="lab-btn" data-flip>Flip the coin</button>
+      <button type="button" class="lab-btn lab-btn-quiet" data-reset>Run it again</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { record, life, stepper, listeners, euros, motionOK } from '../../lib/lab';
+
+  function setup() {
+    const root = document.querySelector<HTMLElement>('[data-lab="loss"]');
+    if (!root) return;
+    const L = listeners();
+    const show = stepper(root);
+    const range = root.querySelector<HTMLInputElement>('[data-range]')!;
+    const value = root.querySelector<HTMLElement>('[data-value]')!;
+    const ratioEl = root.querySelector<HTMLElement>('[data-ratio]')!;
+    const coin = root.querySelector<HTMLElement>('[data-coin]')!;
+    const coinResult = root.querySelector<HTMLElement>('[data-coin-result]')!;
+    let win = 100, half = 0; // half-turns of the coin; even = heads up
+
+    const paint = () => {
+      win = Number(range.value);
+      value.textContent = euros(win);
+      const r = win / 100;
+      ratioEl.textContent = r === 1 ? 'even money' : `${r.toFixed(2).replace(/\.?0+$/, '')} to 1`;
+      range.setAttribute('aria-valuetext', `${euros(win)}, ${ratioEl.textContent}`);
+    };
+
+    const submit = () => {
+      const r = win / 100;
+      const lead = root.querySelector<HTMLElement>('[data-lead]')!;
+      const explain = root.querySelector<HTMLElement>('[data-explain]')!;
+      const ratio = r.toFixed(2).replace(/\.?0+$/, '');
+      if (r > 1.05) {
+        lead.innerHTML = `You'd need ${euros(win)} to risk €100. <em>That's a ratio of ${ratio} to 1.</em>`;
+        explain.textContent = `Any win above €100 makes this a good bet, because on average you come out ahead. Between €100 and ${euros(win)} you'd be walking away from money, just because the thought of losing weighs more than the thought of winning. That ratio is your loss aversion, measured.`;
+        record('loss', true, `Needed ${euros(win)} to risk €100 (${ratio}×)`);
+      } else if (r >= 0.95) {
+        lead.innerHTML = `You'd take it at about even money. <em>That's rare.</em>`;
+        explain.textContent = "Taking a fair bet at a fair price is what the textbook says a rational person does. Most people don't. You're either unusually calm about losing, or you've thought about this before. Either way, you're in the minority.";
+        record('loss', false, `Took the bet at ${euros(win)}`);
+      } else {
+        lead.innerHTML = `You'd take it for ${euros(win)}. <em>That's a bet that loses on average.</em>`;
+        explain.textContent = "Winning less than you could lose, on a fair coin, loses money over time. Loss aversion clearly isn't your problem. Please stay away from casinos anyway.";
+        record('loss', false, `Would take a losing bet at ${euros(win)}`);
+      }
+      coinResult.textContent = 'Want to flip it anyway? Nothing real is at stake.';
+      show(2);
+    };
+
+    const flip = () => {
+      const heads = Math.random() < 0.5;
+      // four full spins, plus one more half-turn if needed to land on the result
+      half += 8;
+      if (half % 2 !== (heads ? 0 : 1)) half += 1;
+      const deg = half * 180;
+      coinResult.textContent = '…';
+      if (motionOK()) coin.style.transform = `rotateY(${deg}deg)`;
+      else coin.style.transform = heads ? 'none' : 'rotateY(180deg)';
+      window.setTimeout(() => {
+        coinResult.textContent = heads
+          ? `Heads. You'd have won ${euros(win)}. Nobody's actually paying you, sorry.`
+          : "Tails. You'd have lost €100. See? It stings a little even when it isn't real.";
+      }, motionOK() ? 1500 : 0);
+    };
+
+    L.on(range, 'input', paint);
+    L.on(root.querySelector('[data-submit]')!, 'click', submit);
+    L.on(root.querySelector('[data-flip]')!, 'click', flip);
+    L.on(root.querySelector('[data-reset]')!, 'click', () => {
+      range.value = '100'; paint(); half = 0; coin.style.transform = ''; show(1); range.focus();
+    });
+    paint();
+    life()?.onLeave(() => L.off());
+  }
+
+  document.addEventListener('site:ready', setup);
+</script>

@@ -20,7 +20,7 @@ const favicon = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' vi
     (function () {
       var t = null;
       try { t = localStorage.getItem('theme'); } catch (e) {}
-      if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'ink' : 'paper';
+      if (t !== 'ink') t = 'paper';
       if (t === 'ink') document.documentElement.setAttribute('data-theme', 'ink');
     })();
   </script>

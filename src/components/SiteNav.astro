@@ -2,7 +2,7 @@
 import { getPublishedCollection } from '../lib/essays';
 
 interface Props {
-  active: 'home' | 'about' | 'ulysses' | 'ilias' | 'shelf' | 'essay' | 'topics' | 'saved' | 'colophon';
+  active: 'home' | 'about' | 'ulysses' | 'ilias' | 'shelf' | 'essay' | 'topics' | 'saved' | 'colophon' | 'lab';
 }
 const { active } = Astro.props;
 const on = 'var(--ember)';
@@ -22,9 +22,10 @@ const readActive = active === 'ulysses' || active === 'ilias';
 const links = [
   { href: '/', label: 'Index', key: 'home', num: '01' },
   { href: '/topics/', label: 'Topics', key: 'topics', num: '03' },
-  { href: '/shelf/', label: 'The Shelf', key: 'shelf', num: '04' },
-  { href: '/saved/', label: 'Saved', key: 'saved', num: '05' },
-  { href: '/about/', label: 'About', key: 'about', num: '06' },
+  { href: '/lab/', label: 'The Lab', key: 'lab', num: '04' },
+  { href: '/shelf/', label: 'The Shelf', key: 'shelf', num: '05' },
+  { href: '/saved/', label: 'Saved', key: 'saved', num: '06' },
+  { href: '/about/', label: 'About', key: 'about', num: '07' },
 ];
 ---
 

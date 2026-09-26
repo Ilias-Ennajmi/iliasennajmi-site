@@ -1,0 +1,53 @@
+---
+// The question every essay asks, turned on the page itself, set as a till
+// receipt (the most honest document in commerce). Keep every line true: if
+// ads, affiliate links or tracking cookies ever arrive, this has to change.
+const lines = [
+  ['Ads', '0'],
+  ['Tracking cookies', '0'],
+  ['Affiliate links', '0'],
+  ['Sponsors', '0'],
+  ['Paid for by', 'nobody'],
+];
+---
+<aside class="wp no-print" aria-labelledby="wp-title">
+  <div class="wp-head" id="wp-title">Who profits from this page</div>
+  <dl class="wp-lines">
+    {lines.map(([k, v]) => (
+      <div class="wp-line"><dt>{k}</dt><dd>{v}</dd></div>
+    ))}
+  </dl>
+  <p class="wp-foot">I do marketing for a living, somewhere else. This is the one place I don't.</p>
+</aside>
+
+<style>
+  .wp {
+    margin: clamp(2.2rem, 4vw, 3rem) 0 0;
+    max-width: 340px;
+    padding: 18px 20px 16px;
+    background: var(--coal-soft);
+    border: 1px solid var(--coal-line);
+    font-family: var(--mono);
+    color: var(--ash);
+    position: relative;
+  }
+  /* torn receipt edge */
+  .wp::after {
+    content: '';
+    position: absolute; left: -1px; right: -1px; bottom: -7px; height: 7px;
+    background: linear-gradient(-45deg, transparent 5px, var(--coal-soft) 0) 0 0 / 10px 7px repeat-x,
+                linear-gradient(45deg, transparent 5px, var(--coal-soft) 0) 0 0 / 10px 7px repeat-x;
+  }
+  .wp-head {
+    font-size: 0.6rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--bone); padding-bottom: 10px; margin-bottom: 8px; border-bottom: 1px dashed var(--coal-line);
+  }
+  .wp-lines { margin: 0; }
+  .wp-line { display: flex; align-items: baseline; gap: 8px; font-size: 0.66rem; letter-spacing: 0.06em; padding: 3px 0; }
+  .wp-line dt { flex: none; }
+  .wp-line::after { content: ''; order: 1; flex: 1; border-bottom: 1px dotted var(--coal-line); transform: translateY(-3px); }
+  .wp-line dd { order: 2; margin: 0; color: var(--bone); font-variant-numeric: tabular-nums; }
+  .wp-line:last-child { margin-top: 6px; padding-top: 8px; border-top: 1px dashed var(--coal-line); }
+  .wp-line:last-child dd { color: var(--ember); font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; }
+  .wp-foot { margin: 12px 0 0; font-family: var(--body); font-style: italic; font-size: 0.92rem; line-height: 1.45; color: var(--ash); letter-spacing: normal; }
+</style>

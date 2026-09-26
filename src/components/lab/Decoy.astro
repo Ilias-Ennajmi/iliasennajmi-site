@@ -1,0 +1,114 @@
+---
+// Experiment: the decoy effect (asymmetric dominance).
+// Half of readers get the original three-option table with the print-only
+// decoy, half get the same table without it. Numbers from Ariely,
+// "Predictably Irrational" (2008), using a real Economist subscription ad.
+---
+<div class="lab-box" data-lab="decoy">
+  <div data-step="1">
+    <p class="lab-q">A magazine you like is running its yearly offer. Pick the plan you'd actually buy.</p>
+    <div class="lab-choices" data-plans></div>
+    <p class="lab-fine" style="border:0;padding:0;margin:0;">Prices are per year. There's no wrong answer, only a wrong reason.</p>
+  </div>
+
+  <div data-step="2" hidden>
+    <p class="lab-lead" data-lead></p>
+    <p class="lab-p" data-explain></p>
+    <div class="lab-compare">
+      <div class="lab-compare-col">
+        <div class="lab-compare-label"><span>Version A</span><b data-a-you></b></div>
+        <div class="lab-mini"><span>Digital</span><span>€59</span></div>
+        <div class="lab-mini"><span>Print<i class="lab-mark">Decoy</i></span><span>€125</span></div>
+        <div class="lab-mini"><span>Print + digital</span><span>€125</span></div>
+      </div>
+      <div class="lab-compare-col">
+        <div class="lab-compare-label"><span>Version B</span><b data-b-you></b></div>
+        <div class="lab-mini"><span>Digital</span><span>€59</span></div>
+        <div class="lab-mini"><span>Print + digital</span><span>€125</span></div>
+      </div>
+    </div>
+    <div class="lab-study">
+      Dan Ariely ran this on 100 MIT students with a real magazine ad. With the print-only option on the page, 84 picked the bundle. When he took that option away, only 32 did.
+      <cite>Ariely, Predictably Irrational (2008)</cite>
+    </div>
+    <div class="lab-bars">
+      <div class="lab-bar-row"><span>Bundle, with decoy</span><span class="lab-bar"><i data-w="84"></i></span><b>84%</b></div>
+      <div class="lab-bar-row" data-muted><span>Bundle, without</span><span class="lab-bar"><i data-w="32"></i></span><b>32%</b></div>
+    </div>
+    <div class="lab-actions"><button type="button" class="lab-btn lab-btn-quiet" data-reset>Run it again</button></div>
+  </div>
+</div>
+
+<script>
+  import { record, life, stepper, listeners } from '../../lib/lab';
+
+  type Plan = { key: 'digital' | 'print' | 'bundle'; name: string; price: number; desc: string };
+  const DIGITAL: Plan = { key: 'digital', name: 'Digital', price: 59, desc: 'Every issue and the full archive, online.' };
+  const PRINT: Plan = { key: 'print', name: 'Print', price: 125, desc: 'Every issue, delivered.' };
+  const BUNDLE: Plan = { key: 'bundle', name: 'Print + digital', price: 125, desc: 'Every issue delivered, plus everything online.' };
+
+  function setup() {
+    const root = document.querySelector<HTMLElement>('[data-lab="decoy"]');
+    if (!root) return;
+    const L = listeners();
+    const show = stepper(root);
+    const plansEl = root.querySelector<HTMLElement>('[data-plans]')!;
+
+    const run = () => {
+      const withDecoy = Math.random() < 0.5;
+      const plans = withDecoy ? [DIGITAL, PRINT, BUNDLE] : [DIGITAL, BUNDLE];
+      plansEl.innerHTML = '';
+      plans.forEach((p) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'lab-choice';
+        b.setAttribute('aria-pressed', 'false');
+        b.innerHTML = `<span class="lab-choice-name"></span><span class="lab-choice-price">€${p.price}<small>/yr</small></span><span class="lab-choice-desc"></span>`;
+        b.querySelector('.lab-choice-name')!.textContent = p.name;
+        b.querySelector('.lab-choice-desc')!.textContent = p.desc;
+        b.addEventListener('click', () => choose(p, withDecoy, b));
+        plansEl.appendChild(b);
+      });
+      show(1, false);
+    };
+
+    const choose = (p: Plan, withDecoy: boolean, btn: HTMLButtonElement) => {
+      btn.setAttribute('aria-pressed', 'true');
+      const lead = root.querySelector<HTMLElement>('[data-lead]')!;
+      const explain = root.querySelector<HTMLElement>('[data-explain]')!;
+      root.querySelector<HTMLElement>('[data-a-you]')!.textContent = withDecoy ? 'You saw this' : '';
+      root.querySelector<HTMLElement>('[data-b-you]')!.textContent = withDecoy ? '' : 'You saw this';
+
+      if (!withDecoy) {
+        lead.innerHTML = `You picked <em>${p.name.toLowerCase()}</em>. You got the clean version.`;
+        explain.textContent = "Half of readers see a third option: print only, for €125. The same price as print and digital together. Nobody wants it, and that's the point. It isn't there to be bought. It's there to make the bundle next to it look like a steal. Your version didn't have it, so there was nothing to fall for this time. Run it again and you might get the other one.";
+        record('decoy', null, `Clean version, picked ${p.name.toLowerCase()}`);
+      } else if (p.key === 'bundle') {
+        lead.innerHTML = 'You picked the bundle. <em>So did most people.</em>';
+        explain.textContent = "Look at the middle option again. Print alone costs exactly what print and digital cost together. Nobody buys it, and it isn't really for sale. It's there to make the bundle look like free money. Take it off the table and the bundle suddenly looks expensive again.";
+        record('decoy', true, 'Took the bundle next to the decoy');
+      } else if (p.key === 'digital') {
+        lead.innerHTML = 'You picked digital. <em>You held out.</em>';
+        explain.textContent = "The middle option, print only for the same price as print and digital together, exists to make the bundle look like a bargain. It worked on most people in the original study. It didn't work on you, or you just really don't want paper.";
+        record('decoy', false, 'Ignored the decoy and took the cheap plan');
+      } else {
+        lead.innerHTML = 'You picked the decoy. <em>Genuinely rare.</em>';
+        explain.textContent = "Print only costs the same as print and digital together, so it's the one option that's strictly worse than its neighbor. It's there to make the bundle look good, not to be bought. In the original study, nobody picked it. You're either testing me or you really hate screens.";
+        record('decoy', false, 'Picked the decoy itself');
+      }
+
+      show(2);
+      requestAnimationFrame(() => root.querySelectorAll<HTMLElement>('.lab-bar i').forEach((i) => { i.style.width = i.dataset.w + '%'; }));
+    };
+
+    L.on(root.querySelector('[data-reset]')!, 'click', () => {
+      root.querySelectorAll<HTMLElement>('.lab-bar i').forEach((i) => { i.style.width = '0'; });
+      run();
+      plansEl.querySelector<HTMLElement>('button')?.focus();
+    });
+    run();
+    life()?.onLeave(() => L.off());
+  }
+
+  document.addEventListener('site:ready', setup);
+</script>

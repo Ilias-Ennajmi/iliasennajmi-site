@@ -142,6 +142,8 @@
 </style>
 
 <script>
+  import { record } from '../lib/lab';
+
   const LOW = 12000;
   const HIGH = 180000;
   // Grouping by hand: the first toLocaleString() call makes the browser load
@@ -215,6 +217,11 @@
       // Which anchor the reader happened to get is the interesting dimension:
       // it's the only thing that differs between the two groups.
       track('anchor-completed', { anchor: shownAnchor === HIGH ? 'high' : 'low' });
+      // For the Lab's case file: did the guess land on the anchor's side of
+      // the range? The midpoint is geometric, since fees scale by ratios.
+      const mid = Math.sqrt(LOW * HIGH);
+      const pulled = shownAnchor === HIGH ? raw > mid : raw < mid;
+      record('anchor', pulled, `Shown ${money(shownAnchor)}, guessed ${money(raw)}`);
       show(3);
     };
 

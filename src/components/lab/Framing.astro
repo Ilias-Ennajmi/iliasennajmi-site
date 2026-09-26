@@ -1,0 +1,106 @@
+---
+// Experiment: framing. Tversky & Kahneman's "Asian disease" problem (Science,
+// 1981), moved from an outbreak to a factory so it reads less grimly. Each
+// reader sees one frame (jobs saved, or jobs lost) chosen at random; the
+// reveal shows that the two frames describe identical plans.
+---
+<div class="lab-box" data-lab="framing">
+  <div data-step="1">
+    <p class="lab-q">A factory is about to close and <strong>600 jobs</strong> are at risk. There's money for one rescue plan. Which one do you back?</p>
+    <div class="lab-options" data-options></div>
+  </div>
+
+  <div data-step="2" hidden>
+    <p class="lab-lead" data-lead></p>
+    <p class="lab-p">Here are both versions side by side. Read the plans on each row.</p>
+    <div class="lab-compare">
+      <div class="lab-compare-col">
+        <div class="lab-compare-label"><span>Told as jobs saved</span><b data-gain-you></b></div>
+        <div class="lab-mini"><span>200 jobs will be saved.</span><span>Sure</span></div>
+        <div class="lab-mini"><span>1 in 3 chance all 600 are saved, 2 in 3 chance none are.</span><span>Gamble</span></div>
+      </div>
+      <div class="lab-compare-col">
+        <div class="lab-compare-label"><span>Told as jobs lost</span><b data-loss-you></b></div>
+        <div class="lab-mini"><span>400 jobs will be lost.</span><span>Sure</span></div>
+        <div class="lab-mini"><span>1 in 3 chance nobody loses their job, 2 in 3 chance all 600 do.</span><span>Gamble</span></div>
+      </div>
+    </div>
+    <p class="lab-p"><strong>They're the same plans.</strong> Saving 200 of 600 is losing 400 of 600. The only thing that changed is the verb. When the sure thing is described as saving, most people take it. When the exact same sure thing is described as losing, most people roll the dice.</p>
+    <div class="lab-study">
+      In the original study the story was about a disease outbreak and 600 lives. Described as lives saved, 72% picked the sure plan. Described as deaths, 78% picked the gamble.
+      <cite>Tversky &amp; Kahneman, Science (1981). The factory is my swap.</cite>
+    </div>
+    <div class="lab-bars">
+      <div class="lab-bar-row"><span>Sure plan, "saved"</span><span class="lab-bar"><i data-w="72"></i></span><b>72%</b></div>
+      <div class="lab-bar-row" data-muted><span>Sure plan, "lost"</span><span class="lab-bar"><i data-w="22"></i></span><b>22%</b></div>
+    </div>
+    <div class="lab-actions"><button type="button" class="lab-btn lab-btn-quiet" data-reset>Run it again</button></div>
+  </div>
+</div>
+
+<script>
+  import { record, life, stepper, listeners } from '../../lib/lab';
+
+  const FRAMES = {
+    gain: [
+      { key: 'sure', label: 'Plan A', text: '200 jobs will be saved.' },
+      { key: 'risky', label: 'Plan B', text: "There's a 1 in 3 chance all 600 jobs are saved, and a 2 in 3 chance none are." },
+    ],
+    loss: [
+      { key: 'sure', label: 'Plan A', text: '400 jobs will be lost.' },
+      { key: 'risky', label: 'Plan B', text: "There's a 1 in 3 chance nobody loses their job, and a 2 in 3 chance all 600 do." },
+    ],
+  } as const;
+
+  function setup() {
+    const root = document.querySelector<HTMLElement>('[data-lab="framing"]');
+    if (!root) return;
+    const L = listeners();
+    const show = stepper(root);
+    const opts = root.querySelector<HTMLElement>('[data-options]')!;
+
+    const run = () => {
+      const frame: 'gain' | 'loss' = Math.random() < 0.5 ? 'gain' : 'loss';
+      opts.innerHTML = '';
+      FRAMES[frame].forEach((o) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'lab-choice';
+        b.setAttribute('aria-pressed', 'false');
+        b.innerHTML = '<span class="lab-choice-name"></span><span class="lab-choice-desc"></span>';
+        b.querySelector('.lab-choice-name')!.textContent = o.label;
+        b.querySelector('.lab-choice-desc')!.textContent = o.text;
+        b.addEventListener('click', () => choose(frame, o.key, b));
+        opts.appendChild(b);
+      });
+      show(1, false);
+    };
+
+    const choose = (frame: 'gain' | 'loss', pick: 'sure' | 'risky', btn: HTMLButtonElement) => {
+      btn.setAttribute('aria-pressed', 'true');
+      root.querySelector<HTMLElement>('[data-gain-you]')!.textContent = frame === 'gain' ? 'Your version' : '';
+      root.querySelector<HTMLElement>('[data-loss-you]')!.textContent = frame === 'loss' ? 'Your version' : '';
+      // The frame "wins" when a saving story gets the sure plan, or a losing story gets the gamble.
+      const pulled = (frame === 'gain' && pick === 'sure') || (frame === 'loss' && pick === 'risky');
+      const lead = root.querySelector<HTMLElement>('[data-lead]')!;
+      const choice = pick === 'sure' ? 'the sure plan' : 'the gamble';
+      const story = frame === 'gain' ? 'jobs saved' : 'jobs lost';
+      lead.innerHTML = pulled
+        ? `You took ${choice}. <em>That's where the wording was pushing you.</em>`
+        : `You took ${choice}. <em>You went against the wording.</em>`;
+      record('framing', pulled, `Heard "${story}", took ${choice}`);
+      show(2);
+      requestAnimationFrame(() => root.querySelectorAll<HTMLElement>('.lab-bar i').forEach((i) => { i.style.width = i.dataset.w + '%'; }));
+    };
+
+    L.on(root.querySelector('[data-reset]')!, 'click', () => {
+      root.querySelectorAll<HTMLElement>('.lab-bar i').forEach((i) => { i.style.width = '0'; });
+      run();
+      opts.querySelector<HTMLElement>('button')?.focus();
+    });
+    run();
+    life()?.onLeave(() => L.off());
+  }
+
+  document.addEventListener('site:ready', setup);
+</script>

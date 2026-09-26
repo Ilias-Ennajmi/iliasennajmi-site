@@ -1,0 +1,101 @@
+---
+// Experiment: defaults. A believable app setup screen with five switches,
+// four of them pre-set in the company's favor. The reveal lists which ones
+// the reader never touched. Organ-donation figures: Johnson & Goldstein,
+// "Do Defaults Save Lives?", Science (2003).
+const settings = [
+  { key: 'updates', label: 'Email me product news and offers', note: 'A few times a week', on: true },
+  { key: 'partners', label: 'Share my activity with partners', note: 'To personalize offers from selected brands', on: true },
+  { key: 'profile', label: 'Make my profile visible in search', note: 'Anyone can find you by name', on: true },
+  { key: 'renew', label: 'Renew my plan automatically', note: 'Charged to your card each year', on: true },
+  { key: 'summary', label: 'Send me a monthly privacy summary', note: 'What was shared, and with whom', on: false },
+];
+---
+<div class="lab-box" data-lab="defaults">
+  <div data-step="1">
+    <p class="lab-q">You've just downloaded a new app. It asks you to confirm your settings. Change whatever you like, then continue.</p>
+    <form class="lab-settings" data-form>
+      <div class="lab-settings-head"><span>Your settings</span><span>Step 2 of 2</span></div>
+      {settings.map((s) => (
+        <label class="lab-switch">
+          <span>{s.label}<small>{s.note}</small></span>
+          <input type="checkbox" name={s.key} data-default={s.on ? '1' : '0'} checked={s.on} />
+          <span class="lab-switch-ui" aria-hidden="true"></span>
+        </label>
+      ))}
+    </form>
+    <div class="lab-actions"><button type="button" class="lab-btn lab-btn-go" data-submit>Continue</button></div>
+  </div>
+
+  <div data-step="2" hidden>
+    <p class="lab-lead" data-lead></p>
+    <ul class="lab-verdict-list" data-list></ul>
+    <p class="lab-p" data-explain></p>
+    <div class="lab-study">
+      Countries where you have to opt in to organ donation had consent rates between about 4% and 28%. Countries where you have to opt out were mostly above 85%, some close to 100%. Same kinds of people, same question. The difference was the box that was already ticked.
+      <cite>Johnson &amp; Goldstein, Science (2003)</cite>
+    </div>
+    <div class="lab-bars">
+      <div class="lab-bar-row"><span>Opt-out countries</span><span class="lab-bar"><i data-w="90"></i></span><b>85%+</b></div>
+      <div class="lab-bar-row" data-muted><span>Opt-in countries</span><span class="lab-bar"><i data-w="28"></i></span><b>4 to 28%</b></div>
+    </div>
+    <div class="lab-actions"><button type="button" class="lab-btn lab-btn-quiet" data-reset>Run it again</button></div>
+  </div>
+</div>
+
+<script>
+  import { record, life, stepper, listeners } from '../../lib/lab';
+
+  function setup() {
+    const root = document.querySelector<HTMLElement>('[data-lab="defaults"]');
+    if (!root) return;
+    const L = listeners();
+    const show = stepper(root);
+    const boxes = Array.from(root.querySelectorAll<HTMLInputElement>('input[type="checkbox"]'));
+
+    const submit = () => {
+      const list = root.querySelector<HTMLElement>('[data-list]')!;
+      list.innerHTML = '';
+      let kept = 0;
+      boxes.forEach((b) => {
+        const wasOn = b.dataset.default === '1';
+        const same = b.checked === wasOn;
+        if (same) kept++;
+        const li = document.createElement('li');
+        if (same) li.setAttribute('data-kept', '');
+        const label = b.closest('label')!.querySelector('span')!.firstChild!.textContent || '';
+        li.innerHTML = '<span></span><span></span>';
+        li.children[0].textContent = label;
+        li.children[1].textContent = same ? (wasOn ? 'Left on' : 'Left off') : (b.checked ? 'You turned it on' : 'You turned it off');
+        list.appendChild(li);
+      });
+      const changed = boxes.length - kept;
+      const lead = root.querySelector<HTMLElement>('[data-lead]')!;
+      const explain = root.querySelector<HTMLElement>('[data-explain]')!;
+      if (changed === 0) {
+        lead.innerHTML = `You changed nothing. <em>All ${boxes.length} settings stayed where the company put them.</em>`;
+        explain.textContent = "Including sharing your activity with partners you've never heard of, and a yearly charge to your card. That's not carelessness. Changing a setting needs a reason and a bit of effort. Keeping it needs nothing, so the default wins almost every time.";
+      } else if (changed <= 2) {
+        lead.innerHTML = `You changed ${changed} of ${boxes.length}. <em>The rest stayed where the company put them.</em>`;
+        explain.textContent = "Most people change one or two things at most, usually the one that looks scariest. The others ride along. Every switch here was set by someone who benefits from you leaving it alone.";
+      } else {
+        lead.innerHTML = `You changed ${changed} of ${boxes.length}. <em>You actually read them.</em>`;
+        explain.textContent = "Most people don't. Every one of these was set by somebody who benefits from you not looking, and on a real app, on a real Tuesday, you probably wouldn't have either.";
+      }
+      record('defaults', changed <= 2, `Changed ${changed} of ${boxes.length} pre-set switches`);
+      show(2);
+      requestAnimationFrame(() => root.querySelectorAll<HTMLElement>('.lab-bar i').forEach((i) => { i.style.width = i.dataset.w + '%'; }));
+    };
+
+    L.on(root.querySelector('[data-submit]')!, 'click', submit);
+    L.on(root.querySelector('[data-reset]')!, 'click', () => {
+      boxes.forEach((b) => { b.checked = b.dataset.default === '1'; });
+      root.querySelectorAll<HTMLElement>('.lab-bar i').forEach((i) => { i.style.width = '0'; });
+      show(1);
+      boxes[0]?.focus();
+    });
+    life()?.onLeave(() => L.off());
+  }
+
+  document.addEventListener('site:ready', setup);
+</script>

@@ -1,0 +1,381 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getPublishedCollection } from '../lib/essays';
+import '../styles/lab.css';
+import '../styles/specimen-mock.css';
+
+// Every mock below is generic and unbranded on purpose: no real company's
+// name, logo, colors or type. Links only go to published essays.
+const published = new Map(
+  [...(await getPublishedCollection('ulysses')), ...(await getPublishedCollection('ilias'))]
+    .map((e) => [e.data.id, e.data.title] as const)
+);
+const essay = (id: string) => (published.has(id) ? { href: `/essays/${id}/`, title: published.get(id)! } : null);
+const defaultsEssay = essay('defaults');
+const anchorEssay = essay('first-number');
+---
+<BaseLayout
+  title="Specimens · Ilias Ennajmi"
+  description="Dark patterns from real checkouts and sign-up flows, redrawn without the logos: fake countdowns, phantom crowds, confirmshaming, pre-ticked extras, drip pricing and the roach motel."
+  active="lab"
+  siteFx
+  fxStrand="ilias"
+>
+<main id="main-content">
+  <header data-cursor-light style="position:relative;overflow:hidden;padding:clamp(8rem,16vh,12rem) clamp(22px,6vw,64px) clamp(3rem,6vw,5rem);">
+    <div style="position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,var(--paper-hi) 0%,var(--paper-mid) 60%,var(--coal) 100%);"></div>
+    <div style="position:relative;z-index:1;max-width:1080px;margin:0 auto;animation:cc-rise .9s ease both;">
+      <div style="display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:0.68rem;letter-spacing:0.24em;text-transform:uppercase;color:var(--ash);margin-bottom:clamp(1.6rem,3vw,2.4rem);">
+        <span style="width:28px;height:1px;background:var(--ember);"></span>Dark patterns, redrawn
+      </div>
+      <h1 style="margin:0;font-family:var(--display);font-weight:500;font-size:clamp(3rem,9vw,6.5rem);line-height:0.94;letter-spacing:-0.015em;">Specimens<span style="color:var(--ember-vivid);">.</span></h1>
+      <p style="font-family:var(--body);font-weight:300;font-style:italic;font-size:clamp(1.15rem,2.2vw,1.5rem);color:var(--bone);opacity:0.86;max-width:54ch;margin:1.6rem 0 0;line-height:1.5;text-wrap:pretty;">Tricks from real checkouts and sign-up flows, redrawn without anyone's logo so you can look at them up close. They're live, so poke at them. A few still work on you with the label right next to them.</p>
+    </div>
+  </header>
+
+  <div class="lab-wrap">
+    <div class="lab-intro-note">
+      <span>Six specimens</span>
+      <span>No real brands were harmed, or named</span>
+      <span><a href="/lab/" style="color:inherit;">Try the Lab first →</a></span>
+    </div>
+
+    <!-- 01 -->
+    <article class="sp-item" id="countdown" aria-labelledby="sp-1">
+      <header class="sp-head">
+        <div class="sp-label"><b>Specimen 01</b> Found on flash sales, course launches, hotel deals</div>
+        <h2 class="sp-name" id="sp-1">The countdown that starts over</h2>
+      </header>
+      <div class="sp-mock" data-sp="countdown">
+        <div class="sp-mock-bar"><i></i><i></i><i></i><span>shop.example</span></div>
+        <h4>Summer sale: 60% off everything</h4>
+        <p>This offer ends in</p>
+        <div class="sp-timer" data-timer aria-hidden="true"><b data-h>00<small>hrs</small></b><b data-m>14<small>min</small></b><b data-s>59<small>sec</small></b></div>
+        <button type="button" class="sp-mbtn">Claim my 60% off</button>
+        <p class="sp-mnote" data-timer-note>Reload the page. The deadline moves with you.</p>
+      </div>
+      <div class="sp-notes">
+        <dl>
+          <dt>How it works</dt>
+          <dd>The timer isn't counting down to anything. It starts when you arrive and starts again when you come back. This one resets when it hits zero, if you're patient enough to watch.</dd>
+          <dt>Why it works on you</dt>
+          <dd>A deadline turns "should I?" into "I'll lose it if I don't." People who are hurrying don't compare prices, which is the whole idea.</dd>
+          <dt>The rules</dt>
+          <dd>In the EU, falsely claiming an offer is only available for a very limited time is on the list of practices banned outright.</dd>
+          <dt>Who profits</dt>
+          <dd class="sp-profits">The seller. The only real deadline was you closing the tab.</dd>
+        </dl>
+      </div>
+    </article>
+
+    <!-- 02 -->
+    <article class="sp-item" id="crowd" aria-labelledby="sp-2">
+      <header class="sp-head">
+        <div class="sp-label"><b>Specimen 02</b> Found on booking sites, sneaker drops, ticketing</div>
+        <h2 class="sp-name" id="sp-2">The phantom crowd</h2>
+      </header>
+      <div class="sp-mock" data-sp="crowd">
+        <div class="sp-mock-bar"><i></i><i></i><i></i><span>stays.example</span></div>
+        <h4>Seaside double room</h4>
+        <p style="margin-bottom:6px;">2 nights · free cancellation · breakfast</p>
+        <div class="sp-mrow"><span class="sp-hot" data-lookers>23 people are looking at this right now</span></div>
+        <div class="sp-mrow"><span class="sp-hot">Only 2 rooms left at this price!</span></div>
+        <div class="sp-mtotal"><span>Total</span><span>€248</span></div>
+        <button type="button" class="sp-mbtn">Reserve now</button>
+        <button type="button" class="sp-mlink" data-code-toggle aria-expanded="false">Show the code behind the crowd</button>
+        <code class="sp-code" data-code hidden>const lookers = Math.floor(Math.random() * 20) + 12;
+// refreshed every few seconds. That's it.</code>
+      </div>
+      <div class="sp-notes">
+        <dl>
+          <dt>How it works</dt>
+          <dd>A number that suggests other people are about to take the thing you want. Watch it for a few seconds. On this mock it's a random number, and the code is right there.</dd>
+          <dt>Why it works on you</dt>
+          <dd>Two effects at once. Social proof: if others want it, it's probably good. Scarcity: if it's running out, decide now. Neither one asks you to check.</dd>
+          <dt>The rules</dt>
+          <dd>In 2019, Britain's competition regulator got the biggest hotel booking sites to stop giving false impressions of how popular a room was and how few were left.</dd>
+          <dt>Who profits</dt>
+          <dd class="sp-profits">Whoever gets the booking before you open a second tab to compare.</dd>
+        </dl>
+      </div>
+    </article>
+
+    <!-- 03 -->
+    <article class="sp-item" id="shame" aria-labelledby="sp-3">
+      <header class="sp-head">
+        <div class="sp-label"><b>Specimen 03</b> Found on pop-ups, exit offers, unsubscribe pages</div>
+        <h2 class="sp-name" id="sp-3">Confirmshaming</h2>
+      </header>
+      <div class="sp-mock" data-sp="shame">
+        <div class="sp-mock-bar"><i></i><i></i><i></i><span>store.example</span></div>
+        <div class="sp-step" data-shame-step="1">
+          <h4>Wait! Don't leave empty-handed.</h4>
+          <p>Get 10% off your first order when you join our list.</p>
+          <div class="sp-input" aria-hidden="true">you@email.com</div>
+          <button type="button" class="sp-mbtn">Yes, give me 10% off</button>
+          <button type="button" class="sp-mlink" data-shame-no>No thanks, I'd rather pay full price</button>
+        </div>
+        <div class="sp-step" data-shame-step="2" hidden>
+          <h4>Are you sure?</h4>
+          <p>Most shoppers take the discount. It only takes a second.</p>
+          <button type="button" class="sp-mbtn">OK, fine, give me 10% off</button>
+          <button type="button" class="sp-mlink" data-shame-no2>I'm sure. I enjoy wasting money.</button>
+        </div>
+        <div class="sp-step" data-shame-step="3" hidden>
+          <h4>You got out.</h4>
+          <p>Two clicks, and you had to call yourself wasteful twice to make them. <button type="button" class="sp-mlink sp-mlink-inline" data-shame-reset>Start over</button></p>
+        </div>
+      </div>
+      <div class="sp-notes">
+        <dl>
+          <dt>How it works</dt>
+          <dd>The "no" is written so that clicking it means insulting yourself. Try saying no to this one. It asks twice.</dd>
+          <dt>Why it works on you</dt>
+          <dd>Nobody wants to confirm they're the kind of person who wastes money. The offer is weak, so the button borrows your self-image to do the selling.</dd>
+          <dt>Who profits</dt>
+          <dd class="sp-profits">Whoever reports on email sign-ups this quarter. The list grows. Whether anyone wanted to be on it is a different number, and nobody puts that one in the deck.</dd>
+        </dl>
+      </div>
+    </article>
+
+    <!-- 04 -->
+    <article class="sp-item" id="preticked" aria-labelledby="sp-4">
+      <header class="sp-head">
+        <div class="sp-label"><b>Specimen 04</b> Found on checkouts, flight bookings, app installers</div>
+        <h2 class="sp-name" id="sp-4">The pre-ticked extra</h2>
+      </header>
+      <div class="sp-mock" data-sp="preticked">
+        <div class="sp-mock-bar"><i></i><i></i><i></i><span>checkout.example</span></div>
+        <h4>Your order</h4>
+        <div class="sp-mrow"><span>Wireless headphones</span><span>€79.00</span></div>
+        <div class="sp-mrow"><span>Shipping</span><span>Free</span></div>
+        <label class="sp-check"><input type="checkbox" checked data-extra /><span>Add 2-year protection plan for €12.99. Covers accidental damage. Terms apply.</span></label>
+        <div class="sp-mtotal"><span>Total</span><span data-total>€91.99</span></div>
+        <button type="button" class="sp-mbtn">Place order</button>
+      </div>
+      <div class="sp-notes">
+        <dl>
+          <dt>How it works</dt>
+          <dd>An add-on you didn't ask for, already in the basket, in the smallest type on the page. Untick it and watch the total drop.</dd>
+          <dt>Why it works on you</dt>
+          <dd>Defaults. Unticking takes noticing, and your attention is on the thing you came to buy.{defaultsEssay && <> More in <a href={defaultsEssay.href}>{defaultsEssay.title}</a>.</>}</dd>
+          <dt>The rules</dt>
+          <dd>Pre-ticked boxes for extra payments have been banned in the EU since 2014. Plenty of places never got the memo.</dd>
+          <dt>Who profits</dt>
+          <dd class="sp-profits">The seller, and whoever sells them the insurance. Add-ons like this are often where the actual margin is.</dd>
+        </dl>
+      </div>
+    </article>
+
+    <!-- 05 -->
+    <article class="sp-item" id="drip" aria-labelledby="sp-5">
+      <header class="sp-head">
+        <div class="sp-label"><b>Specimen 05</b> Found on ticketing, food delivery, short-term rentals</div>
+        <h2 class="sp-name" id="sp-5">Drip pricing</h2>
+      </header>
+      <div class="sp-mock" data-sp="drip">
+        <div class="sp-mock-bar"><i></i><i></i><i></i><span>tickets.example</span></div>
+        <div class="sp-steps-count" data-drip-count>Step 1 of 4</div>
+        <h4 data-drip-title>Live concert, standing</h4>
+        <div data-drip-rows><div class="sp-mrow"><span>1 × ticket</span><span>€49.00</span></div></div>
+        <div class="sp-mtotal"><span>Total</span><span data-drip-total>€49.00</span></div>
+        <button type="button" class="sp-mbtn" data-drip-next>Continue</button>
+        <button type="button" class="sp-mlink" data-drip-reset hidden>Start over</button>
+      </div>
+      <div class="sp-notes">
+        <dl>
+          <dt>How it works</dt>
+          <dd>Show a low price first. Add the rest one step at a time, after you've already decided. Click through this one to the end.</dd>
+          <dt>Why it works on you</dt>
+          <dd>The first number becomes the anchor for the whole purchase.{anchorEssay && <> (<a href={anchorEssay.href}>That's this essay</a>.)</>} And every step you've already taken makes turning back feel like wasted effort.</dd>
+          <dt>The rules</dt>
+          <dd>In the US, a Federal Trade Commission rule against hidden fees on live-event tickets and short-term rentals took effect in 2025. The price you see first now has to include them.</dd>
+          <dt>Who profits</dt>
+          <dd class="sp-profits">Everyone in the chain except you. The €49 was never the price.</dd>
+        </dl>
+      </div>
+    </article>
+
+    <!-- 06 -->
+    <article class="sp-item" id="roach" aria-labelledby="sp-6">
+      <header class="sp-head">
+        <div class="sp-label"><b>Specimen 06</b> Found on subscriptions, gyms, newspapers, software</div>
+        <h2 class="sp-name" id="sp-6">The roach motel</h2>
+      </header>
+      <div class="sp-mock" data-sp="roach">
+        <div class="sp-mock-bar"><i></i><i></i><i></i><span>account.example</span></div>
+        <div class="sp-steps-count" data-roach-count>Signing up took 1 step.</div>
+        <div class="sp-step" data-roach-step="1">
+          <h4>Your plan: Premium</h4>
+          <p>€12.99 a month · renews on the 1st</p>
+          <button type="button" class="sp-mbtn">Upgrade to Premium Plus</button>
+          <button type="button" class="sp-mlink" data-roach-next>Cancel subscription</button>
+        </div>
+        <div class="sp-step" data-roach-step="2" hidden>
+          <h4>Before you go…</h4>
+          <p>Stay and get 50% off for the next 3 months. That's just €6.49.</p>
+          <button type="button" class="sp-mbtn" data-roach-keep>Keep my discount</button>
+          <button type="button" class="sp-mlink" data-roach-next>Continue cancelling</button>
+        </div>
+        <div class="sp-step" data-roach-step="3" hidden>
+          <h4>Tell us why you're leaving</h4>
+          <p>Required.</p>
+          <label class="sp-check"><input type="radio" name="roach-why" /><span>Too expensive</span></label>
+          <label class="sp-check"><input type="radio" name="roach-why" /><span>I don't use it enough</span></label>
+          <label class="sp-check"><input type="radio" name="roach-why" /><span>Something else</span></label>
+          <button type="button" class="sp-mbtn" data-roach-next disabled data-roach-why-next>Continue</button>
+        </div>
+        <div class="sp-step" data-roach-step="4" hidden>
+          <h4>Are you sure?</h4>
+          <p>You'll lose your saved lists, your history and your 214-day streak. This can't be undone.</p>
+          <button type="button" class="sp-mbtn" data-roach-keep>Keep Premium</button>
+          <button type="button" class="sp-mlink" data-roach-next>Cancel anyway</button>
+        </div>
+        <div class="sp-step" data-roach-step="5" hidden>
+          <h4>Almost done</h4>
+          <p>To finish cancelling, please call our team, Monday to Friday, 9 to 5 (Central European Time). Have your account number ready.</p>
+          <button type="button" class="sp-mbtn" data-roach-reset>Back to my account</button>
+        </div>
+        <div class="sp-step" data-roach-step="kept" hidden>
+          <h4>Great news, you're staying!</h4>
+          <p>That's what the numbers call it, anyway. <button type="button" class="sp-mlink sp-mlink-inline" data-roach-reset>Start over</button></p>
+        </div>
+      </div>
+      <div class="sp-notes">
+        <dl>
+          <dt>How it works</dt>
+          <dd>Easy to get into, hard to get out of. Every exit step is another chance to change your mind, and the big button is always the one that keeps you. Try cancelling this one.</dd>
+          <dt>Why it works on you</dt>
+          <dd>Friction, and loss aversion. Each screen shows you something you're about to lose, and each click costs a little more patience than the last.</dd>
+          <dt>The rules</dt>
+          <dd>In 2023 the US Federal Trade Commission sued Amazon over how hard it was to cancel Prime. According to the complaint, the cancellation flow had an internal name: Iliad. As in the very long poem about a very long war.</dd>
+          <dt>Who profits</dt>
+          <dd class="sp-profits">The retention dashboard, this quarter. The reviews, next year, go the other way.</dd>
+        </dl>
+      </div>
+    </article>
+
+    <p style="margin:clamp(3rem,6vw,4.5rem) 0 0;font-family:var(--body);font-style:italic;font-size:clamp(1.05rem,1.9vw,1.25rem);color:var(--ash);line-height:1.55;max-width:56ch;">
+      Seen one in the wild that belongs in here? <a href="mailto:hello@iliasennajmi.com?subject=Specimen" class="charge" style="color:var(--ember);">Send it in</a>. Screenshots welcome, and I'll redraw it without the logo.
+    </p>
+  </div>
+</main>
+</BaseLayout>
+
+<script>
+  import { life } from '../lib/lab';
+
+  const pad = (n: number) => String(n).padStart(2, '0');
+  const eur = (n: number) => '€' + n.toFixed(2);
+
+  function setup() {
+    if (!document.querySelector('[data-sp]')) return;
+    const offs: Array<() => void> = [];
+    const on = (el: Element | null, type: string, fn: EventListener) => {
+      if (!el) return; el.addEventListener(type, fn); offs.push(() => el.removeEventListener(type, fn));
+    };
+    const onAll = (sel: string, type: string, fn: EventListener) => document.querySelectorAll(sel).forEach((el) => on(el, type, fn));
+    const timers: number[] = [];
+
+    // 01 countdown: starts at 14:59 on arrival, restarts at zero. Only ticks
+    // while it's on screen, so it costs nothing when scrolled past.
+    const timer = document.querySelector<HTMLElement>('[data-timer]');
+    if (timer) {
+      const mEl = timer.querySelector<HTMLElement>('[data-m]')!.firstChild as Text;
+      const sEl = timer.querySelector<HTMLElement>('[data-s]')!.firstChild as Text;
+      let left = 14 * 60 + 59, visible = false;
+      const tick = () => {
+        if (!visible) return;
+        left = left <= 0 ? 14 * 60 + 59 : left - 1;
+        mEl.data = pad(Math.floor(left / 60)); sEl.data = pad(left % 60);
+      };
+      const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; });
+      io.observe(timer); offs.push(() => io.disconnect());
+      timers.push(window.setInterval(tick, 1000));
+    }
+
+    // 02 phantom crowd: literally the code it shows
+    const lookers = document.querySelector<HTMLElement>('[data-lookers]');
+    if (lookers) {
+      timers.push(window.setInterval(() => {
+        const n = Math.floor(Math.random() * 20) + 12;
+        lookers.textContent = `${n} people are looking at this right now`;
+      }, 2600));
+      const code = document.querySelector<HTMLElement>('[data-code]')!;
+      const btn = document.querySelector<HTMLButtonElement>('[data-code-toggle]')!;
+      on(btn, 'click', () => {
+        code.hidden = !code.hidden;
+        btn.setAttribute('aria-expanded', String(!code.hidden));
+        btn.textContent = code.hidden ? 'Show the code behind the crowd' : 'Hide the code';
+      });
+    }
+
+    // 03 confirmshaming
+    const shame = (n: number) => document.querySelectorAll<HTMLElement>('[data-shame-step]').forEach((s) => { s.hidden = s.dataset.shameStep !== String(n); });
+    onAll('[data-shame-no]', 'click', () => shame(2));
+    onAll('[data-shame-no2]', 'click', () => shame(3));
+    onAll('[data-shame-reset]', 'click', () => shame(1));
+
+    // 04 pre-ticked extra
+    const extra = document.querySelector<HTMLInputElement>('[data-extra]');
+    const total = document.querySelector<HTMLElement>('[data-total]');
+    on(extra, 'change', () => { if (total && extra) total.textContent = eur(79 + (extra.checked ? 12.99 : 0)); });
+
+    // 05 drip pricing
+    const drip = [
+      { title: 'Live concert, standing', add: null },
+      { title: 'Almost there', add: ['Service fee', 6.5] },
+      { title: 'Review your order', add: ['Order processing', 3.9] },
+      { title: 'Payment', add: ['E-ticket delivery', 2.4] },
+    ] as const;
+    let dripAt = 0;
+    const rows = document.querySelector<HTMLElement>('[data-drip-rows]');
+    const dripPaint = () => {
+      if (!rows) return;
+      let sum = 49;
+      rows.innerHTML = '<div class="sp-mrow"><span>1 × ticket</span><span>€49.00</span></div>';
+      for (let i = 1; i <= dripAt; i++) {
+        const [label, amt] = drip[i].add as readonly [string, number];
+        sum += amt;
+        const r = document.createElement('div'); r.className = 'sp-mrow';
+        r.innerHTML = '<span></span><span class="sp-hot"></span>';
+        r.children[0].textContent = label; r.children[1].textContent = '+' + eur(amt);
+        rows.appendChild(r);
+      }
+      document.querySelector<HTMLElement>('[data-drip-total]')!.textContent = eur(sum);
+      document.querySelector<HTMLElement>('[data-drip-title]')!.textContent = drip[dripAt].title;
+      document.querySelector<HTMLElement>('[data-drip-count]')!.textContent = `Step ${dripAt + 1} of ${drip.length}`;
+      const next = document.querySelector<HTMLButtonElement>('[data-drip-next]')!;
+      const reset = document.querySelector<HTMLButtonElement>('[data-drip-reset]')!;
+      next.textContent = dripAt === drip.length - 1 ? `Pay ${eur(sum)}` : 'Continue';
+      reset.hidden = dripAt !== drip.length - 1;
+    };
+    on(document.querySelector('[data-drip-next]'), 'click', () => {
+      if (dripAt < drip.length - 1) { dripAt++; dripPaint(); }
+      else { document.querySelector<HTMLElement>('[data-drip-title]')!.textContent = `That's €12.80 more than the price you clicked on.`; }
+    });
+    on(document.querySelector('[data-drip-reset]'), 'click', () => { dripAt = 0; dripPaint(); });
+
+    // 06 roach motel
+    let roachAt = 1;
+    const roachCount = document.querySelector<HTMLElement>('[data-roach-count]');
+    const roach = (step: number | 'kept') => {
+      document.querySelectorAll<HTMLElement>('[data-roach-step]').forEach((s) => { s.hidden = s.dataset.roachStep !== String(step); });
+      if (roachCount) roachCount.textContent = step === 'kept' || step === 1 ? 'Signing up took 1 step.' : `Signing up took 1 step. You're on step ${step} of cancelling.`;
+    };
+    onAll('[data-roach-next]', 'click', () => { roachAt = Math.min(5, roachAt + 1); roach(roachAt); });
+    onAll('[data-roach-keep]', 'click', () => roach('kept'));
+    onAll('[data-roach-reset]', 'click', () => {
+      roachAt = 1; roach(1);
+      document.querySelectorAll<HTMLInputElement>('input[name="roach-why"]').forEach((r) => { r.checked = false; });
+      const w = document.querySelector<HTMLButtonElement>('[data-roach-why-next]'); if (w) w.disabled = true;
+    });
+    onAll('input[name="roach-why"]', 'change', () => {
+      const w = document.querySelector<HTMLButtonElement>('[data-roach-why-next]'); if (w) w.disabled = false;
+    });
+
+    life()?.onLeave(() => { offs.forEach((f) => f()); timers.forEach((t) => clearInterval(t)); });
+  }
+
+  document.addEventListener('site:ready', setup);
+</script>

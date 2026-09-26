@@ -27,7 +27,7 @@ import TouchPrefetch from '../components/TouchPrefetch.astro';
 interface Props {
   title: string;
   description: string;
-  active: 'home' | 'about' | 'ulysses' | 'ilias' | 'shelf' | 'essay' | 'topics' | 'saved' | 'colophon';
+  active: 'home' | 'about' | 'ulysses' | 'ilias' | 'shelf' | 'essay' | 'topics' | 'saved' | 'colophon' | 'lab';
   ogType?: string;
   accent?: string;
   grain?: boolean;
@@ -101,14 +101,15 @@ const proseFirst = active === 'essay' || active === 'about' || active === 'colop
   <link rel="manifest" href="/manifest.webmanifest" />
   <meta name="theme-color" content="#ebe5db" />
   <script is:inline>
-    // Apply the saved (or OS-preferred) theme before first paint, and
-    // re-apply after every view-transition swap — the swap replaces <html>
-    // attributes with the incoming page's, which would drop data-theme.
+    // Paper (day mode) is the default for everyone. Ink only if the reader
+    // picked it with the toggle; the OS dark setting is deliberately ignored.
+    // Applied before first paint, and re-applied after every view-transition
+    // swap, which replaces <html> attributes with the incoming page's.
     (function () {
       var apply = function () {
         var t = null;
         try { t = localStorage.getItem('theme'); } catch (e) {}
-        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'ink' : 'paper';
+        if (t !== 'ink') t = 'paper';
         if (t === 'ink') document.documentElement.setAttribute('data-theme', 'ink');
         else document.documentElement.removeAttribute('data-theme');
         var meta = document.querySelector('meta[name="theme-color"]');

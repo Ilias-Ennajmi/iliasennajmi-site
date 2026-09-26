@@ -20,6 +20,8 @@ export const GET: APIRoute = async () => {
     ...toEntry(ilias, 'Ilias', '/ilias/'),
     { title: 'About', tag: 'Page', standfirst: 'The person behind the essays.', strand: 'Site', read: '', href: '/about/' },
     { title: 'The Shelf', tag: 'Page', standfirst: 'Books, sound, and tools shaping the work.', strand: 'Site', read: '', href: '/shelf/' },
+    { title: 'The Lab', tag: 'Page', standfirst: 'Six small experiments that try a well-known trick on you, then show you how it worked.', strand: 'Site', read: '', href: '/lab/' },
+    { title: 'Specimens', tag: 'Page', standfirst: 'Dark patterns from real checkouts, redrawn without the logos.', strand: 'Site', read: '', href: '/specimens/' },
     { title: 'Topics', tag: 'Page', standfirst: 'Every essay, browsable by theme instead of strand.', strand: 'Site', read: '', href: '/topics/' },
     { title: 'Start Here', tag: 'Page', standfirst: 'New here? A few essays in a deliberate order.', strand: 'Site', read: '', href: '/start/' },
     { title: 'Saved', tag: 'Page', standfirst: 'Essays you set aside to read later.', strand: 'Site', read: '', href: '/saved/' },

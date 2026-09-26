@@ -1,0 +1,45 @@
+/* Specimen mockups (/specimens/): deliberately NOT this site's design.
+   Each specimen is a "found object" from a generic, unbranded commercial site
+   (system font, rounded corners, stock blue), so it reads as someone else's
+   interface under glass. No real brand's colors, type or marks. */
+/* the "found object": a mock UI in a neutral, deliberately un-branded skin */
+.sp-mock {
+  --m-bg: #ffffff; --m-ink: #1d1d1f; --m-mute: #6b6b70; --m-line: #e3e3e6; --m-accent: #1f6feb; --m-hot: #d93025; --m-soft: #f5f5f7;
+  position: relative; background: var(--m-bg); color: var(--m-ink); border-radius: 12px;
+  box-shadow: 0 1px 0 rgba(0,0,0,.04), 0 18px 40px -18px rgba(0,0,0,.35);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 15px; line-height: 1.4; padding: 20px; overflow: hidden;
+}
+:root[data-theme="ink"] .sp-mock { box-shadow: 0 0 0 1px rgba(255,255,255,.08), 0 18px 40px -18px rgba(0,0,0,.8); }
+.sp-mock * { box-sizing: border-box; }
+.sp-mock-bar { display: flex; align-items: center; gap: 6px; margin: -20px -20px 16px; padding: 10px 14px; background: var(--m-soft); border-bottom: 1px solid var(--m-line); }
+.sp-mock-bar i { width: 9px; height: 9px; border-radius: 50%; background: #d4d4d8; }
+.sp-mock-bar span { margin-left: 8px; font-size: 11px; color: var(--m-mute); letter-spacing: .02em; }
+.sp-mock h4 { margin: 0 0 6px; font-size: 19px; font-weight: 700; letter-spacing: -.01em; }
+.sp-mock p { margin: 0 0 12px; color: var(--m-mute); }
+.sp-mbtn { display: block; width: 100%; padding: 13px 16px; border: 0; border-radius: 8px; background: var(--m-accent); color: #fff; font: inherit; font-weight: 650; cursor: pointer; text-align: center; min-height: 44px; }
+.sp-mbtn:hover { filter: brightness(1.08); }
+.sp-mlink { display: block; width: 100%; margin-top: 10px; padding: 8px; background: none; border: 0; color: var(--m-mute); font: inherit; font-size: 12.5px; text-decoration: underline; cursor: pointer; text-align: center; min-height: 36px; }
+.sp-mrow { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-top: 1px solid var(--m-line); }
+.sp-mrow:first-child { border-top: 0; }
+.sp-mrow span:last-child { font-variant-numeric: tabular-nums; }
+.sp-mtotal { display: flex; justify-content: space-between; padding: 12px 0 14px; border-top: 2px solid var(--m-ink); font-weight: 700; font-size: 17px; font-variant-numeric: tabular-nums; }
+.sp-hot { color: var(--m-hot); font-weight: 650; }
+.sp-timer { display: flex; gap: 6px; margin: 4px 0 14px; }
+.sp-timer b { flex: 1; text-align: center; padding: 10px 0; background: var(--m-ink); color: #fff; border-radius: 6px; font-size: 22px; font-variant-numeric: tabular-nums; }
+.sp-timer small { display: block; font-size: 9.5px; font-weight: 500; opacity: .7; text-transform: uppercase; letter-spacing: .08em; }
+.sp-check { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-top: 1px solid var(--m-line); font-size: 13px; color: var(--m-mute); cursor: pointer; }
+.sp-check input { width: 18px; height: 18px; margin: 1px 0 0; accent-color: var(--m-accent); flex: none; }
+.sp-code { display: block; margin-top: 12px; padding: 10px 12px; background: #0d1117; color: #e6edf3; border-radius: 6px; font: 12.5px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; white-space: pre-wrap; }
+.sp-code[hidden] { display: none; }
+.sp-toggle { margin-top: 1rem; }
+.sp-reset-note { margin-top: 0.8rem; font-family: var(--body); font-style: italic; font-size: 0.96rem; color: var(--ash); }
+.sp-step[hidden] { display: none; }
+.sp-step { animation: lab-in .35s ease both; }
+.sp-steps-count { font-size: 11px; color: var(--m-mute); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; }
+
+
+.sp-input { border: 1px solid var(--m-line); border-radius: 8px; padding: 12px; color: var(--m-mute); margin-bottom: 10px; font-size: 14px; }
+.sp-mnote { margin: 12px 0 0 !important; font-size: 13px; color: var(--m-mute); }
+.sp-mlink-inline { display: inline; width: auto; padding: 0; margin: 0; min-height: 0; }
+.sp-mbtn:disabled { opacity: .5; cursor: not-allowed; filter: none; }

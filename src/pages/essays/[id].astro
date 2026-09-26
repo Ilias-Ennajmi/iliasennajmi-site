@@ -2,6 +2,7 @@
 import { render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import NewsletterSignup from '../../components/NewsletterSignup.astro';
+import WhoProfits from '../../components/WhoProfits.astro';
 import InteractiveAnchor from '../../components/InteractiveAnchor.astro';
 import { getPublishedCollection, readMinutesOf, readTimeOf, getPairedEssay } from '../../lib/essays';
 import { wordCount } from '../../lib/readTime';
@@ -216,6 +217,7 @@ const epistemicLabel: Record<string, string> = {
           visibility-gated timer in the script below. Never shown for a
           skim/scroll-past, only a real completion. */}
       <p data-pace-reveal class="no-print" style="margin:0.7rem 0 0;font-family:var(--body);font-style:italic;font-size:0.92rem;color:var(--ash);opacity:0;transition:opacity .6s ease;"></p>
+      <WhoProfits />
     </article>
 
     {paired && (

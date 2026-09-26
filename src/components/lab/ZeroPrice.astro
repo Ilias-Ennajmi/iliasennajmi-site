@@ -1,0 +1,107 @@
+---
+// Experiment: the zero-price effect. Two chocolates; half of readers see
+// 15 cents vs 1 cent, half see both cut by one cent (14 cents vs free).
+// Shampanier, Mazar & Ariely, "Zero as a Special Price", Marketing Science
+// (2007): the fancy truffle fell from 73% to 31% once the cheap one was free.
+---
+<div class="lab-box" data-lab="free">
+  <div data-step="1">
+    <p class="lab-q">There's a small stand at the end of a hallway. You can take one chocolate, no more. Which one?</p>
+    <div class="lab-choices" data-choices></div>
+  </div>
+
+  <div data-step="2" hidden>
+    <p class="lab-lead" data-lead></p>
+    <p class="lab-p" data-explain></p>
+    <div class="lab-compare">
+      <div class="lab-compare-col">
+        <div class="lab-compare-label"><span>Version A</span><b data-a-you></b></div>
+        <div class="lab-mini"><span>Hand-made truffle</span><span>15 cents</span></div>
+        <div class="lab-mini"><span>Plain chocolate</span><span>1 cent</span></div>
+      </div>
+      <div class="lab-compare-col">
+        <div class="lab-compare-label"><span>Version B</span><b data-b-you></b></div>
+        <div class="lab-mini"><span>Hand-made truffle</span><span>14 cents</span></div>
+        <div class="lab-mini"><span>Plain chocolate<i class="lab-mark">Free</i></span><span>0</span></div>
+      </div>
+    </div>
+    <div class="lab-study">
+      Researchers set up a stand like this one. At 15 cents against 1 cent, 73% of people took the truffle. Then both prices dropped by exactly one cent, so the gap between them stayed the same. The truffle's share fell to 31%. The plain chocolate went from 27% to 69%.
+      <cite>Shampanier, Mazar &amp; Ariely, Marketing Science (2007)</cite>
+    </div>
+    <div class="lab-bars">
+      <div class="lab-bar-row" data-muted><span>Truffle, 15c vs 1c</span><span class="lab-bar"><i data-w="73"></i></span><b>73%</b></div>
+      <div class="lab-bar-row"><span>Truffle, 14c vs free</span><span class="lab-bar"><i data-w="31"></i></span><b>31%</b></div>
+    </div>
+    <div class="lab-actions"><button type="button" class="lab-btn lab-btn-quiet" data-reset>Run it again</button></div>
+  </div>
+</div>
+
+<script>
+  import { record, life, stepper, listeners } from '../../lib/lab';
+
+  function setup() {
+    const root = document.querySelector<HTMLElement>('[data-lab="free"]');
+    if (!root) return;
+    const L = listeners();
+    const show = stepper(root);
+    const wrap = root.querySelector<HTMLElement>('[data-choices]')!;
+
+    const run = () => {
+      const free = Math.random() < 0.5;
+      const items = [
+        { key: 'truffle', name: 'Hand-made truffle', price: free ? '14' : '15', unit: 'cents', desc: 'Dark chocolate, the kind in a little paper cup.' },
+        { key: 'plain', name: 'Plain chocolate', price: free ? 'Free' : '1', unit: free ? '' : 'cent', desc: 'A small wrapped one. Perfectly fine.' },
+      ];
+      wrap.innerHTML = '';
+      items.forEach((it) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'lab-choice';
+        b.setAttribute('aria-pressed', 'false');
+        b.innerHTML = '<span class="lab-choice-name"></span><span class="lab-choice-price"></span><span class="lab-choice-desc"></span>';
+        b.querySelector('.lab-choice-name')!.textContent = it.name;
+        const price = b.querySelector('.lab-choice-price')!;
+        price.textContent = it.price;
+        if (it.unit) { const s = document.createElement('small'); s.textContent = it.unit; price.appendChild(s); }
+        b.querySelector('.lab-choice-desc')!.textContent = it.desc;
+        b.addEventListener('click', () => choose(free, it.key as 'truffle' | 'plain', b));
+        wrap.appendChild(b);
+      });
+      show(1, false);
+    };
+
+    const choose = (free: boolean, pick: 'truffle' | 'plain', btn: HTMLButtonElement) => {
+      btn.setAttribute('aria-pressed', 'true');
+      root.querySelector<HTMLElement>('[data-a-you]')!.textContent = free ? '' : 'You saw this';
+      root.querySelector<HTMLElement>('[data-b-you]')!.textContent = free ? 'You saw this' : '';
+      const lead = root.querySelector<HTMLElement>('[data-lead]')!;
+      const explain = root.querySelector<HTMLElement>('[data-explain]')!;
+      if (!free) {
+        lead.innerHTML = `You took the ${pick === 'truffle' ? 'truffle' : 'plain one'}. <em>You got the version without "free" in it.</em>`;
+        explain.textContent = "The other half of readers saw both prices cut by one cent: the truffle at 14, the plain one at zero. The difference between them didn't change at all. What changed is that one of them said free, and free doesn't get compared. It just gets taken.";
+        record('free', null, `Paid version, took the ${pick === 'truffle' ? 'truffle' : 'plain one'}`);
+      } else if (pick === 'plain') {
+        lead.innerHTML = 'You took the free one. <em>Most people do.</em>';
+        explain.textContent = "Both prices had been cut by exactly one cent, so the gap between them was the same as before. The truffle was just as good a deal. But zero isn't just a low price. It feels like there's no downside at all, so the comparison stops happening.";
+        record('free', true, 'Took the free chocolate');
+      } else {
+        lead.innerHTML = 'You paid for the truffle. <em>You held out against free.</em>';
+        explain.textContent = "Both prices had been cut by exactly one cent, so the truffle was the same deal as before. Most people still jumped to the free one, because zero stops the comparison. You kept comparing.";
+        record('free', false, 'Paid 14 cents instead of taking free');
+      }
+      show(2);
+      requestAnimationFrame(() => root.querySelectorAll<HTMLElement>('.lab-bar i').forEach((i) => { i.style.width = i.dataset.w + '%'; }));
+    };
+
+    L.on(root.querySelector('[data-reset]')!, 'click', () => {
+      root.querySelectorAll<HTMLElement>('.lab-bar i').forEach((i) => { i.style.width = '0'; });
+      run();
+      wrap.querySelector<HTMLElement>('button')?.focus();
+    });
+    run();
+    life()?.onLeave(() => L.off());
+  }
+
+  document.addEventListener('site:ready', setup);
+</script>

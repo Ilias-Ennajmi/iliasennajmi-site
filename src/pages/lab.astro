@@ -1,0 +1,209 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import InteractiveAnchor from '../components/InteractiveAnchor.astro';
+import Decoy from '../components/lab/Decoy.astro';
+import Framing from '../components/lab/Framing.astro';
+import LossAversion from '../components/lab/LossAversion.astro';
+import Defaults from '../components/lab/Defaults.astro';
+import ZeroPrice from '../components/lab/ZeroPrice.astro';
+import { getPublishedCollection } from '../lib/essays';
+import '../styles/lab.css';
+
+// Link each experiment to the essay it belongs to, but only while that
+// essay is published: a draft would be a dead link.
+const published = new Map(
+  [...(await getPublishedCollection('ulysses')), ...(await getPublishedCollection('ilias'))]
+    .map((e) => [e.data.id, e.data.title] as const)
+);
+const essay = (id: string) => (published.has(id) ? { href: `/essays/${id}/`, title: published.get(id)! } : null);
+
+const experiments = [
+  {
+    id: 'anchor', effect: 'Anchoring', title: 'The number you didn’t choose',
+    hook: 'A question about a consulting fee. Answer quickly, the way you would if someone asked you in a meeting.',
+    essay: essay('first-number'),
+    profits: 'Whoever gets to say a number first. Sellers, negotiators, and every menu you’ve ever read.',
+  },
+  {
+    id: 'decoy', effect: 'The decoy effect', title: 'The option nobody buys',
+    hook: 'A magazine subscription, three plans (or two, depending on your luck). Pick one.',
+    essay: essay('first-number'),
+    profits: 'Whoever designed the pricing page. A decoy costs nothing to offer, because nobody takes it.',
+  },
+  {
+    id: 'framing', effect: 'Framing', title: 'Same numbers, different answer',
+    hook: 'Six hundred jobs, two rescue plans, one choice. Take it seriously.',
+    essay: essay('rational'),
+    profits: 'Whoever writes the sentence. “95% fat free” sells. “5% fat” doesn’t, and it’s the same yogurt.',
+  },
+  {
+    id: 'loss', effect: 'Loss aversion', title: 'What a coin flip costs you',
+    hook: 'You could lose €100. How much would you have to be able to win?',
+    essay: essay('rational'),
+    profits: 'Insurance add-ons, extended warranties, “don’t miss out” emails. Anything sold by making you picture the loss.',
+  },
+  {
+    id: 'defaults', effect: 'Defaults', title: 'The boxes you didn’t touch',
+    hook: 'A new app wants you to confirm your settings. You know how this goes.',
+    essay: essay('defaults'),
+    profits: 'Whoever sets the switches. Here, that would have been “partners” you’ve never heard of.',
+  },
+  {
+    id: 'free', effect: 'The zero-price effect', title: 'The pull of free',
+    hook: 'Two chocolates, one hand. It’s a small decision. That’s why it works.',
+    essay: essay('attention-rent'),
+    profits: 'Every “free” app you use. Free isn’t a price, it’s a different decision, and the bill shows up somewhere else.',
+  },
+];
+const openTab = essay('open-tab');
+const shareUrl = new URL('/lab/', Astro.site).toString();
+---
+<BaseLayout
+  title="The Lab · Ilias Ennajmi"
+  description="Six small experiments that try a well-known trick on you, then show you how it worked. Anchoring, decoys, framing, loss aversion, defaults and the pull of free."
+  active="lab"
+  siteFx
+>
+<main id="main-content">
+  <header data-cursor-light style="position:relative;overflow:hidden;padding:clamp(8rem,16vh,12rem) clamp(22px,6vw,64px) clamp(3rem,6vw,5rem);">
+    <div style="position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,var(--paper-hi) 0%,var(--paper-mid) 60%,var(--coal) 100%);"></div>
+    <div style="position:absolute;inset:-12%;z-index:0;background:radial-gradient(55% 48% at 50% 16%, rgba(165,39,22,0.08), transparent 60%);animation:cc-drift1 24s ease-in-out infinite;"></div>
+    <div style="position:relative;z-index:1;max-width:1080px;margin:0 auto;animation:cc-rise .9s ease both;">
+      <div style="display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:0.68rem;letter-spacing:0.24em;text-transform:uppercase;color:var(--ash);margin-bottom:clamp(1.6rem,3vw,2.4rem);">
+        <span style="width:28px;height:1px;background:var(--ember);"></span>Experiments you run on yourself
+      </div>
+      <h1 style="margin:0;font-family:var(--display);font-weight:500;font-size:clamp(3rem,9vw,6.5rem);line-height:0.94;letter-spacing:-0.015em;">The Lab<span style="color:var(--ember-vivid);">.</span></h1>
+      <p style="font-family:var(--body);font-weight:300;font-style:italic;font-size:clamp(1.15rem,2.2vw,1.5rem);color:var(--bone);opacity:0.86;max-width:54ch;margin:1.6rem 0 0;line-height:1.5;text-wrap:pretty;">Six small experiments. Each one tries a trick on you that gets used on you every day, then shows you how it worked. Knowing about them helps less than you'd think. That's sort of the point.</p>
+    </div>
+  </header>
+
+  <div class="lab-wrap">
+    <div class="lab-intro-note">
+      <span>About five minutes</span>
+      <span>Nothing you do here leaves this browser</span>
+      <span>Every number quoted comes from a named study</span>
+    </div>
+
+    {experiments.map((x, i) => (
+      <section class="lab-exp" id={`exp-${x.id}`} aria-labelledby={`exp-${x.id}-title`}>
+        <div class="lab-exp-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</div>
+        <div class="lab-exp-body">
+          <div class="lab-exp-head">
+            <span class="lab-exp-effect">{x.effect}</span>
+            <span class="lab-status" data-status-for={x.id}>Not run yet</span>
+          </div>
+          <h2 class="lab-exp-title" id={`exp-${x.id}-title`}>{x.title}</h2>
+          <p class="lab-exp-hook">{x.hook}</p>
+
+          {x.id === 'anchor' && <InteractiveAnchor />}
+          {x.id === 'decoy' && <Decoy />}
+          {x.id === 'framing' && <Framing />}
+          {x.id === 'loss' && <LossAversion />}
+          {x.id === 'defaults' && <Defaults />}
+          {x.id === 'free' && <ZeroPrice />}
+
+          <div class="lab-exp-foot">
+            {x.essay && <span>The essay: <a href={x.essay.href}>{x.essay.title} →</a></span>}
+            <span class="lab-profits"><strong>Who profits</strong>{x.profits}</span>
+          </div>
+        </div>
+      </section>
+    ))}
+
+    <section class="lab-file" aria-labelledby="lab-file-title" data-file data-share-url={shareUrl}>
+      <div class="lab-file-head">
+        <h2 class="lab-file-title" id="lab-file-title">Your case file</h2>
+        <span class="lab-file-kicker">Kept in this browser only</span>
+      </div>
+      <ol class="lab-file-rows" data-rows>
+        {experiments.map((x, i) => (
+          <li>
+            <span class="n">{String(i + 1).padStart(2, '0')}</span>
+            <a href={`#exp-${x.id}`}>{x.effect}</a>
+            <span class="lab-status" data-status-for={x.id}>Not run yet</span>
+          </li>
+        ))}
+      </ol>
+      <div class="lab-file-sum">
+        <p class="lab-file-score" data-score>Nothing on file yet. Start with the first one.</p>
+        <p class="lab-file-note" data-note>
+          No reader statistics anywhere on this page, because I don't collect any. Your results sit in your own browser, and the button below deletes them.
+        </p>
+        <p class="lab-file-note" data-itch hidden>
+          Feeling a small itch to finish the rest? That's the Zeigarnik effect: unfinished things stick in the mind more than finished ones.{openTab && <> I wrote about it in <a href={openTab.href}>{openTab.title}</a>.</>}
+        </p>
+        <div class="lab-actions">
+          <button type="button" class="lab-btn lab-btn-go" data-copy disabled>Copy my score</button>
+          <button type="button" class="lab-btn lab-btn-quiet" data-clear>Clear my file</button>
+        </div>
+      </div>
+    </section>
+
+    <p style="margin:clamp(3rem,6vw,4.5rem) 0 0;font-family:var(--body);font-style:italic;font-size:clamp(1.05rem,1.9vw,1.25rem);color:var(--ash);line-height:1.55;max-width:56ch;">
+      These tricks don't only live in labs. <a href="/specimens/" class="charge" style="color:var(--ember);">The specimen cabinet</a> has the ones you'll meet at checkout this week, redrawn so you can look at them up close.
+    </p>
+  </div>
+</main>
+</BaseLayout>
+
+<script>
+  import { readResults, clearResults, LAB_ORDER, life } from '../lib/lab';
+
+  function setupFile() {
+    const file = document.querySelector<HTMLElement>('[data-file]');
+    if (!file) return;
+    const score = file.querySelector<HTMLElement>('[data-score]')!;
+    const itch = file.querySelector<HTMLElement>('[data-itch]')!;
+    const copyBtn = file.querySelector<HTMLButtonElement>('[data-copy]')!;
+    const clearBtn = file.querySelector<HTMLButtonElement>('[data-clear]')!;
+    let shareText = '';
+
+    const paint = () => {
+      const r = readResults();
+      document.querySelectorAll<HTMLElement>('[data-status-for]').forEach((el) => {
+        const res = r[el.dataset.statusFor as keyof typeof r];
+        const state = !res ? '' : res.got === null ? 'control' : res.got ? 'got' : 'held';
+        el.dataset.state = state;
+        el.textContent = !res ? 'Not run yet' : res.got === null ? 'No trick in your version' : res.got ? 'It got you' : 'You held out';
+        el.title = res?.note ?? '';
+      });
+      const done = LAB_ORDER.filter((x) => r[x.id]);
+      const scored = done.filter((x) => r[x.id]!.got !== null);
+      const got = scored.filter((x) => r[x.id]!.got).length;
+      if (!done.length) {
+        score.textContent = 'Nothing on file yet. Start with the first one.';
+        shareText = '';
+      } else if (!scored.length) {
+        score.textContent = "You've only drawn the versions without a trick so far. Run one again.";
+        shareText = '';
+      } else {
+        score.innerHTML = got === 0
+          ? `Nothing got you. <em>0 out of ${scored.length}.</em> Either you're very good, or you've read the essays.`
+          : `The Lab got you <em>${got} out of ${scored.length}</em> times.`;
+        shareText = `The Lab got me ${got} out of ${scored.length} times. ${file.dataset.shareUrl}`;
+      }
+      itch.hidden = !(done.length > 0 && done.length < LAB_ORDER.length);
+      copyBtn.disabled = !shareText;
+    };
+
+    const onCopy = async () => {
+      if (!shareText) return;
+      try { await navigator.clipboard.writeText(shareText); copyBtn.textContent = 'Copied'; }
+      catch { copyBtn.textContent = 'Copy failed'; }
+      window.setTimeout(() => { copyBtn.textContent = 'Copy my score'; }, 1800);
+    };
+    const onClear = () => { clearResults(); };
+
+    document.addEventListener('lab:result', paint);
+    copyBtn.addEventListener('click', onCopy);
+    clearBtn.addEventListener('click', onClear);
+    paint();
+    life()?.onLeave(() => {
+      document.removeEventListener('lab:result', paint);
+      copyBtn.removeEventListener('click', onCopy);
+      clearBtn.removeEventListener('click', onClear);
+    });
+  }
+
+  document.addEventListener('site:ready', setupFile);
+</script>
