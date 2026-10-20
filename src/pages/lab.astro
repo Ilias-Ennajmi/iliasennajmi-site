@@ -6,6 +6,7 @@ import Framing from '../components/lab/Framing.astro';
 import LossAversion from '../components/lab/LossAversion.astro';
 import Defaults from '../components/lab/Defaults.astro';
 import ZeroPrice from '../components/lab/ZeroPrice.astro';
+import Face from '../components/Face.astro';
 import { getPublishedCollection } from '../lib/essays';
 import '../styles/lab.css';
 
@@ -84,9 +85,19 @@ const shareUrl = new URL('/lab/', Astro.site).toString();
       <span>Every number quoted comes from a named study</span>
     </div>
 
+    <nav class="lab-rail" aria-label="Experiments" data-rail>
+      {experiments.map((x, i) => (
+        <a href={`#exp-${x.id}`} class="lab-rail-item" data-rail-for={x.id} data-exp={x.id}>
+          <span class="lab-rail-dot" aria-hidden="true"></span>
+          <span class="lab-rail-no">{String(i + 1).padStart(2, '0')}</span>
+          <span class="lab-rail-name">{x.effect}</span>
+        </a>
+      ))}
+    </nav>
+
     {experiments.map((x, i) => (
       <section class="lab-exp" id={`exp-${x.id}`} aria-labelledby={`exp-${x.id}-title`}>
-        <div class="lab-exp-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</div>
+        <div class="lab-exp-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}<img src={`/illus/lab-${x.id}-280.png`} alt="" class="illus lab-instrument" loading="lazy" decoding="async" width="200" height="200" /></div>
         <div class="lab-exp-body">
           <div class="lab-exp-head">
             <span class="lab-exp-effect">{x.effect}</span>
@@ -112,10 +123,11 @@ const shareUrl = new URL('/lab/', Astro.site).toString();
 
     <section class="lab-file" aria-labelledby="lab-file-title" data-file data-share-url={shareUrl}>
       <div class="lab-file-head">
+        <Face mode="observer" uid="lab" class="lab-observer" />
         <h2 class="lab-file-title" id="lab-file-title">Your case file</h2>
         <span class="lab-file-kicker">Kept in this browser only</span>
       </div>
-      <ol class="lab-file-rows" data-rows>
+      <ol class="lab-file-rows" data-rows data-xray="Completion: six slots you'll want to fill">
         {experiments.map((x, i) => (
           <li>
             <span class="n">{String(i + 1).padStart(2, '0')}</span>
@@ -160,6 +172,10 @@ const shareUrl = new URL('/lab/', Astro.site).toString();
 
     const paint = () => {
       const r = readResults();
+      document.querySelectorAll<HTMLElement>('[data-rail-for]').forEach((el) => {
+        const res = r[el.dataset.railFor as keyof typeof r];
+        el.dataset.state = !res ? '' : res.got === null ? 'control' : res.got ? 'got' : 'held';
+      });
       document.querySelectorAll<HTMLElement>('[data-status-for]').forEach((el) => {
         const res = r[el.dataset.statusFor as keyof typeof r];
         const state = !res ? '' : res.got === null ? 'control' : res.got ? 'got' : 'held';
@@ -195,11 +211,70 @@ const shareUrl = new URL('/lab/', Astro.site).toString();
     const onClear = () => { clearResults(); };
 
     document.addEventListener('lab:result', paint);
+
+    // After a reveal, offer the next bench. Arrow keys walk the bench too.
+    const sections = Array.from(document.querySelectorAll<HTMLElement>('.lab-exp'));
+    const onNext = (e: Event) => {
+      const id = (e as CustomEvent).detail?.id;
+      if (!id) return;
+      const i = sections.findIndex((s) => s.id === `exp-${id}`);
+      const next = sections[i + 1];
+      const sec = sections[i];
+      if (!sec || sec.querySelector('.lab-next')) return;
+      setTimeout(() => {
+      const step = Array.from(sec.querySelectorAll<HTMLElement>('[data-step]')).find((s) => !s.hidden);
+      const actions = step?.querySelector('.lab-actions');
+      if (!actions) return;
+      const a = document.createElement('a');
+      a.className = 'lab-btn lab-btn-go lab-next';
+      a.href = next ? `#${next.id}` : '#lab-file-title';
+      a.innerHTML = next ? 'Next experiment <span class="m-arrow">→</span>' : 'Your case file <span class="m-arrow">→</span>';
+      actions.prepend(a);
+      }, 0);
+    };
+    document.addEventListener('lab:result', onNext);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      const t = e.target as HTMLElement;
+      if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+      const y = window.scrollY + window.innerHeight * 0.3;
+      let cur = sections.findIndex((s) => s.offsetTop + s.offsetHeight > y);
+      if (cur < 0) cur = sections.length - 1;
+      const to = sections[cur + (e.key === 'ArrowRight' ? 1 : -1)];
+      if (!to) return;
+      e.preventDefault();
+      to.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      to.querySelector<HTMLElement>('button, input, a')?.focus({ preventScroll: true });
+    };
+    document.addEventListener('keydown', onKey);
+    // which bench is in view
+    const railIO = new IntersectionObserver((ents) => {
+      ents.forEach((en) => {
+        const id = en.target.id.replace('exp-', '');
+        const item = document.querySelector<HTMLElement>(`[data-rail-for="${id}"]`);
+        if (item) item.toggleAttribute('data-current', en.isIntersecting);
+      });
+    }, { rootMargin: '-40% 0px -50% 0px' });
+    sections.forEach((s) => railIO.observe(s));
+
+    // He reacts. Got you: surprised. Held out: suspicious. Cleared: neutral.
+    const observer = file.querySelector<HTMLElement>('.lab-observer');
+    const onMood = (e: Event) => {
+      const d = (e as CustomEvent).detail || {};
+      if (!observer) return;
+      if (d.id == null || d.got == null) observer.removeAttribute('data-mood');
+      else observer.setAttribute('data-mood', d.got ? 'surprised' : 'suspicious');
+    };
+    document.addEventListener('lab:result', onMood);
     copyBtn.addEventListener('click', onCopy);
     clearBtn.addEventListener('click', onClear);
     paint();
     life()?.onLeave(() => {
       document.removeEventListener('lab:result', paint);
+      document.removeEventListener('lab:result', onMood);
+      document.removeEventListener('lab:result', onNext);
+      document.removeEventListener('keydown', onKey);
+      railIO.disconnect();
       copyBtn.removeEventListener('click', onCopy);
       clearBtn.removeEventListener('click', onClear);
     });

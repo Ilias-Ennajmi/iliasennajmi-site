@@ -65,7 +65,7 @@ export default function siteCsp({ env = {} } = {}) {
           ['script-src', "'self'", ...hashes, ...extra.script].join(' '),
           "style-src 'self' 'unsafe-inline'",
           "img-src 'self' data:",
-          "font-src 'self'",
+          "font-src 'self' data:",
           ['connect-src', "'self'", ...extra.connect].join(' '),
           'frame-src https://open.spotify.com',
           "form-action 'self' https://api.web3forms.com",

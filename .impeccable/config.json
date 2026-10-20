@@ -4,7 +4,9 @@
       "design-system-font-size"
     ],
     "ignoreFiles": [
-      "src/styles/specimen-mock.css"
+      "src/styles/specimen-mock.css",
+      "src/components/Face.astro",
+      "src/components/Illustration.astro"
     ],
     "ignoreValues": [
       {
@@ -79,6 +81,56 @@
         "rule": "design-system-color",
         "value": "#666",
         "createdAt": "2026-09-24T23:43:18.016Z"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "glyphs",
+        "createdAt": "2026-10-19T21:19:36.210Z"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "eb garamond fallback",
+        "createdAt": "2026-10-19T21:19:36.510Z"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "fraunces fallback",
+        "createdAt": "2026-10-19T21:19:36.840Z"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "space grotesk fallback",
+        "createdAt": "2026-10-19T21:19:37.150Z"
+      },
+      {
+        "rule": "overused-font",
+        "value": "fraunces",
+        "createdAt": "2026-10-19T21:19:37.456Z"
+      },
+      {
+        "rule": "overused-font",
+        "value": "space grotesk",
+        "createdAt": "2026-10-19T21:19:37.778Z"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "rgba(0, 0, 0, .8) src/styles/motion.css",
+        "createdAt": "2026-10-19T21:36:18.397Z"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#fff src/styles/motion.css",
+        "createdAt": "2026-10-19T21:36:19.042Z"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "rgba(0,0,0,.5) src/styles/motion.css",
+        "createdAt": "2026-10-19T21:36:19.746Z"
+      },
+      {
+        "rule": "design-system-radius",
+        "value": "2px src/styles/motion.css",
+        "createdAt": "2026-10-19T21:36:20.195Z"
       }
     ]
   }

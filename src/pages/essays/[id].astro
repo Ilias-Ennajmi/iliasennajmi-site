@@ -3,6 +3,8 @@ import { render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import NewsletterSignup from '../../components/NewsletterSignup.astro';
 import WhoProfits from '../../components/WhoProfits.astro';
+import Face from '../../components/Face.astro';
+import Illustration from '../../components/Illustration.astro';
 import InteractiveAnchor from '../../components/InteractiveAnchor.astro';
 import { getPublishedCollection, readMinutesOf, readTimeOf, getPairedEssay } from '../../lib/essays';
 import { wordCount } from '../../lib/readTime';
@@ -100,26 +102,26 @@ const epistemicLabel: Record<string, string> = {
   fxProgress="article"
 >
 <div style={`--acc:${accentVar};`}>
-  <div data-reading-meter data-minutes={readMinutes} style="position:fixed;left:clamp(14px,2vw,26px);bottom:clamp(14px,2.4vh,24px);z-index:7200;opacity:0;transition:opacity .5s ease;pointer-events:none;font-family:var(--mono);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--acc);display:flex;align-items:center;gap:9px;">
+  <div data-reading-meter data-minutes={readMinutes} data-xray="Progress: unfinished things itch (Zeigarnik)" style="position:fixed;left:clamp(14px,2vw,26px);bottom:clamp(14px,2.4vh,24px);z-index:7200;opacity:0;transition:opacity .5s ease;pointer-events:none;font-family:var(--mono);font-size:0.66rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--acc);display:flex;align-items:center;gap:9px;">
     <span style="width:5px;height:5px;background:var(--acc);transform:rotate(45deg);"></span>
     <span data-meter-label>—</span>
   </div>
 
   <div id="highlight-popover" class="no-print" style="position:absolute;display:none;z-index:9000;transform:translate(-50%,-100%);margin-top:-10px;">
     <div id="highlight-actions" style="display:flex;background:var(--bone);white-space:nowrap;">
-      <button type="button" id="highlight-copy-btn" style="background:none;color:var(--coal);font-family:var(--mono);font-size:0.64rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;border:none;border-right:1px solid color-mix(in srgb, var(--coal) 20%, transparent);padding:9px 16px;cursor:pointer;display:flex;align-items:center;gap:8px;">
+      <button type="button" id="highlight-copy-btn" style="background:none;color:var(--coal);font-family:var(--mono);font-size:0.7rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;border:none;border-right:1px solid color-mix(in srgb, var(--coal) 20%, transparent);padding:9px 16px;cursor:pointer;display:flex;align-items:center;gap:8px;">
         <span style={`width:6px;height:6px;background:${accentVar};transform:rotate(45deg);display:inline-block;`}></span>
         Copy quote
       </button>
-      <button type="button" id="highlight-note-btn" style="background:none;color:var(--coal);font-family:var(--mono);font-size:0.64rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;border:none;padding:9px 16px;cursor:pointer;">
+      <button type="button" id="highlight-note-btn" style="background:none;color:var(--coal);font-family:var(--mono);font-size:0.7rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;border:none;padding:9px 16px;cursor:pointer;">
         Note
       </button>
     </div>
     <div id="note-composer" style="display:none;background:var(--bone);padding:10px;width:240px;">
       <textarea id="note-composer-input" rows="2" placeholder="Why? (just for you)" style="width:100%;resize:vertical;background:var(--coal);color:var(--bone);border:1px solid var(--coal-line);font-family:var(--body);font-size:0.9rem;padding:8px;box-sizing:border-box;"></textarea>
       <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:8px;">
-        <button type="button" id="note-composer-cancel" style="background:none;border:none;color:var(--coal);opacity:0.7;font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;padding:6px 4px;">Cancel</button>
-        <button type="button" id="note-composer-save" style="background:var(--coal);color:var(--bone);border:none;font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;padding:6px 12px;">Save</button>
+        <button type="button" id="note-composer-cancel" style="background:none;border:none;color:var(--coal);opacity:0.7;font-family:var(--mono);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;padding:6px 4px;">Cancel</button>
+        <button type="button" id="note-composer-save" style="background:var(--coal);color:var(--bone);border:none;font-family:var(--mono);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;padding:6px 12px;">Save</button>
       </div>
     </div>
   </div>
@@ -128,9 +130,9 @@ const epistemicLabel: Record<string, string> = {
     <!-- ARTICLE HEADER -->
     <header data-cursor-light style="position:relative;overflow:hidden;padding:clamp(8rem,16vh,12rem) clamp(22px,6vw,64px) clamp(2.5rem,5vw,4rem);">
       <div style="position:absolute;inset:0;z-index:0;background:radial-gradient(110% 80% at 18% 6%, rgba(117,89,56,0.10), transparent 56%),linear-gradient(180deg,var(--paper-hi) 0%,var(--coal) 70%);"></div>
-      <div style="position:relative;z-index:1;max-width:calc(760px - 2 * clamp(22px,6vw,64px));margin:0 auto;animation:cc-rise .9s ease both;">
-        <a href={strandHref} class="charge back-link" style="display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:0.62rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--acc);margin-bottom:clamp(2rem,4vw,3rem);transition:gap .3s;">← {strandLabel}</a>
-        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:13px;margin-bottom:clamp(1.4rem,2.5vw,2rem);font-family:var(--mono);font-size:0.6rem;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--ash);">
+      <div class="essay-head" style="position:relative;z-index:1;max-width:calc(760px - 2 * clamp(22px,6vw,64px));margin:0 auto;animation:cc-rise .9s ease both;">
+        <a href={strandHref} class="charge back-link" style="display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:0.7rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--acc);margin-bottom:clamp(2rem,4vw,3rem);transition:gap .3s;">← {strandLabel}</a>
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:13px;margin-bottom:clamp(1.4rem,2.5vw,2rem);font-family:var(--mono);font-size:0.68rem;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--ash);">
           <span style="color:var(--acc);">{entry.data.tag}</span>
           <span style="width:16px;height:1px;background:var(--coal-line);"></span>
           <span>{readLabel} read</span>
@@ -143,16 +145,18 @@ const epistemicLabel: Record<string, string> = {
             </Fragment>
           )}
         </div>
-        <h1 style="margin:0;font-family:var(--display);font-weight:500;font-size:clamp(2.5rem,6.4vw,4.6rem);line-height:1.0;letter-spacing:-0.018em;text-wrap:balance;">{entry.data.title}</h1>
+        <h1 transition:name={`essay-${entry.data.id}`} style="margin:0;font-family:var(--display);font-weight:500;font-size:clamp(2.5rem,6.4vw,4.6rem);line-height:1.0;letter-spacing:-0.018em;text-wrap:balance;">{entry.data.title}</h1>
         <p style="font-family:var(--body);font-weight:400;font-style:italic;font-size:clamp(1.25rem,2.4vw,1.7rem);line-height:1.42;color:var(--tide);margin:clamp(1.6rem,3vw,2.2rem) 0 0;text-wrap:pretty;">{entry.data.standfirst}</p>
+        {/* after the title in source so the title is parsed and painted first; CSS puts it above (phones) or beside (wide) */}
+        <Illustration id={entry.data.id} class="illus--essay" eager />
       </div>
     </header>
 
     <!-- AUTHOR / SEAM -->
     <div style="max-width:760px;margin:0 auto;padding:0 clamp(22px,6vw,64px);">
       <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px 18px;padding:clamp(1.4rem,2.5vw,1.8rem) 0;border-top:1px solid var(--coal-line);border-bottom:1px solid var(--coal-line);">
-        <span style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);">By <span style="color:var(--bone);">Ilias Ennajmi</span></span>
-        <div class="no-print" style="display:flex;flex-wrap:wrap;align-items:center;gap:16px;font-family:var(--mono);font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);">
+        <span style="display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);"><Face mode="stamp" uid="byline" style="width:34px;height:34px;flex:none;" />By <span style="color:var(--bone);">Ilias Ennajmi</span></span>
+        <div class="no-print essay-actions" data-xray="Social proof: the sharing you do for me" style="display:flex;flex-wrap:wrap;align-items:center;gap:16px;font-family:var(--mono);font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);">
           <div style="display:flex;align-items:center;gap:14px;">
             <span>Share</span>
             <span style="width:3px;height:3px;border-radius:50%;background:var(--acc);"></span>
@@ -176,7 +180,7 @@ const epistemicLabel: Record<string, string> = {
     {toc.length >= 3 && (
       <div class="no-print" style="max-width:760px;margin:0 auto;padding:clamp(2.4rem,4.5vw,3.4rem) clamp(22px,6vw,64px) 0;">
         <details class="essay-toc" style="border:1px solid var(--coal-line);background:var(--coal-soft);">
-          <summary style="display:flex;align-items:center;gap:11px;padding:14px 18px;cursor:pointer;font-family:var(--mono);font-size:0.62rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--ash);list-style:none;-webkit-tap-highlight-color:transparent;">
+          <summary style="display:flex;align-items:center;gap:11px;padding:14px 18px;cursor:pointer;font-family:var(--mono);font-size:0.7rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--ash);list-style:none;-webkit-tap-highlight-color:transparent;">
             <span style="width:6px;height:6px;background:var(--acc);transform:rotate(45deg);display:inline-block;flex:none;"></span>
             Contents
             <span class="toc-chev" aria-hidden="true" style="margin-left:auto;transition:transform .3s;color:var(--acc);">↓</span>
@@ -185,7 +189,7 @@ const epistemicLabel: Record<string, string> = {
             {toc.map((h) => (
               <li style="counter-increment:toc;margin:0;padding:7px 0;border-top:1px solid var(--coal-line);">
                 <a href={`#${h.slug}`} class="toc-link" style="display:flex;align-items:baseline;gap:12px;font-family:var(--display);font-weight:500;font-size:clamp(1.02rem,1.8vw,1.18rem);line-height:1.3;color:var(--bone);transition:color .25s;">
-                  <span style="font-family:var(--mono);font-size:0.56rem;letter-spacing:0.08em;color:var(--acc);flex:none;">{String(toc.indexOf(h) + 1).padStart(2, '0')}</span>
+                  <span style="font-family:var(--mono);font-size:0.66rem;letter-spacing:0.08em;color:var(--acc);flex:none;">{String(toc.indexOf(h) + 1).padStart(2, '0')}</span>
                   {h.text}
                 </a>
               </li>
@@ -204,7 +208,7 @@ const epistemicLabel: Record<string, string> = {
           runs the widget simply stays at the end rather than vanishing. */}
       {entry.data.interactive === 'anchor' && <div data-interactive-source hidden><InteractiveAnchor /></div>}
 
-      <div data-reveal style="display:flex;align-items:center;gap:14px;margin-top:clamp(2.4rem,4vw,3.4rem);font-family:var(--mono);font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--ash);">
+      <div data-reveal style="display:flex;align-items:center;gap:14px;margin-top:clamp(2.4rem,4vw,3.4rem);font-family:var(--mono);font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--ash);">
         <span style="width:8px;height:8px;background:var(--acc);transform:rotate(45deg);display:inline-block;"></span>
         <span>{endLabel}</span>
       </div>
@@ -221,16 +225,16 @@ const epistemicLabel: Record<string, string> = {
     </article>
 
     {paired && (
-      <section class="no-print" style="border-top:1px solid var(--coal-line);background:var(--coal-soft);">
+      <section class="no-print cv" style="border-top:1px solid var(--coal-line);background:var(--coal-soft);">
         <div style="max-width:760px;margin:0 auto;padding:clamp(2.6rem,5vw,4rem) clamp(22px,6vw,64px);">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.1rem;font-family:var(--mono);font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ash);">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.1rem;font-family:var(--mono);font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ash);">
             <span style={`width:7px;height:7px;transform:rotate(45deg);display:inline-block;background:${paired.accent === 'ember' ? 'var(--ember)' : 'var(--tide)'};`}></span>
             {strand === 'ulysses' ? 'Now see who profits' : 'Now ask why people act'}
           </div>
           <a href={`/essays/${paired.entry.data.id}/`} class="charge paired-link" data-accent={paired.accent} style="display:block;">
             <div class="paired-title" style="font-family:var(--display);font-weight:500;font-size:clamp(1.7rem,3.4vw,2.6rem);line-height:1.08;letter-spacing:-0.01em;transition:color .3s;text-wrap:balance;">{paired.entry.data.title}</div>
             <p style="font-family:var(--body);font-weight:300;font-style:italic;color:var(--ash);font-size:clamp(1rem,1.6vw,1.15rem);margin:0.8rem 0 0;line-height:1.45;text-wrap:pretty;">{paired.entry.data.standfirst}</p>
-            <span style={`display:inline-flex;align-items:center;gap:8px;margin-top:1.2rem;font-family:var(--mono);font-size:0.64rem;letter-spacing:0.16em;text-transform:uppercase;color:${paired.accent === 'ember' ? 'var(--ember)' : 'var(--tide)'};`}>Read the {paired.strandLabel} counterpart →</span>
+            <span style={`display:inline-flex;align-items:center;gap:8px;margin-top:1.2rem;font-family:var(--mono);font-size:0.7rem;letter-spacing:0.16em;text-transform:uppercase;color:${paired.accent === 'ember' ? 'var(--ember)' : 'var(--tide)'};`}>Read the {paired.strandLabel} counterpart →</span>
           </a>
         </div>
       </section>
@@ -239,18 +243,18 @@ const epistemicLabel: Record<string, string> = {
     <NewsletterSignup />
 
     <!-- PREV / NEXT -->
-    <nav aria-label="More essays" class="no-print" style="border-top:1px solid var(--coal-line);">
-      <div class="kb-hint" style="max-width:1180px;margin:0 auto;padding:1.1rem clamp(22px,6vw,64px) 0;text-align:center;font-family:var(--mono);font-size:0.56rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ash);">Navigate with <span style="color:var(--acc);">←</span> <span style="color:var(--acc);">→</span></div>
-      <div style="max-width:1180px;margin:0 auto;padding:0 clamp(22px,6vw,64px);display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--coal-line);">
-        <a href={prevHref} data-prev-link class="charge prevnext-link" style="background:var(--coal);display:flex;flex-direction:column;gap:0.8rem;padding:clamp(2.2rem,4vw,3.4rem) clamp(1.4rem,3vw,2.6rem);transition:background .4s;">
-          <span style="font-family:var(--mono);font-size:0.6rem;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--ash);">← Previous</span>
+    <nav aria-label="More essays" class="no-print cv" data-xray="Autoplay, for reading" style="border-top:1px solid var(--coal-line);">
+      <div class="kb-hint" style="max-width:1180px;margin:0 auto;padding:1.1rem clamp(22px,6vw,64px) 0;text-align:center;font-family:var(--mono);font-size:0.66rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ash);">Navigate with <span style="color:var(--acc);">←</span> <span style="color:var(--acc);">→</span></div>
+      <div style="max-width:1180px;margin:0 auto;padding:0 clamp(22px,6vw,64px);display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--coal-line);">
+        <a href={prevHref} data-prev-link class="charge prevnext-link m-lift" style="background:var(--coal);display:flex;flex-direction:column;gap:0.8rem;padding:clamp(2.2rem,4vw,3.4rem) clamp(1.4rem,3vw,2.6rem);transition:background .4s;">
+          <span style="font-family:var(--mono);font-size:0.68rem;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--ash);">← Previous</span>
           <span style="font-family:var(--display);font-weight:500;font-size:clamp(1.3rem,2.4vw,1.9rem);line-height:1.08;letter-spacing:-0.01em;text-wrap:balance;">{prev.entry.data.title}</span>
-          <span style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ash);">{prev.entry.data.tag}</span>
+          <span style="font-family:var(--mono);font-size:0.66rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ash);">{prev.entry.data.tag}</span>
         </a>
-        <a href={nextHref} data-next-link class="charge prevnext-link" style="background:var(--coal);display:flex;flex-direction:column;gap:0.8rem;padding:clamp(2.2rem,4vw,3.4rem) clamp(1.4rem,3vw,2.6rem);text-align:right;align-items:flex-end;transition:background .4s;">
-          <span style="font-family:var(--mono);font-size:0.6rem;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--acc);">Next →</span>
+        <a href={nextHref} data-next-link class="charge prevnext-link m-lift" style="background:var(--coal);border-left:1px solid var(--coal-line);display:flex;flex-direction:column;gap:0.8rem;padding:clamp(2.2rem,4vw,3.4rem) clamp(1.4rem,3vw,2.6rem);text-align:right;align-items:flex-end;transition:background .4s;">
+          <span style="font-family:var(--mono);font-size:0.68rem;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--acc);">Next →</span>
           <span style="font-family:var(--display);font-weight:500;font-size:clamp(1.3rem,2.4vw,1.9rem);line-height:1.08;letter-spacing:-0.01em;text-wrap:balance;">{next.entry.data.title}</span>
-          <span style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ash);">{next.entry.data.tag}</span>
+          <span style="font-family:var(--mono);font-size:0.66rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ash);">{next.entry.data.tag}</span>
         </a>
       </div>
     </nav>
@@ -273,7 +277,7 @@ const epistemicLabel: Record<string, string> = {
   .reader-note-label {
     display: block;
     font-family: var(--mono);
-    font-size: 0.58rem;
+    font-size: 0.66rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--ash);
@@ -293,7 +297,7 @@ const epistemicLabel: Record<string, string> = {
     border: none;
     padding: 0;
     font-family: var(--mono);
-    font-size: 0.56rem;
+    font-size: 0.66rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--ash);
@@ -319,6 +323,7 @@ const epistemicLabel: Record<string, string> = {
   let cleanupListen = null;
   let cleanupReadingLog = null;
   let cleanupPace = null;
+  let cleanupResume = null;
 
   // Which direct child of .essay-body a selection/click landed in -- stable
   // across visits since published content doesn't change, so it doubles as
@@ -392,6 +397,47 @@ const epistemicLabel: Record<string, string> = {
   // ---- Local reading log ("Your reading, honestly" on /saved/) ----
   // Listens for the generic completion event site-fx.js's reading meter
   // dispatches; this file is where strand/tag/minutes are already known.
+  // Remembers how far down this essay you got (this browser only) and, on
+  // return, offers to jump back there. Only between 12% and 88%: nobody needs
+  // help resuming at the title or at the end.
+  function setupResume() {
+    if (cleanupResume) cleanupResume();
+    const article = document.querySelector('.essay-body');
+    if (!article) return;
+    const key = 'resume:' + essayMeta.id;
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { saved = null; }
+    const offerAt = saved && saved.f > 0.12 && saved.f < 0.88 ? saved.f : null;
+    let pill = null;
+    if (offerAt != null) {
+      pill = document.createElement('button');
+      pill.type = 'button';
+      pill.className = 'resume-pill';
+      pill.innerHTML = 'Pick up where you left off <span class="m-arrow">↓</span>';
+      document.body.appendChild(pill);
+      requestAnimationFrame(() => pill.classList.add('is-in'));
+      pill.addEventListener('click', () => {
+        const top = article.getBoundingClientRect().top + window.scrollY + offerAt * article.offsetHeight - window.innerHeight * 0.3;
+        window.scrollTo({ top, behavior: 'smooth' });
+        pill.classList.remove('is-in');
+        setTimeout(() => pill.remove(), 400);
+      });
+      setTimeout(() => { if (pill && pill.isConnected) { pill.classList.remove('is-in'); setTimeout(() => pill.remove(), 400); } }, 9000);
+    }
+    let t = 0;
+    const onScroll = () => {
+      if (t) return;
+      t = window.setTimeout(() => {
+        t = 0;
+        const r = article.getBoundingClientRect();
+        const f = Math.min(1, Math.max(0, (window.innerHeight * 0.4 - r.top) / r.height));
+        try { localStorage.setItem(key, JSON.stringify({ f: +f.toFixed(3), at: Date.now() })); } catch (e) { /* private mode */ }
+      }, 600);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    cleanupResume = () => { window.removeEventListener('scroll', onScroll); clearTimeout(t); if (pill) pill.remove(); };
+  }
+
   function setupReadingLog() {
     if (cleanupReadingLog) cleanupReadingLog();
     const onComplete = (e) => {
@@ -606,6 +652,7 @@ const epistemicLabel: Record<string, string> = {
     setupSidenotes();
     setupListen();
     setupReadingLog();
+    setupResume();
     setupPaceReveal();
     renderRebuttals();
 
@@ -780,7 +827,7 @@ const epistemicLabel: Record<string, string> = {
     }
 
     window.__life.onLeave(() => {
-      [cleanupKeydown, cleanupHighlight, cleanupSidenotes, cleanupSidenoteResize, cleanupListen, cleanupReadingLog, cleanupPace]
+      [cleanupKeydown, cleanupHighlight, cleanupSidenotes, cleanupSidenoteResize, cleanupListen, cleanupReadingLog, cleanupPace, cleanupResume]
         .forEach((fn) => { if (fn) fn(); });
     });
   });

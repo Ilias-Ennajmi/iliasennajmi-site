@@ -38,7 +38,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   /* injected at runtime via innerHTML — must be global, same reasoning as StrandList */
   .saved-row { background: var(--coal); display: flex; align-items: center; justify-content: space-between; gap: 16px; transition: background .3s; }
   .saved-row:hover { background: var(--coal-soft); }
-  .saved-remove { background: none; border: none; cursor: pointer; font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ash); padding: 10px 12px; transition: color .25s; }
+  .saved-remove { background: none; border: none; cursor: pointer; font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ash); padding: 10px 12px; transition: color .25s; }
   .saved-remove:hover { color: var(--ember); }
 </style>
 
@@ -76,7 +76,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       html += `<div class="saved-row" style="padding:clamp(12px,2vw,16px) clamp(14px,2.5vw,22px);">
         <a href="${esc(e.href)}" class="charge" style="flex:1;display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 16px;min-width:0;">
           <span style="font-family:var(--display);font-weight:500;font-size:clamp(1.1rem,2vw,1.4rem);letter-spacing:-0.005em;text-wrap:balance;">${esc(e.title)}</span>
-          <span style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:${acc};white-space:nowrap;">${esc(e.strand)} <span style="color:var(--ash);">· ${esc(e.read)}</span></span>
+          <span style="font-family:var(--mono);font-size:0.66rem;letter-spacing:0.1em;text-transform:uppercase;color:${acc};white-space:nowrap;">${esc(e.strand)} <span style="color:var(--ash);">· ${esc(e.read)}</span></span>
         </a>
         <button type="button" class="saved-remove" data-id="${esc(e.id)}" aria-label="Remove ${esc(e.title)} from saved">Remove ✕</button>
       </div>`;
@@ -120,15 +120,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     let html = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:var(--coal-line);border:1px solid var(--coal-line);margin-bottom:clamp(1.6rem,3vw,2.4rem);">
       <div style="background:var(--coal-soft);padding:clamp(18px,3vw,26px);">
         <div style="font-family:var(--display);font-weight:500;font-size:clamp(1.6rem,3vw,2.2rem);">${log.length}</div>
-        <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ash);margin-top:0.4rem;">Essay${log.length > 1 ? 's' : ''} finished</div>
+        <div style="font-family:var(--mono);font-size:0.66rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ash);margin-top:0.4rem;">Essay${log.length > 1 ? 's' : ''} finished</div>
       </div>
       <div style="background:var(--coal-soft);padding:clamp(18px,3vw,26px);">
         <div style="font-family:var(--display);font-weight:500;font-size:clamp(1.6rem,3vw,2.2rem);">${totalMinutes}</div>
-        <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ash);margin-top:0.4rem;">Minutes, cover to cover</div>
+        <div style="font-family:var(--mono);font-size:0.66rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ash);margin-top:0.4rem;">Minutes, cover to cover</div>
       </div>
       <div style="background:var(--coal-soft);padding:clamp(18px,3vw,26px);">
         <div style="font-family:var(--display);font-weight:500;font-size:clamp(1.3rem,2.4vw,1.7rem);text-wrap:balance;">${esc(topTag)}</div>
-        <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ash);margin-top:0.4rem;">Most-read theme</div>
+        <div style="font-family:var(--mono);font-size:0.66rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ash);margin-top:0.4rem;">Most-read theme</div>
       </div>
     </div><div style="display:grid;gap:1px;background:var(--coal-line);border:1px solid var(--coal-line);">`;
     sorted.forEach((e) => {
@@ -136,7 +136,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       const date = new Date(e.completedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
       html += `<div style="background:var(--coal);padding:clamp(12px,2vw,16px) clamp(14px,2.5vw,22px);display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 16px;">
         <span style="font-family:var(--body);font-size:clamp(1.02rem,1.8vw,1.2rem);text-wrap:balance;">${esc(e.title)}</span>
-        <span style="font-family:var(--mono);font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:${acc};white-space:nowrap;">${esc(e.strand)} <span style="color:var(--ash);">· ${date}</span></span>
+        <span style="font-family:var(--mono);font-size:0.66rem;letter-spacing:0.1em;text-transform:uppercase;color:${acc};white-space:nowrap;">${esc(e.strand)} <span style="color:var(--ash);">· ${date}</span></span>
       </div>`;
     });
     html += '</div>';

@@ -1,0 +1,37 @@
+---
+/**
+ * One engraved object per essay (public/illus/<id>.svg, source copy in
+ * src/assets/illus/). Each file is two paths, ink and red, traced from a
+ * generated engraving; scripts/illustrate.md says how they're made.
+ *
+ * Always an <img>, and a PNG: inlining the paths put 20-40 KB of path data
+ * ahead of the title in every essay's HTML, and an SVG in an <img> is parsed
+ * on the main thread each time it paints (100-200 ms on a phone). The PNGs
+ * come from scripts/rasterize.mjs at the widths the site displays, 2x.
+ * Sized from the source's viewBox so nothing moves when it arrives. Ink mode
+ * recolors with a CSS filter. Absent file: renders nothing.
+ */
+import fs from 'node:fs';
+import path from 'node:path';
+
+interface Props {
+  id: string;
+  class?: string;
+  style?: string;
+  thumb?: boolean;
+  eager?: boolean;
+  /** which raster: 92 thumb, 220 start, 340 lead, 500 essay (2x widths) */
+  size?: 92 | 220 | 340 | 500;
+}
+const { id, class: cls = '', style = '', thumb = false, eager = false, size = thumb ? 92 : 500 } = Astro.props;
+const file = path.join(process.cwd(), 'src/assets/illus', `${id}.svg`);
+const exists = fs.existsSync(file);
+let w = 1, h = 1;
+if (exists) {
+  const vb = fs.readFileSync(file, 'utf8').match(/viewBox="[\d.-]+ [\d.-]+ ([\d.]+) ([\d.]+)"/);
+  if (vb) { w = Math.round(+vb[1]); h = Math.round(+vb[2]); }
+}
+---
+{exists && (
+  <img src={`/illus/${id}-${size}.png`} alt="" aria-hidden="true" width={w} height={h} class={`illus ${thumb ? 'illus--thumb' : ''} ${cls}`} style={style} loading={eager ? 'eager' : 'lazy'} fetchpriority={eager ? 'low' : undefined} decoding="async" />
+)}

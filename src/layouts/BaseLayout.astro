@@ -2,10 +2,11 @@
 import { ClientRouter } from 'astro:transitions';
 import '@fontsource-variable/eb-garamond';
 import '@fontsource-variable/eb-garamond/wght-italic.css';
-import '@fontsource-variable/fraunces';
-import '@fontsource-variable/fraunces/wght-italic.css';
+import '@fontsource-variable/fraunces/wonk.css';
+import '@fontsource-variable/fraunces/wonk-italic.css';
 import '@fontsource-variable/space-grotesk';
 import '../styles/global.css';
+import '../styles/motion.css';
 // `?url` resolves to the exact same hashed asset Vite emits for the
 // @font-face rules above (same source file → same content hash), so the
 // preload below is guaranteed to match what the CSS actually requests —
@@ -13,8 +14,8 @@ import '../styles/global.css';
 // download after the next build.
 import ebGaramondItalicUrl from '@fontsource-variable/eb-garamond/files/eb-garamond-latin-wght-italic.woff2?url';
 import ebGaramondNormalUrl from '@fontsource-variable/eb-garamond/files/eb-garamond-latin-wght-normal.woff2?url';
-import frauncesNormalUrl from '@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2?url';
-import frauncesItalicUrl from '@fontsource-variable/fraunces/files/fraunces-latin-wght-italic.woff2?url';
+import frauncesNormalUrl from '@fontsource-variable/fraunces/files/fraunces-latin-wonk-normal.woff2?url';
+import frauncesItalicUrl from '@fontsource-variable/fraunces/files/fraunces-latin-wonk-italic.woff2?url';
 import spaceGroteskNormalUrl from '@fontsource-variable/space-grotesk/files/space-grotesk-latin-wght-normal.woff2?url';
 import SiteNav from '../components/SiteNav.astro';
 import Footer from '../components/Footer.astro';
@@ -97,7 +98,7 @@ const proseFirst = active === 'essay' || active === 'about' || active === 'colop
   <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:image" content={resolvedOgImage} />
-  <link rel="icon" href={favicon} />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="manifest" href="/manifest.webmanifest" />
   <meta name="theme-color" content="#ebe5db" />
   <script is:inline>
@@ -158,6 +159,8 @@ const proseFirst = active === 'essay' || active === 'about' || active === 'colop
   <ClientRouter />
   <script is:inline defer src="/site-fx.js"></script>
   <script is:inline defer src="/page-boot.js"></script>
+  <script is:inline defer src="/face.js"></script>
+  <script is:inline defer src="/xray.js"></script>
   {import.meta.env.PROD && (
     <script is:inline>
       // Registered only in production builds — a service worker caching

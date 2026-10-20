@@ -1,4 +1,5 @@
 ---
+import Face from './Face.astro';
 ---
 <section style="position:relative;min-height:100svh;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:clamp(6rem,11vh,8rem) clamp(20px,5vw,40px) clamp(4rem,8vh,6rem);">
   <div style="position:absolute;inset:0;z-index:0;background:radial-gradient(80% 90% at 0% 24%, rgba(117,89,56,0.07), transparent 56%),radial-gradient(80% 90% at 100% 76%, rgba(117,89,56,0.06), transparent 56%),linear-gradient(180deg,var(--paper-hi) 0%,var(--paper-mid) 56%,var(--coal) 100%);"></div>
@@ -7,20 +8,20 @@
   <div style="position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;text-align:center;max-width:640px;animation:cc-rise .9s ease both;">
 
     <div style="position:relative;width:clamp(120px,16vw,168px);aspect-ratio:1;margin-bottom:clamp(1.6rem,3.5vh,2.4rem);">
-      <img src="/logo-mark.svg" alt="" aria-hidden="true" fetchpriority="high" style="display:block;width:100%;height:100%;object-fit:contain;" />
+      <Face mode="hero" uid="hero" style="width:100%;height:100%;cursor:default;" />
     </div>
 
-    <h1 style="margin:0;font-family:var(--display);font-weight:500;font-style:italic;font-size:clamp(2.6rem,7vw,4.6rem);line-height:1;letter-spacing:-0.015em;color:var(--ember-vivid);">Ilias Ennajmi</h1>
+    <h1 class="hero-name" style="margin:0;font-family:var(--display);font-weight:500;font-style:italic;font-size:clamp(2.6rem,7vw,4.6rem);line-height:1;letter-spacing:-0.015em;color:var(--ember-vivid);">Ilias Ennajmi</h1>
     <div style="margin-top:clamp(0.8rem,1.6vh,1.1rem);font-family:var(--mono);font-weight:600;font-size:clamp(0.8rem,1.6vw,1rem);letter-spacing:0.18em;text-transform:uppercase;color:var(--bone);">Why People Act &amp; Who Profits</div>
     <p style="margin:clamp(1.2rem,2.4vh,1.6rem) 0 0;font-family:var(--body);font-weight:400;font-style:italic;font-size:clamp(1.05rem,2vw,1.25rem);color:var(--ash);line-height:1.5;text-wrap:pretty;">and other observations that won't make you any money</p>
 
     <span class="hero-rule" style="display:block;width:min(220px,42vw);height:1px;background:var(--coal-line);margin:clamp(1.8rem,3.5vh,2.4rem) 0;transform:scaleX(0);transform-origin:center;"></span>
 
-    <div style="font-family:var(--mono);font-size:clamp(0.6rem,1.2vw,0.7rem);letter-spacing:0.16em;text-transform:uppercase;color:var(--ash);line-height:1.9;">
+    <div style="font-family:var(--mono);font-size:clamp(0.68rem,1.2vw,0.74rem);letter-spacing:0.16em;text-transform:uppercase;color:var(--ash);line-height:1.9;">
       Written by&nbsp;
       <a href="/ulysses/" class="js-seam-why charge tap" style="color:var(--tide);text-decoration:none;">a behavior obsessive</a>
       <span style="color:var(--coal-line);margin:0 8px;">/</span>
-      <a href="/ilias/" class="js-seam-who charge tap" style="color:var(--ember);text-decoration:none;">a marketing strategist</a>
+      <a href="/ilias/" class="js-seam-who charge tap" data-xray="Authority: a job title, worn lightly" style="color:var(--ember);text-decoration:none;">a marketing strategist</a>
     </div>
 
     <div aria-hidden="true" style="display:flex;gap:0.5em;margin-top:clamp(1.2rem,2.4vh,1.6rem);">
@@ -29,8 +30,8 @@
       ))}
     </div>
 
-    <blockquote style="margin:clamp(1.6rem,3vh,2.2rem) 0 0;font-family:var(--display);font-weight:400;font-style:italic;font-size:clamp(1.1rem,2.2vw,1.4rem);line-height:1.4;color:var(--bone);max-width:38ch;text-wrap:pretty;">&ldquo;Guy realizes free will isn&rsquo;t real, immediately monetizes the observation.&rdquo;</blockquote>
-    <div style="margin-top:0.7rem;font-family:var(--mono);font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);">A fair summary of this site</div>
+    <blockquote data-xray="Social proof: a flattering quote, no source" style="margin:clamp(1.6rem,3vh,2.2rem) 0 0;font-family:var(--display);font-weight:400;font-style:italic;font-size:clamp(1.1rem,2.2vw,1.4rem);line-height:1.4;color:var(--bone);max-width:38ch;text-wrap:pretty;">&ldquo;Guy realizes free will isn&rsquo;t real, immediately monetizes the observation.&rdquo;</blockquote>
+    <div style="margin-top:0.7rem;font-family:var(--mono);font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);">A fair summary of this site</div>
   </div>
 
   <!-- The visual falling-dot line is intentionally 1px wide; the tappable

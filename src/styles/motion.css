@@ -1,0 +1,194 @@
+/* The site's motion system. One vocabulary for how things arrive, respond
+   and leave: shared easings and durations, scroll-driven reveals, the hover
+   and press language, page transitions, the portrait's behavior, the
+   kinetic name, and x-ray mode. Everything here moves with transform,
+   opacity or font-variation only; nothing triggers layout. */
+
+:root {
+  --ease-out: cubic-bezier(.2, .7, .2, 1);
+  --ease-in-out: cubic-bezier(.65, 0, .35, 1);
+  --ease-in: cubic-bezier(.4, 0, 1, 1);
+  --dur-quick: .18s;
+  --dur-base: .32s;
+  --dur-slow: .7s;
+}
+
+/* ---------- reveals: the browser drives them, no JavaScript ----------
+   Each [data-reveal] element rises in as it enters the viewport, scrubbed by
+   scroll position (so it never flashes, and anything already on screen at
+   load is simply there). Browsers without scroll-driven animations keep the
+   IntersectionObserver fallback in site-fx.js. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-reveal] {
+      animation: m-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 4% entry 46%;
+    }
+    [data-reveal][data-bigrise] { animation-name: m-rise-big; }
+    html.js-reveals [data-reveal] { animation: none; }
+  }
+}
+@keyframes m-rise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+@keyframes m-rise-big { from { opacity: 0; transform: translateY(56px); } to { opacity: 1; transform: none; } }
+
+/* ---------- work the browser can skip ----------
+   Sections below the first screen aren't laid out or painted until they're
+   near the viewport. Every font that arrives re-lays out the page; with this,
+   it re-lays out only what's on screen. The placeholder height keeps the
+   scrollbar honest until the real size is known. */
+.cv { content-visibility: auto; contain-intrinsic-size: auto 640px; }
+
+/* ---------- hover and press language ---------- */
+/* Prose links: the underline draws itself from the left. */
+.essay-body a:not(.sidenote a), .m-link {
+  color: var(--acc, var(--ember));
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  transition: background-size var(--dur-base) var(--ease-out), color var(--dur-base);
+  padding-bottom: 1px;
+}
+.essay-body a:not(.sidenote a):hover, .essay-body a:not(.sidenote a):focus-visible, .m-link:hover, .m-link:focus-visible { background-size: 100% 1px; }
+
+/* Buttons press. */
+@media (hover: hover) {
+  button:not(:disabled):active, .pill-cta:active, .lab-btn:not(:disabled):active, .lab-choice:active { transform: scale(.975); }
+  button, .pill-cta, .lab-btn, .lab-choice { transition-property: transform, background, color, border-color, letter-spacing, opacity; transition-duration: var(--dur-quick), var(--dur-base), var(--dur-base), var(--dur-base), var(--dur-base), var(--dur-base); }
+}
+
+/* Cards lift toward the pointer. */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .m-lift { transition: transform var(--dur-slow) var(--ease-out), box-shadow var(--dur-slow) var(--ease-out), background var(--dur-base), opacity var(--dur-base), filter var(--dur-base); }
+  .m-lift:hover { transform: translateY(-3px); box-shadow: 0 18px 40px -28px rgba(41, 28, 15, .45); }
+  :root[data-theme="ink"] .m-lift:hover { box-shadow: 0 18px 40px -24px rgba(0, 0, 0, .8); }
+}
+
+/* Arrows travel. Any link with a trailing .m-arrow nudges it on hover. */
+.m-arrow { display: inline-block; transition: transform var(--dur-base) var(--ease-out); }
+a:hover > .m-arrow, a:focus-visible > .m-arrow, button:hover > .m-arrow { transform: translateX(5px); }
+a:hover > .m-arrow--up, a:focus-visible > .m-arrow--up { transform: translate(3px, -3px); }
+
+/* The Fork: leaning toward one strand tints the ground beneath both. */
+.cc-fork { transition: background-color var(--dur-slow) var(--ease-out); }
+@media (hover: hover) {
+  .cc-fork:has(.js-ulysses:hover) { background-color: color-mix(in srgb, var(--tide) 14%, var(--coal-line)); }
+  .cc-fork:has(.js-ilias:hover) { background-color: color-mix(in srgb, var(--ember) 14%, var(--coal-line)); }
+  .cc-fork > a { transition: transform var(--dur-slow) var(--ease-out), background .45s ease, opacity .45s ease, filter .45s ease; transform-origin: 50% 100%; }
+  .cc-fork > a:hover { transform: scale(1.012); z-index: 1; }
+}
+
+/* ---------- page transitions (Astro ClientRouter, View Transitions API) ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root) { animation: vt-out .28s var(--ease-in) both; }
+  ::view-transition-new(root) { animation: vt-in .46s var(--ease-out) both; }
+  /* a shared essay title travels from the list to the page */
+  ::view-transition-group(*) { animation-duration: .5s; animation-timing-function: var(--ease-out); }
+  ::view-transition-old(site-nav), ::view-transition-new(site-nav) { animation: none; mix-blend-mode: normal; }
+}
+@keyframes vt-out { to { opacity: 0; transform: translateY(-6px); } }
+@keyframes vt-in { from { opacity: 0; transform: translateY(12px); } }
+
+/* ---------- the portrait ---------- */
+.face { display: block; width: 100%; height: auto; }
+span.face { position: relative; transform-origin: 50% 86%; transform: rotate(var(--tilt, 0deg)); transition: transform .9s var(--ease-out); }
+.f-img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.f-over { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.face--eyes { overflow: hidden; }
+svg.face .f-head { transform-origin: 1020px 1760px; transform: rotate(var(--tilt, 0deg)); transition: transform .9s var(--ease-out); }
+.f-pupil { transform: translate(var(--ex, 0px), var(--ey, 0px)) scale(var(--dilate, 1)); transform-box: fill-box; transform-origin: center; transition: transform .3s var(--ease-out); }
+.f-splat { transform-origin: 1300px 1480px; transform: scale(var(--splat, 1)); transition: transform .7s var(--ease-out); }
+.f-glint { transform: translateX(var(--glint, 0px)); transition: transform 1.1s cubic-bezier(.4, 0, .2, 1); }
+.face.is-hover { --splat: 1.2; --dilate: 1.1; --glint: 2300px; }
+.face[data-mood="surprised"] { --dilate: 1.26; --tilt: -2.5deg; }
+.face[data-mood="suspicious"] { --dilate: .8; --tilt: 3deg; }
+.f-drop { opacity: 0; }
+.face.is-drip .f-drop { animation: f-drip 1.25s cubic-bezier(.5, 0, .85, .45) both; }
+@keyframes f-drip { 0% { opacity: 0; transform: translateY(0) scale(.5); } 14% { opacity: 1; transform: translateY(10px) scale(1); } 100% { opacity: 0; transform: translateY(560px) scale(.9); } }
+/* duotones: ink → strand color, paper stays paper */
+.face--ember path[fill="#1e1d19"], .face--ember path[fill="#322f29"], .face--ember path[fill="#36342a"], .face--ember path[fill="#171513"], .face--ember path[fill="#5e5953"], .face--ember circle[fill="#1e1d19"] { fill: var(--ember); }
+.face--ember path[fill="#83817e"], .face--ember path[fill="#a5a5a5"] { fill: color-mix(in srgb, var(--ember) 45%, var(--coal)); }
+.face--tide path[fill="#1e1d19"], .face--tide path[fill="#322f29"], .face--tide path[fill="#36342a"], .face--tide path[fill="#171513"], .face--tide path[fill="#5e5953"], .face--tide circle[fill="#1e1d19"] { fill: var(--tide); }
+.face--tide path[fill="#83817e"], .face--tide path[fill="#a5a5a5"] { fill: color-mix(in srgb, var(--tide) 45%, var(--coal)); }
+.face--ember path[fill="#cbcbcc"], .face--ember path[fill="#eeedee"], .face--ember path[fill="#f6f6f6"], .face--ember circle[fill="#f6f6f6"],
+.face--tide path[fill="#cbcbcc"], .face--tide path[fill="#eeedee"], .face--tide path[fill="#f6f6f6"], .face--tide circle[fill="#f6f6f6"] { fill: var(--coal); }
+/* ink mode: the paper in the drawing becomes bone, the ink stays darker than the page */
+:root[data-theme="ink"] .face:not(.face--ember):not(.face--tide) path[fill="#f6f6f6"], :root[data-theme="ink"] .face:not(.face--ember):not(.face--tide) circle[fill="#f6f6f6"] { fill: #f4ede1; }
+:root[data-theme="ink"] .face:not(.face--ember):not(.face--tide) path[fill="#eeedee"] { fill: #e6dccb; }
+:root[data-theme="ink"] .face:not(.face--ember):not(.face--tide) path[fill="#cbcbcc"] { fill: #bfb09b; }
+:root[data-theme="ink"] .face:not(.face--ember):not(.face--tide) path[fill="#1e1d19"], :root[data-theme="ink"] .face:not(.face--ember):not(.face--tide) circle[fill="#1e1d19"] { fill: #110e0a; }
+/* the stamp in the nav: appears once the hero portrait has scrolled away */
+img.sn-stamp { width: 26px; height: 26px; flex: none; margin-right: 10px; object-fit: contain; opacity: 0; transform: translateY(6px) scale(.8); transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-slow) var(--ease-out); pointer-events: none; }
+html[data-stamp] .sn-stamp { opacity: 1; transform: none; pointer-events: auto; }
+/* a faint strand-colored portrait behind a hub title */
+.face-wm { position: absolute; z-index: -1; right: clamp(-60px, -3vw, 0px); top: 4%; width: clamp(260px, 30vw, 480px); opacity: .16; pointer-events: none; display: none; }
+@media (min-width: 1024px) { .face-wm { display: block; } }
+
+/* ---------- the name, alive ----------
+   Fraunces' own axes: weight follows the pointer across the page, and the
+   "wonky" letterforms (WONK) straighten up while you look straight at it. */
+.hero-name { font-variation-settings: 'wght' var(--hw, 500), 'WONK' var(--hk, 1); transition: font-variation-settings .55s var(--ease-out), color var(--dur-base); }
+@media (hover: hover) { .hero-name:hover { --hk: 0; } }
+
+/* the hero's falling cue answers a click on the portrait */
+#cc-cue.cue-pulse > span > span { animation-duration: .9s !important; }
+
+/* ---------- x-ray: "See the tricks" ---------- */
+.xr-layer { position: fixed; inset: 0; z-index: 8800; pointer-events: none; display: none; }
+html[data-xray-on] .xr-layer { display: block; }
+.xr-box { position: absolute; border: 1.5px dashed var(--ember-vivid); border-radius: 2px; box-shadow: 0 0 0 4px color-mix(in srgb, var(--ember-vivid) 8%, transparent); animation: xr-in .35s var(--ease-out) both; }
+.xr-tag { position: absolute; max-width: 260px; padding: 4px 8px 3px; background: var(--ember-vivid); color: #fff; font: 600 10px/1.3 var(--mono); letter-spacing: .12em; text-transform: uppercase; transform: translateY(-100%); white-space: normal; animation: xr-in .35s var(--ease-out) both; }
+.xr-tag::after { content: ''; position: absolute; left: 10px; bottom: -5px; border: 5px solid transparent; border-top-color: var(--ember-vivid); border-bottom: 0; }
+@keyframes xr-in { from { opacity: 0; transform: translateY(-100%) scale(.96); } }
+.xr-chip { position: fixed; left: 50%; bottom: max(18px, env(safe-area-inset-bottom)); max-width: calc(100vw - 24px); white-space: nowrap; z-index: 8900; transform: translateX(-50%) translateY(20px); opacity: 0; pointer-events: none; display: inline-flex; align-items: center; gap: 12px; padding: 10px 14px 10px 16px; background: var(--bone); color: var(--coal); font: 600 10.5px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; box-shadow: 0 10px 30px -14px rgba(0,0,0,.5); transition: opacity var(--dur-base), transform var(--dur-slow) var(--ease-out); }
+.xr-chip b { font-weight: 600; color: var(--ember-vivid); }
+.xr-chip button { background: none; border: 1px solid color-mix(in srgb, var(--coal) 40%, transparent); color: inherit; font: inherit; letter-spacing: inherit; text-transform: inherit; padding: 7px 10px; cursor: pointer; min-height: 32px; }
+html[data-xray-on] .xr-chip { opacity: 1; transform: translateX(-50%); pointer-events: auto; }
+.xr-toggle { font: inherit; letter-spacing: inherit; text-transform: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+.xr-toggle::before { content: ''; width: 7px; height: 7px; background: var(--ember-vivid); transform: rotate(45deg); transition: transform var(--dur-base); }
+html[data-xray-on] .xr-toggle::before { transform: rotate(45deg) scale(1.5); }
+
+@media (prefers-reduced-motion: reduce) {
+  .f-head, .f-pupil, .f-splat, .f-glint, .hero-name, .m-lift, .m-arrow { transition: none !important; }
+  .face.is-hover { --glint: 0px; }
+  .xr-box, .xr-tag { animation: none; }
+}
+
+/* ---------- "pick up where you left off" ---------- */
+.resume-pill {
+  position: fixed; left: 50%; bottom: max(18px, env(safe-area-inset-bottom)); z-index: 7300;
+  transform: translateX(-50%) translateY(24px); opacity: 0;
+  display: inline-flex; align-items: center; gap: 10px; padding: 12px 18px; min-height: 44px;
+  background: var(--bone); color: var(--coal); border: 0; cursor: pointer;
+  font: 600 10.5px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase;
+  box-shadow: 0 12px 30px -14px rgba(0, 0, 0, .5);
+  transition: opacity var(--dur-base), transform var(--dur-slow) var(--ease-out);
+}
+.resume-pill.is-in { opacity: 1; transform: translateX(-50%); }
+.resume-pill .m-arrow { transition: transform var(--dur-base) var(--ease-out); }
+.resume-pill:hover .m-arrow { transform: translateY(3px); }
+
+/* ---------- the engraved objects ---------- */
+.illus { display: block; object-fit: contain; }
+/* ink on transparent: ink mode inverts it (the red comes back red through
+   the hue rotation; saturate keeps it vivid) */
+:root[data-theme="ink"] .illus { filter: invert(1) hue-rotate(180deg) saturate(1.4); }
+/* the essay's object: beside the title when there's room, above it otherwise */
+.essay-head { display: flex; flex-direction: column; align-items: flex-start; }
+.essay-head > * { max-width: 100%; }
+.illus--essay { order: -1; width: clamp(120px, 24vw, 190px); height: auto; max-height: clamp(150px, 26vw, 230px); margin: 0 0 clamp(1.2rem, 2.4vw, 1.8rem); animation: illus-in .9s var(--ease-out) .25s both; }
+@keyframes illus-in { from { opacity: 0; transform: translateY(8px) rotate(-1.5deg); } }
+@media (hover: hover) { .illus--essay { transition: transform .7s var(--ease-out); } .essay-head:hover .illus--essay { transform: rotate(-2deg) scale(1.03); } }
+@media (min-width: 1180px) {
+  .illus--essay { position: absolute; left: 100%; top: 0.6rem; margin: 0 0 0 clamp(36px, 5vw, 80px); width: clamp(180px, 16vw, 250px); max-height: clamp(220px, 20vw, 320px); }
+}
+.illus--row { width: 46px; height: 46px; display: block; margin-top: -8px; object-position: left center; }
+.illus--lead { position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: clamp(90px, 14vw, 170px); height: clamp(120px, 18vw, 220px); opacity: .92; pointer-events: none; display: none; }
+@media (min-width: 900px) { .illus--lead { display: block; } .lead-card .lead-title { max-width: calc(100% - clamp(110px, 16vw, 200px)); } }
+.illus--start { position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: auto; height: auto; max-width: clamp(64px, 9vw, 110px); max-height: clamp(90px, 12vw, 150px); pointer-events: none; }
+.start-item .start-title { padding-right: clamp(76px, 11vw, 130px); }
+@media (max-width: 520px) { .illus--start { max-width: 56px; max-height: 84px; top: clamp(2.2rem, 4vw, 3rem); transform: none; } .start-item .start-title { padding-right: 70px; } }
+
+@media (max-width: 560px) { .xr-chip-more { display: none; } .xr-tag { max-width: min(260px, calc(100vw - 16px)); } }

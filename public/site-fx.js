@@ -229,6 +229,11 @@
         el.style.transition = 'transform .8s cubic-bezier(.2,.7,.2,1), opacity .8s ease';
       };
       if (!this.motion || !('IntersectionObserver' in window)) { [].forEach.call(els, show); return; }
+      // Scroll-driven CSS (motion.css) handles reveals where supported; the
+      // observer path below is the fallback, flagged on <html> so the CSS
+      // animation stands down.
+      if (window.CSS && CSS.supports && CSS.supports('animation-timeline: view()')) { [].forEach.call(els, function (el) { el.dataset.shown = '1'; }); return; }
+      document.documentElement.classList.add('js-reveals');
       if (!this._revIO) {
         // The observer's first report for each element says where it is,
         // computed during the browser's own rendering step (no forced

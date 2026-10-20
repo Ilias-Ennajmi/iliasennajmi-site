@@ -1,0 +1,111 @@
+---
+/**
+ * The portrait, alive.
+ *
+ * The logo is an auto-traced engraving (258 paths). Inlining all of it on
+ * every page made each layout pass expensive, so the moving version is two
+ * layers: the untouched drawing as an <img>, and a small inline SVG laid
+ * exactly over it (same viewBox) carrying only what moves:
+ *   - a rebuilt eye layer (the pupils are holes in the big black path, not
+ *     shapes, so each eye gets a white cover clipped to its own eye shape
+ *     and a new pupil disc that can translate and scale);
+ *   - the splat paths, grouped so they can spread from the mouth;
+ *   - a glint bar clipped to each lens, and a drop for the click.
+ * Behavior lives in /face.js and talks to this markup through CSS custom
+ * properties only, so every instance on a page shares one pointer listener.
+ *
+ * Measured once: left pupil (1002.4, 942.1) r 39.7, highlight (1019, 932.5);
+ * right pupil (1376.3, 990.8) r 39.7, highlight (1393, 981). Eye whites:
+ * path 87 (left), path 111 (right lens). Lenses: paths 84 and 111.
+ *
+ * crop="eyes" (the 404) inlines the drawing's paths for real, since an
+ * image can't be cropped to the eyes and still move; use it once per page.
+ * duo="ember|tide" renders a static recolored file (see scripts/face-duo).
+ */
+import fs from 'node:fs';
+import path from 'node:path';
+
+interface Props {
+  crop?: 'full' | 'eyes';
+  duo?: 'ember' | 'tide';
+  /** hero: eyes, tilt, hover, click. observer: eyes, tilt, moods. stamp: a plain small image. static: no script. */
+  mode?: 'hero' | 'stamp' | 'observer' | 'static';
+  /** raster width for the drawing (2x the displayed size): 52 nav, 68 byline, 192 observer, 336 hero */
+  px?: 52 | 68 | 192 | 336;
+  class?: string;
+  style?: string;
+  uid?: string;
+}
+const { crop = 'full', duo, mode = 'static', class: cls = '', style = '', uid, px = mode === 'hero' ? 336 : mode === 'observer' ? 192 : 68 } = Astro.props;
+
+const cache = (globalThis as any).__faceCache ?? ((globalThis as any).__faceCache = (() => {
+  const src = fs.readFileSync(path.join(process.cwd(), 'public/logo-mark.svg'), 'utf8');
+  const defs = src.match(/<defs>[\s\S]*?<\/defs>/)![0].replace(/<\/?defs>/g, '');
+  const paths = [...src.matchAll(/<path [^>]*\/>/g)].map((m) => m[0]);
+  const d = (i: number) => paths[i].match(/ d="([^"]+)"/)![1];
+  const fill = (i: number) => paths[i].match(/fill="([^"]+)"/)![1];
+  const splatIdx = new Set([33, 34, 38, 40, 45, 59, 61, 250, 251, 252, 253, 254, 255, 256, 257]);
+  return {
+    defs,
+    body: paths.filter((_, i) => !splatIdx.has(i)).join(''),
+    splat: paths.filter((_, i) => splatIdx.has(i)).join(''),
+    eyeL: d(87), eyeLFill: fill(87), eyeR: d(111), lensL: d(84), lensR: d(111),
+  };
+})());
+
+const id = uid ?? Math.random().toString(36).slice(2, 7);
+const defs = cache.defs.replace(/id="([abc])"/g, `id="g-${id}-$1"`);
+const body = cache.body.replace(/url\(#([abc])\)/g, `url(#g-${id}-$1)`);
+const splat = cache.splat.replace(/url\(#([abc])\)/g, `url(#g-${id}-$1)`);
+const classes = ['face', `face--${crop}`, duo ? `face--${duo}` : '', cls].filter(Boolean).join(' ');
+const eyesViewBox = '700 760 950 420';
+---
+{duo ? (
+  <img src={`/face-${duo}.svg`} alt="" aria-hidden="true" class={classes} style={style} loading="lazy" decoding="async" />
+) : mode === 'stamp' ? (
+  <img src={`/face/${px}.png`} width="2048" height="2048" alt="" aria-hidden="true" class={classes} style={style} decoding="async" />
+) : crop === 'eyes' ? (
+  <svg class={classes} data-face={mode} viewBox={eyesViewBox} xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" style={style}>
+    <defs>
+      <Fragment set:html={defs} />
+      <clipPath id={`f-eyeL-${id}`}><path d={cache.eyeL} /></clipPath>
+      <clipPath id={`f-eyeR-${id}`}><path d={cache.eyeR} /></clipPath>
+    </defs>
+    <g class="f-head">
+      <Fragment set:html={body} />
+      <g clip-path={`url(#f-eyeL-${id})`}>
+        <path d={cache.eyeL} fill={cache.eyeLFill} />
+        <g class="f-pupil"><circle cx="1002.4" cy="942.1" r="39.7" fill="#1e1d19" /><circle cx="1019" cy="932.5" r="5.2" fill="#f6f6f6" /></g>
+      </g>
+      <g clip-path={`url(#f-eyeR-${id})`}>
+        <circle cx="1376.3" cy="990.8" r="47" fill="#f6f6f6" />
+        <g class="f-pupil"><circle cx="1376.3" cy="990.8" r="39.7" fill="#1e1d19" /><circle cx="1393" cy="981" r="5.6" fill="#f6f6f6" /></g>
+      </g>
+    </g>
+  </svg>
+) : (
+  <span class={classes} data-face={mode} style={style} aria-hidden="true">
+    <img src={`/face/${px}.png`} width="2048" height="2048" alt="" class="f-img" fetchpriority={mode === 'hero' ? 'high' : undefined} decoding="async" />
+    <svg class="f-over" viewBox="0 0 2048 2048" xmlns="http://www.w3.org/2000/svg" focusable="false">
+      <defs>
+        <Fragment set:html={defs} />
+        <clipPath id={`f-eyeL-${id}`}><path d={cache.eyeL} /></clipPath>
+        <clipPath id={`f-eyeR-${id}`}><path d={cache.eyeR} /></clipPath>
+        <clipPath id={`f-lensL-${id}`}><path d={cache.lensL} /></clipPath>
+        <clipPath id={`f-lensR-${id}`}><path d={cache.lensR} /></clipPath>
+      </defs>
+      <g clip-path={`url(#f-eyeL-${id})`}>
+        <path d={cache.eyeL} fill={cache.eyeLFill} />
+        <g class="f-pupil"><circle cx="1002.4" cy="942.1" r="39.7" fill="#1e1d19" /><circle cx="1019" cy="932.5" r="5.2" fill="#f6f6f6" /></g>
+      </g>
+      <g clip-path={`url(#f-eyeR-${id})`}>
+        <circle cx="1376.3" cy="990.8" r="47" fill="#f6f6f6" />
+        <g class="f-pupil"><circle cx="1376.3" cy="990.8" r="39.7" fill="#1e1d19" /><circle cx="1393" cy="981" r="5.6" fill="#f6f6f6" /></g>
+      </g>
+      <g clip-path={`url(#f-lensL-${id})`}><rect class="f-glint" x="-260" y="700" width="44" height="560" fill="#fff" opacity="0.42" transform="rotate(-24 0 0)" /></g>
+      <g clip-path={`url(#f-lensR-${id})`}><rect class="f-glint" x="-260" y="700" width="44" height="560" fill="#fff" opacity="0.42" transform="rotate(-24 0 0)" /></g>
+      <g class="f-splat"><Fragment set:html={splat} /></g>
+      <circle class="f-drop" cx="1478" cy="1612" r="20" fill="#c3222e" />
+    </svg>
+  </span>
+)}
