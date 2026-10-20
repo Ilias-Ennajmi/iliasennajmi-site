@@ -117,22 +117,22 @@ const markFor = (i: number) => marks[i % marks.length];
 <style is:global>
   .tx-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px 24px; padding: clamp(1.8rem, 3vw, 2.6rem) 0 1.2rem; }
   .tx-chips { display: flex; flex-wrap: wrap; gap: 8px; }
-  .tx-chip { display: inline-flex; align-items: center; gap: 7px; min-height: 40px; padding: 0 14px; background: none; border: 1px solid var(--coal-line); color: var(--ash); font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; transition: color var(--dur-base), border-color var(--dur-base), background var(--dur-base); }
+  .tx-chip { display: inline-flex; align-items: center; gap: 7px; min-height: 40px; padding: 0 14px; background: none; border: 1px solid var(--coal-line); color: var(--ash); font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; transition: color var(--dur-base), border-color var(--dur-base), background var(--dur-base); }
   .tx-chip:hover { color: var(--bone); border-color: var(--bone); }
   .tx-chip[aria-pressed="true"] { background: var(--bone); color: var(--coal); border-color: var(--bone); }
   .tx-chip svg { color: var(--ember); } .tx-chip[aria-pressed="true"] svg { color: var(--coal); }
   .tx-chip-n { opacity: .6; font-weight: 400; }
-  .tx-count { margin: 0; font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ash); }
+  .tx-count { margin: 0; font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ash); }
   .tx-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--coal-line); }
   .tx-row[hidden] { display: none; }
   .tx-link { display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; gap: clamp(14px, 3vw, 36px); align-items: baseline; padding: clamp(1.3rem, 2.6vw, 1.9rem) clamp(6px, 1vw, 14px); border-bottom: 1px solid var(--coal-line); color: var(--bone); text-decoration: none; transition: background var(--dur-base); }
   .tx-link:hover { background: var(--coal-soft); }
-  .tx-no { font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.06em; color: var(--ash); }
+  .tx-no { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.06em; color: var(--ash); }
   .tx-main { min-width: 0; display: flex; flex-direction: column; gap: 0.4rem; }
-  .tx-meta { display: flex; flex-wrap: wrap; gap: 14px; font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ash); }
+  .tx-meta { display: flex; flex-wrap: wrap; gap: 14px; font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ash); }
   .tx-title { font-family: var(--display); font-weight: 500; font-size: clamp(1.35rem, 2.8vw, 2rem); line-height: 1.06; letter-spacing: -0.01em; text-wrap: balance; transition: color var(--dur-base); }
   .tx-link:hover .tx-title { color: var(--ember); }
-  .tx-side { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.08em; color: var(--ash); white-space: nowrap; text-transform: uppercase; }
+  .tx-side { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.08em; color: var(--ash); white-space: nowrap; text-transform: uppercase; }
   .tx-empty { font-family: var(--body); font-style: italic; color: var(--ash); padding: 2rem 0; }
   @media (max-width: 560px) { .tx-link { grid-template-columns: minmax(0, 1fr) auto; } .tx-no { display: none; } .tx-side span:last-child { display: none; } }
 </style>

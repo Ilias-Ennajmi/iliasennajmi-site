@@ -50,6 +50,9 @@
   background-position: 0 100%;
   transition: background-size var(--dur-base) var(--ease-out), color var(--dur-base);
   padding-bottom: 1px;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 30%, transparent);
+  text-underline-offset: 3px;
 }
 .essay-body a:not(.sidenote a):hover, .essay-body a:not(.sidenote a):focus-visible, .m-link:hover, .m-link:focus-visible { background-size: 100% 1px; }
 
