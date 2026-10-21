@@ -2,23 +2,80 @@
 // Phones and small tablets only (the same <=860px range where the top
 // links collapse). A burger in the top corner hid every section behind an
 // icon nobody was told to press; a labelled bar under the thumb shows the
-// four places that matter and keeps "Menu" in plain sight for the rest.
-// It slides away while scrolling down (reading) and comes back on any
+// four places that matter, and "More" opens a sheet with everything else.
+// The bar slides away while scrolling down (reading) and comes back on any
 // scroll up, or at the end of the page.
+import { SITE } from '../lib/site';
+
 interface Props {
   active: string;
   strand?: 'ulysses' | 'ilias';
 }
 const { active, strand } = Astro.props;
-// an essay belongs to its strand's tab
-const current = active === 'essay' ? strand : active;
 const tabs = [
   { href: '/', key: 'home', label: 'Home' },
   { href: '/ulysses/', key: 'ulysses', label: 'Ulysses', glyph: 'I' },
   { href: '/ilias/', key: 'ilias', label: 'Ilias', glyph: 'II' },
   { href: '/lab/', key: 'lab', label: 'Lab' },
 ];
+// Only what the tabs don't already show. Each gets one of the house
+// engravings; the Shelf gets three spines, the same drawing as its page.
+const more = [
+  { href: '/start/', key: 'start', label: 'Start here', sub: 'Four essays, in order', img: '/illus/manicule-120.png' },
+  { href: '/topics/', key: 'topics', label: 'Topics', sub: 'Every essay, one index', img: '/illus/past-92.png' },
+  { href: '/specimens/', key: 'specimens', label: 'Specimens', sub: 'Dark patterns, redrawn', img: '/illus/sp-countdown-360.png' },
+  { href: '/shelf/', key: 'shelf', label: 'The Shelf', sub: 'Reading, listening', spines: true },
+  { href: '/saved/', key: 'saved', label: 'Saved', sub: 'Kept for later', img: '/illus/open-tab-92.png' },
+  { href: '/about/', key: 'about', label: 'About', sub: 'The person behind it', img: '/face/68.png' },
+];
+// Specimens and Start here borrow the Lab's and Home's nav state, so read
+// the URL for anything in the sheet; an essay belongs to its strand's tab.
+const path = Astro.url.pathname;
+const current = more.find((m) => path.startsWith(m.href))?.key ?? (active === 'essay' ? strand : active);
+const moreActive = more.some((m) => m.key === current) || current === 'colophon';
 ---
+<div id="tb-scrim" hidden></div>
+
+<div id="tb-sheet" role="dialog" aria-modal="true" aria-labelledby="tb-sheet-title" hidden>
+  <div class="tbs-grab" aria-hidden="true"></div>
+  <div class="tbs-head">
+    <h2 id="tb-sheet-title" class="tbs-title">More<span aria-hidden="true">.</span></h2>
+    <span class="tbs-kicker">Everything else on the site</span>
+  </div>
+  <ul class="tbs-grid">
+    {more.map((m, i) => (
+      <li style={`--i:${i};`}>
+        <a href={m.href} class="tbs-tile" aria-current={current === m.key ? 'page' : undefined}>
+          <span class="tbs-art" aria-hidden="true">
+            {m.spines
+              ? <span class="tbs-spines"><i></i><i></i><i></i></span>
+              : <img src={m.img} alt="" width="44" height="44" loading="lazy" decoding="async" class={m.key === 'about' ? 'tbs-face' : 'illus'} />}
+          </span>
+          <span class="tbs-text">
+            <span class="tbs-label">{m.label}</span>
+            <span class="tbs-sub">{m.sub}</span>
+          </span>
+        </a>
+      </li>
+    ))}
+  </ul>
+  <div class="tbs-tools">
+    <button type="button" class="tbs-tool" data-tool="search">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" /><path d="m20 20-4.2-4.2" /></svg>
+      Search
+    </button>
+    <button type="button" class="tbs-tool" data-tool="theme">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" /><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor" stroke="none" /></svg>
+      <span data-theme-label>Ink</span>
+    </button>
+    <button type="button" class="tbs-tool xr-toggle" data-tool="xray" aria-pressed="false">See the tricks</button>
+  </div>
+  <div class="tbs-foot">
+    <a href={`mailto:${SITE.email}`}>Email &#8599;</a>
+    <a href="/colophon/">Colophon</a>
+  </div>
+</div>
+
 <nav id="tb" aria-label="Sections">
   {tabs.map((t) => (
     <a href={t.href} class="tb-item" data-key={t.key} aria-current={current === t.key ? 'page' : undefined}>
@@ -32,14 +89,14 @@ const tabs = [
       <span class="tb-label">{t.label}</span>
     </a>
   ))}
-  <button type="button" id="tb-menu" class="tb-item" aria-controls="sn-drawer" aria-expanded="false">
-    <svg class="tb-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
-    <span class="tb-label">Menu</span>
+  <button type="button" id="tb-more" class="tb-item" data-key="more" aria-controls="tb-sheet" aria-expanded="false" aria-current={moreActive ? 'page' : undefined}>
+    <span class="tb-diamonds" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+    <span class="tb-label">More</span>
   </button>
 </nav>
 
 <style is:global>
-  #tb { display: none; }
+  #tb, #tb-sheet, #tb-scrim { display: none; }
   @media (max-width: 860px) {
     :root { --tb-h: 62px; --tb-space: calc(var(--tb-h) + env(safe-area-inset-bottom, 0px)); }
     :root[data-tb-hidden] { --tb-space: 0px; }
@@ -55,7 +112,29 @@ const tabs = [
       transition: transform .32s cubic-bezier(.2, .7, .2, 1);
     }
     :root[data-tb-hidden] #tb { transform: translateY(100%); }
+
+    /* the sheet rises out of the bar; the bar stays put so More can close it */
+    #tb-scrim:not([hidden]) {
+      display: block; position: fixed; inset: 0; z-index: 7040;
+      background: var(--overlay); opacity: 0; transition: opacity .3s ease;
+    }
+    #tb-sheet:not([hidden]) {
+      display: flex; flex-direction: column;
+      position: fixed; left: 0; right: 0; z-index: 7045;
+      bottom: var(--tb-space);
+      max-height: calc(100svh - var(--tb-space) - 56px); overflow-y: auto; overscroll-behavior: contain;
+      padding: 10px clamp(18px, 5vw, 28px) 18px;
+      background: var(--coal); border-top: 1px solid var(--coal-line);
+      border-radius: 18px 18px 0 0;
+      box-shadow: 0 -18px 40px -24px rgba(0, 0, 0, .45);
+      transform: translateY(calc(100% + var(--tb-space)));
+      transition: transform .42s cubic-bezier(.2, .8, .2, 1);
+    }
+    :root[data-sheet] #tb-scrim { opacity: 1; }
+    :root[data-sheet] #tb-sheet { transform: translateY(var(--drag, 0px)); }
+    :root[data-sheet] #tb-sheet.is-dragging { transition: none; }
   }
+
   .tb-item {
     position: relative;
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
@@ -63,38 +142,98 @@ const tabs = [
     background: none; border: 0; cursor: pointer; text-decoration: none;
     color: var(--ash); font: inherit;
     -webkit-tap-highlight-color: transparent;
-    transition: color .2s;
+    transition: color .2s, transform .15s;
   }
   .tb-icon { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
   .tb-glyph { height: 22px; display: flex; align-items: center; font-family: var(--display); font-style: italic; font-weight: 600; font-size: 1.25rem; line-height: 1; letter-spacing: 0.02em; }
   .tb-label { font-family: var(--mono); font-size: 0.72rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; line-height: 1; }
   .tb-item[aria-current="page"] { color: var(--bone); }
   .tb-item[aria-current="page"][data-key="ulysses"] { color: var(--tide); }
-  .tb-item[aria-current="page"][data-key="ilias"], .tb-item[aria-current="page"][data-key="home"], .tb-item[aria-current="page"][data-key="lab"] { color: var(--ember); }
-  /* the house diamond marks where you are */
+  .tb-item[aria-current="page"]:is([data-key="ilias"], [data-key="home"], [data-key="lab"], [data-key="more"]) { color: var(--ember); }
   .tb-item[aria-current="page"]::before {
     content: ''; position: absolute; top: -1px; left: 50%; width: 22px; height: 2px;
     background: currentColor; transform: translateX(-50%);
   }
   .tb-item:active { transform: scale(.94); }
   .tb-item:focus-visible { outline: 2px solid var(--ember); outline-offset: -4px; }
-  @media (prefers-reduced-motion: reduce) { #tb { transition: none !important; } }
-  @media print { #tb { display: none !important; } }
+
+  /* More: four of the house diamonds, which turn into an x-ish cross when open */
+  .tb-diamonds { position: relative; width: 22px; height: 22px; display: grid; grid-template-columns: 1fr 1fr; place-items: center; transition: transform .4s cubic-bezier(.2, .8, .2, 1); }
+  .tb-diamonds i { width: 6px; height: 6px; border: 1.5px solid currentColor; transform: rotate(45deg); transition: background .3s; }
+  #tb-more[aria-expanded="true"] { color: var(--bone); }
+  #tb-more[aria-expanded="true"] .tb-diamonds { transform: rotate(45deg); }
+  #tb-more[aria-expanded="true"] .tb-diamonds i { background: currentColor; }
+
+  /* ---- the sheet ---- */
+  .tbs-grab { width: 38px; height: 4px; border-radius: 4px; background: var(--coal-line); margin: 0 auto 14px; flex: none; }
+  .tbs-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+  .tbs-title { margin: 0; font-family: var(--display); font-weight: 500; font-size: 2rem; line-height: 1; letter-spacing: -0.01em; color: var(--bone); }
+  .tbs-title span { color: var(--ember-vivid); }
+  .tbs-kicker { font-family: var(--mono); font-size: var(--fs-2xs); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ash); text-align: right; }
+  .tbs-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .tbs-grid li { opacity: 0; transform: translateY(10px); transition: opacity .35s ease, transform .45s cubic-bezier(.2, .8, .2, 1); transition-delay: calc(var(--i) * 35ms + 80ms); }
+  :root[data-sheet] .tbs-grid li { opacity: 1; transform: none; }
+  .tbs-tile {
+    display: flex; flex-direction: column; gap: 10px; height: 100%;
+    padding: 14px 14px 13px; text-decoration: none; color: var(--bone);
+    background: var(--coal-soft); border: 1px solid var(--coal-line);
+    -webkit-tap-highlight-color: transparent;
+    transition: border-color .2s, transform .15s;
+  }
+  .tbs-tile:active { transform: scale(.97); }
+  .tbs-tile[aria-current="page"] { border-color: var(--ember); }
+  .tbs-tile:focus-visible { outline: 2px solid var(--ember); outline-offset: 2px; }
+  .tbs-art { height: 44px; display: flex; align-items: flex-end; }
+  .tbs-art img { width: 44px; height: 44px; object-fit: contain; object-position: left bottom; }
+  .tbs-face { border-radius: 50%; }
+  .tbs-spines { display: flex; align-items: flex-end; gap: 2px; height: 40px; border-bottom: 2px solid var(--bone); padding: 0 3px; }
+  .tbs-spines i { display: block; width: 9px; }
+  .tbs-spines i:nth-child(1) { height: 32px; background: var(--bone); }
+  .tbs-spines i:nth-child(2) { height: 26px; background: var(--ember); }
+  .tbs-spines i:nth-child(3) { height: 36px; background: var(--tide); }
+  .tbs-text { display: flex; flex-direction: column; gap: 3px; }
+  .tbs-label { font-family: var(--display); font-weight: 500; font-size: 1.15rem; line-height: 1.1; }
+  .tbs-sub { font-family: var(--body); font-style: italic; font-size: 0.92rem; line-height: 1.25; color: var(--ash); }
+  .tbs-tools { display: grid; grid-template-columns: 1fr 1fr 1.4fr; gap: 8px; margin-top: 8px; }
+  .tbs-tool {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 10px;
+    background: none; border: 1px solid var(--coal-line); color: var(--bone); cursor: pointer;
+    font-family: var(--mono); font-size: var(--fs-2xs); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .tbs-tool svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; flex: none; }
+  .tbs-tool.xr-toggle::before { flex: none; }
+  .tbs-tool[aria-pressed="true"] { border-color: var(--ember-vivid); color: var(--ember-vivid); }
+  .tbs-foot { display: flex; justify-content: space-between; margin-top: 12px; font-family: var(--mono); font-size: var(--fs-2xs); letter-spacing: 0.14em; text-transform: uppercase; }
+  .tbs-foot a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ash); text-decoration: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    #tb, #tb-sheet, #tb-scrim, .tbs-grid li, .tb-diamonds { transition: none !important; }
+  }
+  @media print { #tb, #tb-sheet, #tb-scrim { display: none !important; } }
 </style>
 
 <script>
-  // Hide on scroll down, show on scroll up. Small jitters are ignored, the
-  // bar never hides near the top, and it returns at the bottom of the page
-  // so the next place to go is right there when you finish reading.
   let teardown: (() => void) | null = null;
   function initTabBar() {
     if (teardown) { teardown(); teardown = null; }
     const root = document.documentElement;
     root.removeAttribute('data-tb-hidden');
+    root.removeAttribute('data-sheet');
+    const more = document.getElementById('tb-more');
+    const sheet = document.getElementById('tb-sheet');
+    const scrim = document.getElementById('tb-scrim');
+    if (!more || !sheet || !scrim) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // ---- hide on scroll down, show on scroll up ----
+    // Small jitters are ignored, the bar never hides near the top, and it
+    // returns at the bottom of the page, where the next place to go matters.
     let lastY = window.scrollY;
     let ticking = false;
     const update = () => {
       ticking = false;
+      if (root.hasAttribute('data-sheet')) return;
       const y = window.scrollY;
       const dy = y - lastY;
       const atEnd = window.innerHeight + y >= document.documentElement.scrollHeight - 80;
@@ -104,7 +243,101 @@ const tabs = [
     };
     const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
     window.addEventListener('scroll', onScroll, { passive: true });
-    teardown = () => window.removeEventListener('scroll', onScroll);
+
+    // ---- the More sheet ----
+    const themeLabel = sheet.querySelector<HTMLElement>('[data-theme-label]');
+    const paintTheme = () => {
+      // names the theme you'd switch *to*
+      if (themeLabel) themeLabel.textContent = root.getAttribute('data-theme') === 'ink' ? 'Paper' : 'Ink';
+    };
+    let closeTimer = 0;
+    const isOpen = () => root.hasAttribute('data-sheet');
+    const openSheet = () => {
+      clearTimeout(closeTimer);
+      paintTheme();
+      root.removeAttribute('data-tb-hidden');
+      sheet.hidden = false;
+      scrim.hidden = false;
+      sheet.style.removeProperty('--drag');
+      void sheet.offsetHeight; // start the rise from the closed position
+      root.setAttribute('data-sheet', '');
+      more.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+      sheet.querySelector<HTMLElement>('.tbs-tile')?.focus({ preventScroll: true });
+    };
+    const closeSheet = (returnFocus = true) => {
+      if (!isOpen()) return;
+      root.removeAttribute('data-sheet');
+      more.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      sheet.style.removeProperty('--drag');
+      closeTimer = window.setTimeout(() => { sheet.hidden = true; scrim.hidden = true; }, reduce ? 0 : 420);
+      if (returnFocus && sheet.contains(document.activeElement)) more.focus({ preventScroll: true });
+    };
+    const onMore = () => (isOpen() ? closeSheet() : openSheet());
+    const onKey = (e: KeyboardEvent) => {
+      if (!isOpen()) return;
+      if (e.key === 'Escape') { closeSheet(); return; }
+      if (e.key !== 'Tab') return;
+      // keep Tab inside the sheet and its More button
+      const f = [...sheet.querySelectorAll<HTMLElement>('a, button'), more];
+      const i = f.indexOf(document.activeElement as HTMLElement);
+      const to = e.shiftKey ? (i <= 0 ? f.length - 1 : i - 1) : (i === f.length - 1 ? 0 : i + 1);
+      e.preventDefault();
+      f[to].focus();
+    };
+    const onSheetClick = (e: MouseEvent) => {
+      const t = e.target as HTMLElement;
+      const tool = t.closest<HTMLElement>('[data-tool]')?.dataset.tool;
+      if (tool === 'search') {
+        closeSheet(false);
+        (window as unknown as { openCommandPalette?: () => void }).openCommandPalette?.();
+      } else if (tool === 'theme') {
+        document.getElementById('sn-theme-btn')?.click();
+        window.setTimeout(paintTheme, 800);
+      } else if (tool === 'xray') {
+        // let x-ray's own handler run first, then get out of the way so
+        // the annotations are visible
+        window.setTimeout(() => closeSheet(false), 120);
+      } else if (t.closest('a')) {
+        closeSheet(false);
+      }
+    };
+
+    // drag the sheet down to dismiss
+    let startY = 0, dragging = false;
+    const onTouchStart = (e: TouchEvent) => {
+      if (sheet.scrollTop > 0) return;
+      startY = e.touches[0].clientY; dragging = true;
+      sheet.classList.add('is-dragging');
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      if (!dragging) return;
+      const dy = Math.max(0, e.touches[0].clientY - startY);
+      sheet.style.setProperty('--drag', `${dy}px`);
+    };
+    const onTouchEnd = (e: TouchEvent) => {
+      if (!dragging) return;
+      dragging = false;
+      sheet.classList.remove('is-dragging');
+      const dy = e.changedTouches[0].clientY - startY;
+      if (dy > 80) closeSheet(); else sheet.style.removeProperty('--drag');
+    };
+    const onScrim = () => closeSheet();
+
+    more.addEventListener('click', onMore);
+    scrim.addEventListener('click', onScrim);
+    sheet.addEventListener('click', onSheetClick);
+    sheet.addEventListener('touchstart', onTouchStart, { passive: true });
+    sheet.addEventListener('touchmove', onTouchMove, { passive: true });
+    sheet.addEventListener('touchend', onTouchEnd);
+    document.addEventListener('keydown', onKey);
+
+    teardown = () => {
+      window.removeEventListener('scroll', onScroll);
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+    };
   }
   document.addEventListener('site:ready', initTabBar);
 </script>
