@@ -251,17 +251,31 @@
 .lab-rail-item[data-state="held"] .lab-rail-dot { background: var(--bone); border-color: var(--bone); }
 .lab-rail-item[data-state="control"] .lab-rail-dot { background: var(--tide); border-color: var(--tide); }
 .lab-rail-item[data-current] .lab-rail-dot { transform: rotate(45deg) scale(1.35); }
+/* Phones: the rail pins edge to edge just under the top bar, as a tab
+   strip (it used to sit at the bottom, where the tab bar now lives). */
 @media (max-width: 900px) {
-  .lab-rail { position: fixed; top: auto; bottom: 0; left: 0; right: 0; margin: 0; padding: 6px max(6px, env(safe-area-inset-left)) max(6px, env(safe-area-inset-bottom)); border-width: 1px 0 0; z-index: 7100; }
-  .lab-rail-item { padding: 0 6px; justify-content: center; min-height: 44px; gap: 6px; }
+  .lab-rail { top: 70px; margin: 0 calc(-1 * clamp(22px, 6vw, 64px)) 0; padding: 6px clamp(10px, 3vw, 20px); border-width: 1px 0; z-index: 6900; }
+  .lab-rail-item { padding: 0 4px; justify-content: center; min-height: 44px; gap: 6px; }
   .lab-rail-name { display: none; }
-  .lab-wrap { padding-bottom: clamp(6rem, 12vw, 8rem); }
 }
 .lab-next { animation: lab-in .45s var(--ease-out) both; }
 
+/* one bench at a time (JS sets data-paged; without it all six stack) */
+.lab-wrap[data-paged] .lab-exp:not([data-active]) { display: none; }
+.lab-wrap[data-paged] .lab-exp[data-active] { animation: lab-in .45s var(--ease-out) both; }
+.lab-pager {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin-top: clamp(2rem, 4vw, 2.8rem); padding-top: 1rem; border-top: 1px solid var(--coal-line);
+  font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ash);
+}
+.lab-pager a { display: inline-flex; align-items: center; min-height: 44px; color: var(--bone); text-decoration: none; }
+.lab-pager a:hover { color: var(--ember); }
+.lab-pager-next { color: var(--ember) !important; font-weight: 600; }
+.lab-pager-count { font-variant-numeric: tabular-nums; }
+
 /* anchors land below the sticky rail */
 .lab-exp, .lab-file { scroll-margin-top: 132px; }
-@media (max-width: 900px) { .lab-exp, .lab-file { scroll-margin-top: 80px; } }
+@media (max-width: 900px) { .lab-exp, .lab-file { scroll-margin-top: 130px; } }
 
 /* each bench has its instrument, drawn in the house engraving style */
 .lab-exp-num { display: flex; flex-direction: column; gap: clamp(10px, 1.6vw, 18px); align-items: flex-start; }

@@ -184,10 +184,16 @@ const links = [
     const burger = document.getElementById('sn-burger');
     const drawer = document.getElementById('sn-drawer');
     if (!burger || !drawer) return;
-    const open = () => {
+    // Opened by the top burger (tablets) or the tab bar's Menu (phones);
+    // focus returns to whichever one did it.
+    const tabMenu = document.getElementById('tb-menu');
+    let opener: HTMLElement = burger;
+    const open = (e?: Event) => {
+      opener = (e?.currentTarget as HTMLElement) || burger;
       drawer.setAttribute('data-open', '1');
       drawer.setAttribute('aria-hidden', 'false');
       burger.setAttribute('aria-expanded', 'true');
+      tabMenu?.setAttribute('aria-expanded', 'true');
       document.body.style.overflow = 'hidden';
     };
     const close = () => {
@@ -195,11 +201,13 @@ const links = [
       drawer.removeAttribute('data-open');
       drawer.setAttribute('aria-hidden', 'true');
       burger.setAttribute('aria-expanded', 'false');
+      tabMenu?.setAttribute('aria-expanded', 'false');
       document.body.style.overflow = '';
       // keyboard users land back where they left, not at the top of the page
-      if (wasOpen && drawer.contains(document.activeElement)) burger.focus();
+      if (wasOpen && drawer.contains(document.activeElement)) opener.focus();
     };
     burger.addEventListener('click', open);
+    tabMenu?.addEventListener('click', open);
     drawer.querySelectorAll('[data-close]').forEach((el) => el.addEventListener('click', close));
 
     // Reading progress on the "Saved" link: quiet by design -- stays

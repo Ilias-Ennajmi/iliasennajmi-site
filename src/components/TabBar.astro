@@ -1,0 +1,110 @@
+---
+// Phones and small tablets only (the same <=860px range where the top
+// links collapse). A burger in the top corner hid every section behind an
+// icon nobody was told to press; a labelled bar under the thumb shows the
+// four places that matter and keeps "Menu" in plain sight for the rest.
+// It slides away while scrolling down (reading) and comes back on any
+// scroll up, or at the end of the page.
+interface Props {
+  active: string;
+  strand?: 'ulysses' | 'ilias';
+}
+const { active, strand } = Astro.props;
+// an essay belongs to its strand's tab
+const current = active === 'essay' ? strand : active;
+const tabs = [
+  { href: '/', key: 'home', label: 'Home' },
+  { href: '/ulysses/', key: 'ulysses', label: 'Ulysses', glyph: 'I' },
+  { href: '/ilias/', key: 'ilias', label: 'Ilias', glyph: 'II' },
+  { href: '/lab/', key: 'lab', label: 'Lab' },
+];
+---
+<nav id="tb" aria-label="Sections">
+  {tabs.map((t) => (
+    <a href={t.href} class="tb-item" data-key={t.key} aria-current={current === t.key ? 'page' : undefined}>
+      {t.key === 'home' && (
+        <svg class="tb-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5 12 5l8 6.5V20h-5.5v-5h-5v5H4z" /></svg>
+      )}
+      {t.glyph && <span class="tb-glyph" aria-hidden="true">{t.glyph}</span>}
+      {t.key === 'lab' && (
+        <svg class="tb-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 4h5M10.5 4v5.2L5.6 18a1.4 1.4 0 0 0 1.2 2h10.4a1.4 1.4 0 0 0 1.2-2l-4.9-8.8V4M8 14.5h8" /></svg>
+      )}
+      <span class="tb-label">{t.label}</span>
+    </a>
+  ))}
+  <button type="button" id="tb-menu" class="tb-item" aria-controls="sn-drawer" aria-expanded="false">
+    <svg class="tb-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+    <span class="tb-label">Menu</span>
+  </button>
+</nav>
+
+<style is:global>
+  #tb { display: none; }
+  @media (max-width: 860px) {
+    :root { --tb-h: 62px; --tb-space: calc(var(--tb-h) + env(safe-area-inset-bottom, 0px)); }
+    :root[data-tb-hidden] { --tb-space: 0px; }
+    body { padding-bottom: calc(var(--tb-h) + env(safe-area-inset-bottom, 0px)); }
+    #tb {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 7050;
+      display: grid; grid-template-columns: repeat(5, 1fr);
+      height: calc(var(--tb-h) + env(safe-area-inset-bottom, 0px));
+      padding: 0 max(6px, env(safe-area-inset-left)) env(safe-area-inset-bottom, 0px) max(6px, env(safe-area-inset-right));
+      background: color-mix(in srgb, var(--coal) 94%, transparent);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-top: 1px solid var(--coal-line);
+      transition: transform .32s cubic-bezier(.2, .7, .2, 1);
+    }
+    :root[data-tb-hidden] #tb { transform: translateY(100%); }
+  }
+  .tb-item {
+    position: relative;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+    min-height: 44px; padding: 0; margin: 0;
+    background: none; border: 0; cursor: pointer; text-decoration: none;
+    color: var(--ash); font: inherit;
+    -webkit-tap-highlight-color: transparent;
+    transition: color .2s;
+  }
+  .tb-icon { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+  .tb-glyph { height: 22px; display: flex; align-items: center; font-family: var(--display); font-style: italic; font-weight: 600; font-size: 1.25rem; line-height: 1; letter-spacing: 0.02em; }
+  .tb-label { font-family: var(--mono); font-size: 0.72rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; line-height: 1; }
+  .tb-item[aria-current="page"] { color: var(--bone); }
+  .tb-item[aria-current="page"][data-key="ulysses"] { color: var(--tide); }
+  .tb-item[aria-current="page"][data-key="ilias"], .tb-item[aria-current="page"][data-key="home"], .tb-item[aria-current="page"][data-key="lab"] { color: var(--ember); }
+  /* the house diamond marks where you are */
+  .tb-item[aria-current="page"]::before {
+    content: ''; position: absolute; top: -1px; left: 50%; width: 22px; height: 2px;
+    background: currentColor; transform: translateX(-50%);
+  }
+  .tb-item:active { transform: scale(.94); }
+  .tb-item:focus-visible { outline: 2px solid var(--ember); outline-offset: -4px; }
+  @media (prefers-reduced-motion: reduce) { #tb { transition: none !important; } }
+  @media print { #tb { display: none !important; } }
+</style>
+
+<script>
+  // Hide on scroll down, show on scroll up. Small jitters are ignored, the
+  // bar never hides near the top, and it returns at the bottom of the page
+  // so the next place to go is right there when you finish reading.
+  let teardown: (() => void) | null = null;
+  function initTabBar() {
+    if (teardown) { teardown(); teardown = null; }
+    const root = document.documentElement;
+    root.removeAttribute('data-tb-hidden');
+    let lastY = window.scrollY;
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const y = window.scrollY;
+      const dy = y - lastY;
+      const atEnd = window.innerHeight + y >= document.documentElement.scrollHeight - 80;
+      if (y < 120 || atEnd || dy < -8) root.removeAttribute('data-tb-hidden');
+      else if (dy > 8) root.setAttribute('data-tb-hidden', '');
+      if (Math.abs(dy) > 8) lastY = y;
+    };
+    const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    teardown = () => window.removeEventListener('scroll', onScroll);
+  }
+  document.addEventListener('site:ready', initTabBar);
+</script>

@@ -40,6 +40,8 @@
   --fs-2xs: 0.66rem;
   --fs-xs: 0.68rem;
   --fs-sm: 0.7rem;
+  /* page titles (Lab, Shelf, Topics, Saved...) */
+  --fs-title: clamp(3rem, 9vw, 6.5rem);
 }
 @media (max-width: 640px) {
   :root {
@@ -47,6 +49,7 @@
     --fs-2xs: 0.78rem;
     --fs-xs: 0.8rem;
     --fs-sm: 0.82rem;
+    --fs-title: clamp(3rem, 15vw, 4.2rem);
   }
 }
 
@@ -218,9 +221,16 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 /* The wordmark, two icon buttons and "MENU" add up to ~410px, so on a
    phone the label ran off the right edge. The three-line icon carries the
    meaning alone (the button keeps its aria-label). */
-@media (max-width: 440px) {
-  .sn-burger-label { display: none; }
+/* Phones: the bottom tab bar's labelled "Menu" replaces the top burger. */
+@media (max-width: 860px) {
+  #sn-burger { display: none !important; }
   #sn-bar > div:last-child { gap: 8px !important; }
+  /* floating chips sit above the tab bar, and ride down with it when it hides */
+  .xr-chip, .resume-pill, [data-reading-meter] {
+    bottom: calc(var(--tb-space, 0px) + 12px) !important;
+    transition: opacity var(--dur-base, .3s), transform var(--dur-slow, .5s) var(--ease-out, ease), bottom .32s cubic-bezier(.2, .7, .2, 1) !important;
+  }
+  .xr-chip, .resume-pill { font-size: 12px !important; }
 }
 #sn-drawer {
   transform: translateY(-101%);

@@ -25,6 +25,9 @@
       }
     });
     document.querySelectorAll<HTMLAnchorElement>('a[href^="/"]').forEach((a) => {
+      // SVG <a> (the Topics map) has no pathname; throwing here stopped
+      // every link after it from being prefetched
+      if (!(a instanceof HTMLAnchorElement)) return;
       if (a.dataset.astroPrefetch === 'false' || a.hasAttribute('download')) return;
       // pages only (every page URL ends in a slash), not feeds or files
       if (!a.pathname.endsWith('/') || a.pathname.startsWith('/admin')) return;

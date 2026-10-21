@@ -38,6 +38,19 @@ const shelves = [
   ] },
 ];
 
+// The header's shelf: what's open now plus the canon, as spines. Widths
+// and heights vary like real books; tones come from the palette so ink
+// mode inverts them with everything else.
+const spines = [
+  { title: 'Seeing Like a State', tone: 'bone', h: 188, w: 46 },
+  { title: 'The Status Game', tone: 'ember', h: 166, w: 40 },
+  { title: 'Trust', tone: 'soft', h: 148, w: 34 },
+  { title: 'Ulysses', tone: 'tide', h: 200, w: 52 },
+  { title: 'Meditations', tone: 'soft', h: 158, w: 36 },
+  { title: 'The Brothers Karamazov', tone: 'bone', h: 196, w: 50 },
+  { title: 'Letters to a Young Poet', tone: 'ember', h: 150, w: 34, lean: true },
+];
+
 // Items link out only when there's a real URL to link to. A generated
 // search query isn't a recommendation, so unlinked items render as text.
 ---
@@ -60,6 +73,13 @@ const shelves = [
       </div>
       <h1 style="margin:0;font-family:var(--display);font-weight:500;font-size:clamp(3.4rem,11vw,8.5rem);line-height:0.9;letter-spacing:-0.015em;">The Shelf<span style="color:var(--ember-vivid);">.</span></h1>
       <p style="font-family:var(--body);font-weight:300;font-style:italic;font-size:clamp(1.2rem,2.4vw,1.7rem);color:var(--bone);opacity:0.82;max-width:48ch;margin:1.6rem 0 0;line-height:1.45;text-wrap:pretty;">What I'm reading, listening to and using right now, plus a few rabbit holes. Updated when something new sticks. Last touched {SITE.nowUpdated}.</p>
+      <div class="spines" aria-hidden="true">
+        {spines.map((b, i) => (
+          <div class={`spine spine-${b.tone}${b.lean ? ' spine-lean' : ''}`} style={`--h:${b.h}px;--w:${b.w}px;--i:${i};`}>
+            <span class="spine-t">{b.title}</span>
+          </div>
+        ))}
+      </div>
     </div>
   </header>
 
@@ -127,5 +147,42 @@ const shelves = [
 
 <style>
   .shelf-link:hover { color: var(--ember); }
+
+  .spines {
+    display: flex; align-items: flex-end; gap: 4px;
+    width: max-content; max-width: 100%;
+    margin-top: clamp(2.2rem, 4vw, 3rem);
+    padding: 0 18px 0 6px;
+    border-bottom: 3px solid var(--bone);
+  }
+  .spine {
+    position: relative; flex: none;
+    width: var(--w); height: var(--h);
+    display: flex; align-items: center; justify-content: center;
+    padding: 18px 0;
+    color: var(--coal);
+    border-radius: 2px 2px 0 0;
+    box-shadow: inset -3px 0 0 rgba(0, 0, 0, 0.12), inset 2px 0 0 rgba(255, 255, 255, 0.08);
+    animation: spine-in .7s cubic-bezier(.2, .7, .2, 1) both;
+    animation-delay: calc(var(--i) * 70ms + .35s);
+    transition: transform .3s cubic-bezier(.2, .7, .2, 1);
+  }
+  /* the two bands every cloth spine has */
+  .spine::before, .spine::after { content: ''; position: absolute; left: 0; right: 0; height: 2px; background: currentColor; opacity: 0.35; }
+  .spine::before { top: 8px; }
+  .spine::after { bottom: 8px; }
+  .spine-bone { background: var(--bone); }
+  .spine-ember { background: var(--ember); }
+  .spine-tide { background: var(--tide); }
+  .spine-soft { background: var(--coal-soft); color: var(--bone); box-shadow: inset 0 0 0 1px var(--coal-line), inset -3px 0 0 rgba(0, 0, 0, 0.06); }
+  .spine-t {
+    writing-mode: vertical-rl;
+    max-height: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    font-family: var(--display); font-weight: 500; font-size: 0.86rem; letter-spacing: 0.02em; line-height: 1;
+  }
+  .spine-lean { transform-origin: bottom right; transform: rotate(-7deg); margin-left: 10px; }
+  @media (hover: hover) { .spine:not(.spine-lean):hover { transform: translateY(-8px); } }
+  @keyframes spine-in { from { opacity: 0; translate: 0 -26px; } to { opacity: 1; translate: 0 0; } }
+  @media (prefers-reduced-motion: reduce) { .spine { animation: none; } }
 </style>
 

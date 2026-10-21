@@ -6,10 +6,11 @@
       <span style="width:7px;height:7px;background:var(--ember);transform:rotate(45deg);flex:none;"></span>
       <input id="cmdk-input" type="text" placeholder="Search essays…" aria-label="Search essays" autocomplete="off" spellcheck="false"
         style="flex:1;background:none;border:none;outline:none;font-family:var(--display);font-size:1.2rem;color:var(--bone);" />
-      <kbd style="font-family:var(--mono);font-size:var(--fs-xs);letter-spacing:0.1em;color:var(--ash);border:1px solid var(--coal-line);padding:3px 6px;">ESC</kbd>
+      <kbd class="cmdk-esc" style="font-family:var(--mono);font-size:var(--fs-xs);letter-spacing:0.1em;color:var(--ash);border:1px solid var(--coal-line);padding:3px 6px;">ESC</kbd>
+      <button type="button" id="cmdk-close" class="cmdk-close">Close</button>
     </div>
     <div id="cmdk-results" style="overflow-y:auto;flex:1;"></div>
-    <div style="padding:10px 20px;border-top:1px solid var(--coal-line);font-family:var(--mono);font-size:var(--fs-2xs);letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);display:flex;gap:16px;">
+    <div class="cmdk-hints" style="padding:10px 20px;border-top:1px solid var(--coal-line);font-family:var(--mono);font-size:var(--fs-2xs);letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);display:flex;gap:16px;">
       <span>↑↓ Navigate</span>
       <span>↵ Open</span>
       <span style="margin-left:auto;">⌘K / Ctrl+K</span>
@@ -33,6 +34,13 @@
     transition: background 0.15s ease;
   }
   .cmdk-item:last-child { border-bottom: none; }
+  /* keyboard hints mean nothing on a phone; a real Close button does */
+  .cmdk-close { display: none; }
+  @media (hover: none) {
+    .cmdk-esc, .cmdk-hints { display: none !important; }
+    .cmdk-close { display: inline-flex; align-items: center; min-height: 44px; padding: 0 4px 0 10px; background: none; border: 0; cursor: pointer; font-family: var(--mono); font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ash); }
+    #cmdk-panel { margin-top: 70px !important; max-height: calc(100svh - 160px) !important; margin-left: 12px !important; margin-right: 12px !important; }
+  }
   .cmdk-item[data-active="1"] { background: var(--coal-line); }
   .cmdk-item-dot {
     width: 6px;
@@ -226,6 +234,8 @@
     input.addEventListener('keydown', onInputKeydown);
     backdrop.addEventListener('click', onBackdropClick);
     results.addEventListener('mouseover', onResultsMouseover);
+    const closeBtn = document.getElementById('cmdk-close');
+    closeBtn?.addEventListener('click', closePalette);
 
     cleanupPalette = () => {
       document.removeEventListener('keydown', onGlobalKeydown);
@@ -233,6 +243,7 @@
       input.removeEventListener('keydown', onInputKeydown);
       backdrop.removeEventListener('click', onBackdropClick);
       results.removeEventListener('mouseover', onResultsMouseover);
+      closeBtn?.removeEventListener('click', closePalette);
       closePalette();
     };
   }

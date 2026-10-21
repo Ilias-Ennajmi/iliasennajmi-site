@@ -19,6 +19,7 @@ import frauncesItalicUrl from '@fontsource-variable/fraunces/files/fraunces-lati
 import spaceGroteskNormalUrl from '@fontsource-variable/space-grotesk/files/space-grotesk-latin-wght-normal.woff2?url';
 import SiteNav from '../components/SiteNav.astro';
 import Footer from '../components/Footer.astro';
+import TabBar from '../components/TabBar.astro';
 import GrainOverlay from '../components/GrainOverlay.astro';
 import ScrollProgress from '../components/ScrollProgress.astro';
 import CommandPalette from '../components/CommandPalette.astro';
@@ -178,6 +179,7 @@ const proseFirst = active === 'essay' || active === 'about' || active === 'colop
   <SiteNav active={active} />
   <slot />
   <Footer />
+  <TabBar active={active} strand={fxStrand} />
   <CommandPalette />
   <TouchPrefetch />
 </body>

@@ -73,7 +73,7 @@ const shareUrl = new URL('/lab/', Astro.site).toString();
       <div style="display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:var(--fs-xs);letter-spacing:0.24em;text-transform:uppercase;color:var(--ash);margin-bottom:clamp(1.6rem,3vw,2.4rem);">
         <span style="width:28px;height:1px;background:var(--ember);"></span>Experiments you run on yourself
       </div>
-      <h1 style="margin:0;font-family:var(--display);font-weight:500;font-size:clamp(3rem,9vw,6.5rem);line-height:0.94;letter-spacing:-0.015em;">The Lab<span style="color:var(--ember-vivid);">.</span></h1>
+      <h1 style="margin:0;font-family:var(--display);font-weight:500;font-size:var(--fs-title);line-height:0.94;letter-spacing:-0.015em;">The Lab<span style="color:var(--ember-vivid);">.</span></h1>
       <p style="font-family:var(--body);font-weight:300;font-style:italic;font-size:clamp(1.15rem,2.2vw,1.5rem);color:var(--bone);opacity:0.86;max-width:54ch;margin:1.6rem 0 0;line-height:1.5;text-wrap:pretty;">Six small experiments. Each one tries a trick on you that gets used on you every day, then shows you how it worked. Knowing about them helps less than you'd think. That's sort of the point.</p>
     </div>
   </header>
@@ -223,8 +223,15 @@ const shareUrl = new URL('/lab/', Astro.site).toString();
       if (!sec || sec.querySelector('.lab-next')) return;
       setTimeout(() => {
       const step = Array.from(sec.querySelectorAll<HTMLElement>('[data-step]')).find((s) => !s.hidden);
-      const actions = step?.querySelector('.lab-actions');
-      if (!actions) return;
+      if (!step) return;
+      // the anchoring bench is shared with the essay and has no actions row
+      // of its own, so the button never appeared there; give it one
+      let actions = step.querySelector('.lab-actions');
+      if (!actions) {
+        actions = document.createElement('div');
+        actions.className = 'lab-actions';
+        step.append(actions);
+      }
       const a = document.createElement('a');
       a.className = 'lab-btn lab-btn-go lab-next';
       a.href = next ? `#${next.id}` : '#lab-file-title';
@@ -233,29 +240,69 @@ const shareUrl = new URL('/lab/', Astro.site).toString();
       }, 0);
     };
     document.addEventListener('lab:result', onNext);
+
+    // One bench at a time. Six experiments stacked made a 7,000px page on a
+    // phone; now the rail works as tabs and only the chosen one is on the
+    // page. Without JS (no data-paged) every bench still shows, stacked.
+    const wrap = document.querySelector<HTMLElement>('.lab-wrap')!;
+    const railItems = Array.from(document.querySelectorAll<HTMLElement>('[data-rail-for]'));
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let cur = 0;
+    const show = (i: number, scroll: boolean) => {
+      cur = Math.max(0, Math.min(sections.length - 1, i));
+      sections.forEach((s, k) => s.toggleAttribute('data-active', k === cur));
+      railItems.forEach((el, k) => {
+        el.toggleAttribute('data-current', k === cur);
+        if (k === cur) el.setAttribute('aria-current', 'step'); else el.removeAttribute('aria-current');
+      });
+      history.replaceState(history.state, '', `#${sections[cur].id}`);
+      // only move the page if the new bench's top is out of sight
+      if (scroll && sections[cur].getBoundingClientRect().top < 0) {
+        sections[cur].scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      }
+    };
+    sections.forEach((s, i) => {
+      const pager = document.createElement('nav');
+      pager.className = 'lab-pager';
+      pager.setAttribute('aria-label', 'Experiment pages');
+      const prev = sections[i - 1];
+      const next = sections[i + 1];
+      pager.innerHTML =
+        (prev ? `<a href="#${prev.id}" class="lab-pager-prev">← Previous</a>` : '<span></span>') +
+        `<span class="lab-pager-count">${String(i + 1).padStart(2, '0')} / ${String(sections.length).padStart(2, '0')}</span>` +
+        (next ? `<a href="#${next.id}" class="lab-pager-next">Next →</a>` : '<a href="#lab-file-title" class="lab-pager-next">Your case file →</a>');
+      s.querySelector('.lab-exp-body')?.append(pager);
+    });
+    const onClick = (e: MouseEvent) => {
+      const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[href^="#exp-"]');
+      if (!a) return;
+      const i = sections.findIndex((s) => `#${s.id}` === a.getAttribute('href'));
+      if (i < 0) return;
+      e.preventDefault();
+      show(i, true);
+    };
+    wrap.addEventListener('click', onClick);
+    const fromHash = () => sections.findIndex((s) => `#${s.id}` === location.hash);
+    const onHash = () => { const i = fromHash(); if (i >= 0) show(i, true); };
+    window.addEventListener('hashchange', onHash);
+    // land on the bench named in the link, else the first one not yet run
+    const done = readResults();
+    const firstOpen = LAB_ORDER.findIndex((x) => !done[x.id]);
+    wrap.setAttribute('data-paged', '');
+    show(fromHash() >= 0 ? fromHash() : Math.max(0, firstOpen), false);
+    if (!location.hash.startsWith('#exp-') || fromHash() < 0) history.replaceState(history.state, '', location.pathname);
+
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
       const t = e.target as HTMLElement;
       if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
-      const y = window.scrollY + window.innerHeight * 0.3;
-      let cur = sections.findIndex((s) => s.offsetTop + s.offsetHeight > y);
-      if (cur < 0) cur = sections.length - 1;
-      const to = sections[cur + (e.key === 'ArrowRight' ? 1 : -1)];
-      if (!to) return;
+      const to = cur + (e.key === 'ArrowRight' ? 1 : -1);
+      if (to < 0 || to >= sections.length) return;
       e.preventDefault();
-      to.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      to.querySelector<HTMLElement>('button, input, a')?.focus({ preventScroll: true });
+      show(to, true);
+      sections[to].querySelector<HTMLElement>('button, input, a')?.focus({ preventScroll: true });
     };
     document.addEventListener('keydown', onKey);
-    // which bench is in view
-    const railIO = new IntersectionObserver((ents) => {
-      ents.forEach((en) => {
-        const id = en.target.id.replace('exp-', '');
-        const item = document.querySelector<HTMLElement>(`[data-rail-for="${id}"]`);
-        if (item) item.toggleAttribute('data-current', en.isIntersecting);
-      });
-    }, { rootMargin: '-40% 0px -50% 0px' });
-    sections.forEach((s) => railIO.observe(s));
 
     // He reacts. Got you: surprised. Held out: suspicious. Cleared: neutral.
     const observer = file.querySelector<HTMLElement>('.lab-observer');
@@ -274,7 +321,8 @@ const shareUrl = new URL('/lab/', Astro.site).toString();
       document.removeEventListener('lab:result', onMood);
       document.removeEventListener('lab:result', onNext);
       document.removeEventListener('keydown', onKey);
-      railIO.disconnect();
+      wrap.removeEventListener('click', onClick);
+      window.removeEventListener('hashchange', onHash);
       copyBtn.removeEventListener('click', onCopy);
       clearBtn.removeEventListener('click', onClear);
     });
