@@ -267,3 +267,9 @@
 .lab-exp-num { display: flex; flex-direction: column; gap: clamp(10px, 1.6vw, 18px); align-items: flex-start; }
 .lab-instrument { width: clamp(64px, 11vw, 140px); height: auto; max-height: clamp(80px, 13vw, 170px); object-fit: contain; object-position: left top; }
 @media (max-width: 640px) { .lab-exp-num { flex-direction: row; align-items: center; gap: 14px; } .lab-instrument { width: 64px; max-height: 64px; } }
+
+/* the specimen plate: a small engraving pinned beside each drawer's label */
+.sp-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 12px 24px; }
+.sp-head > .sp-label, .sp-head > .sp-name { grid-column: 1; }
+.sp-plate { grid-column: 2; grid-row: 1 / span 2; width: clamp(72px, 9vw, 120px); height: auto; max-height: clamp(72px, 9vw, 120px); object-fit: contain; object-position: right bottom; align-self: end; }
+@media (max-width: 520px) { .sp-plate { width: 64px; max-height: 64px; } }

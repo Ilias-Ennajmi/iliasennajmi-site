@@ -11,6 +11,7 @@ const lines = [
 ];
 ---
 <aside class="wp no-print" aria-labelledby="wp-title" data-xray="Transparency. Also a persuasion technique.">
+  <img src="/illus/register-240.png" alt="" aria-hidden="true" class="illus wp-register" width="120" height="120" loading="lazy" decoding="async" />
   <div class="wp-head" id="wp-title">Who profits from this page</div>
   <dl class="wp-lines">
     {lines.map(([k, v]) => (
@@ -38,6 +39,8 @@ const lines = [
     background: linear-gradient(-45deg, transparent 5px, var(--coal-soft) 0) 0 0 / 10px 7px repeat-x,
                 linear-gradient(45deg, transparent 5px, var(--coal-soft) 0) 0 0 / 10px 7px repeat-x;
   }
+  .wp-register { position: absolute; right: 10px; top: -60px; width: 56px; height: 56px; object-fit: contain; object-position: center bottom; }
+  .wp { margin-top: clamp(4rem, 6vw, 4.6rem) !important; }
   .wp-head {
     font-size: 0.68rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase;
     color: var(--bone); padding-bottom: 10px; margin-bottom: 8px; border-bottom: 1px dashed var(--coal-line);

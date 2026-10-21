@@ -195,3 +195,11 @@ html[data-xray-on] .xr-toggle::before { transform: rotate(45deg) scale(1.5); }
 @media (max-width: 520px) { .illus--start { max-width: 56px; max-height: 84px; top: clamp(2.2rem, 4vw, 3rem); transform: none; } .start-item .start-title { padding-right: 70px; } }
 
 @media (max-width: 560px) { .xr-chip-more { display: none; } .xr-tag { max-width: min(260px, calc(100vw - 16px)); } }
+
+/* marginalia */
+.manicule { display: inline-block; width: 30px; height: 20px; object-fit: contain; vertical-align: middle; }
+.lab-btn .manicule { filter: invert(1) hue-rotate(180deg) saturate(1.4); }
+:root[data-theme="ink"] .lab-btn .manicule { filter: none; }
+.nl-envelope { position: absolute; right: clamp(22px, 6vw, 64px); top: clamp(1.6rem, 3vw, 2.4rem); width: clamp(64px, 8vw, 104px); height: auto; transform: rotate(6deg); transition: transform var(--dur-slow) var(--ease-out); }
+section:hover .nl-envelope, .nl-envelope:focus-within { transform: rotate(0deg) translateY(-3px); }
+@media (max-width: 640px) { .nl-envelope { width: 56px; top: 1.2rem; } }

@@ -228,7 +228,7 @@ const shareUrl = new URL('/lab/', Astro.site).toString();
       const a = document.createElement('a');
       a.className = 'lab-btn lab-btn-go lab-next';
       a.href = next ? `#${next.id}` : '#lab-file-title';
-      a.innerHTML = next ? 'Next experiment <span class="m-arrow">→</span>' : 'Your case file <span class="m-arrow">→</span>';
+      a.innerHTML = next ? 'Next experiment <img src="/illus/manicule-120.png" alt="" class="illus manicule m-arrow" width="30" height="20">' : 'Your case file <img src="/illus/manicule-120.png" alt="" class="illus manicule m-arrow" width="30" height="20">';
       actions.prepend(a);
       }, 0);
     };
