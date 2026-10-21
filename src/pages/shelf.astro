@@ -55,7 +55,7 @@ const shelves = [
     <div style="position:absolute;inset:-12%;z-index:0;background:radial-gradient(55% 48% at 74% 14%, rgba(117,89,56,0.09), transparent 60%);animation:cc-drift2 26s ease-in-out infinite;"></div>
     <div style="position:relative;z-index:1;max-width:1180px;margin:0 auto;animation:cc-rise .9s ease both;">
       <div data-pll="0.10" data-watermark class="wm wm-left" style="top:8%;font-size:clamp(5rem,15vw,14rem);">04</div>
-      <div style="display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:0.68rem;letter-spacing:0.24em;text-transform:uppercase;color:var(--ash);margin-bottom:clamp(1.6rem,3vw,2.4rem);">
+      <div style="display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:var(--fs-xs);letter-spacing:0.24em;text-transform:uppercase;color:var(--ash);margin-bottom:clamp(1.6rem,3vw,2.4rem);">
         <span style="width:28px;height:1px;background:var(--ember);"></span><span class="cc-num" data-to="4">04</span> · The Shelf
       </div>
       <h1 style="margin:0;font-family:var(--display);font-weight:500;font-size:clamp(3.4rem,11vw,8.5rem);line-height:0.9;letter-spacing:-0.015em;">The Shelf<span style="color:var(--ember-vivid);">.</span></h1>
@@ -66,7 +66,7 @@ const shelves = [
   <!-- NOW PLAYING strip -->
   <section style="border-top:1px solid var(--coal-line);border-bottom:1px solid var(--coal-line);background:var(--coal-soft);">
     <div data-reveal style="max-width:1180px;margin:0 auto;padding:clamp(1.4rem,3vw,2.2rem) clamp(22px,6vw,64px);display:flex;flex-wrap:wrap;align-items:center;gap:clamp(18px,4vw,48px);">
-      <span style="font-family:var(--mono);font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ember);display:flex;align-items:center;gap:9px;"><span style="width:7px;height:7px;border-radius:50%;background:var(--ember);display:inline-block;"></span>Right now</span>
+      <span style="font-family:var(--mono);font-size:var(--fs-sm);letter-spacing:0.2em;text-transform:uppercase;color:var(--ember);display:flex;align-items:center;gap:9px;"><span style="width:7px;height:7px;border-radius:50%;background:var(--ember);display:inline-block;"></span>Right now</span>
       <span style="font-family:var(--body);font-weight:300;font-style:italic;font-size:clamp(1.1rem,2vw,1.45rem);color:var(--bone);">Reading <span style="font-style:normal;">Seeing Like a State</span> · re-watching <span style="font-style:normal;">The Bear</span> · stuck on <span style="font-style:normal;">one Nina Simone record</span></span>
     </div>
   </section>
@@ -77,20 +77,20 @@ const shelves = [
       {shelves.map((col) => (
         <div data-reveal>
           <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding-bottom:1rem;margin-bottom:0.4rem;border-bottom:1px solid var(--coal-line);">
-            <span style="display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--ash);"><span style="width:6px;height:6px;background:var(--ember);display:inline-block;"></span>{col.label}</span>
-            <span style="font-family:var(--mono);font-size:0.66rem;letter-spacing:0.06em;color:var(--ash);">{col.meta}</span>
+            <span style="display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:var(--fs-sm);letter-spacing:0.18em;text-transform:uppercase;color:var(--ash);"><span style="width:6px;height:6px;background:var(--ember);display:inline-block;"></span>{col.label}</span>
+            <span style="font-family:var(--mono);font-size:var(--fs-2xs);letter-spacing:0.06em;color:var(--ash);">{col.meta}</span>
           </div>
           {col.items.map((it) => (
             <div class="shelf-item" style="padding:1rem 0;border-bottom:1px solid var(--coal-line);">
               {it.url ? (
                 <a href={it.url} target="_blank" rel="noopener noreferrer" class="charge shelf-link" style="display:flex;align-items:baseline;justify-content:space-between;gap:14px;text-decoration:none;transition:color .25s;">
                   <span style="font-family:var(--body);font-size:1.18rem;line-height:1.2;">{it.title}</span>
-                  <span style="font-family:var(--mono);font-size:0.66rem;letter-spacing:0.03em;color:var(--ash);white-space:nowrap;">{it.by}</span>
+                  <span style="font-family:var(--mono);font-size:var(--fs-2xs);letter-spacing:0.03em;color:var(--ash);white-space:nowrap;">{it.by}</span>
                 </a>
               ) : (
                 <div style="display:flex;align-items:baseline;justify-content:space-between;gap:14px;">
                   <span style="font-family:var(--body);font-size:1.18rem;line-height:1.2;">{it.title}</span>
-                  <span style="font-family:var(--mono);font-size:0.66rem;letter-spacing:0.03em;color:var(--ash);white-space:nowrap;">{it.by}</span>
+                  <span style="font-family:var(--mono);font-size:var(--fs-2xs);letter-spacing:0.03em;color:var(--ash);white-space:nowrap;">{it.by}</span>
                 </div>
               )}
               {it.note && (
@@ -103,7 +103,7 @@ const shelves = [
     </div>
 
     <div data-reveal style="margin-top:clamp(2.4rem,4vw,4rem);padding-top:clamp(2.4rem,4vw,4rem);border-top:1px solid var(--coal-line);">
-      <div style="display:flex;align-items:center;gap:16px;margin-bottom:clamp(1.2rem,2vw,1.8rem);font-family:var(--mono);font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--ash);">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:clamp(1.2rem,2vw,1.8rem);font-family:var(--mono);font-size:var(--fs-sm);letter-spacing:0.18em;text-transform:uppercase;color:var(--ash);">
         <span style="width:6px;height:6px;background:var(--ember);display:inline-block;flex:none;"></span>
         <span style="color:var(--bone);">The actual playlist</span>
         <span class="cc-rule"></span>
@@ -120,7 +120,7 @@ const shelves = [
       ></iframe>
     </div>
 
-    <p data-reveal style="font-family:var(--mono);font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ash);margin:clamp(3rem,6vw,5rem) 0 0;">Nothing here is sponsored. Most of it I'd defend in an argument.</p>
+    <p data-reveal style="font-family:var(--mono);font-size:var(--fs-sm);letter-spacing:0.12em;text-transform:uppercase;color:var(--ash);margin:clamp(3rem,6vw,5rem) 0 0;">Nothing here is sponsored. Most of it I'd defend in an argument.</p>
   </section>
 </main>
 </BaseLayout>

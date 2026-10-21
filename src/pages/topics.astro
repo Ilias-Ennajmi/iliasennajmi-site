@@ -65,7 +65,7 @@ const markFor = (i: number) => marks[i % marks.length];
     <div style="position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,var(--paper-hi) 0%,var(--paper-mid) 60%,var(--coal) 100%);"></div>
     <div style="position:absolute;inset:-12%;z-index:0;background:radial-gradient(55% 48% at 50% 16%, rgba(117,89,56,0.10), transparent 60%);animation:cc-drift1 24s ease-in-out infinite;"></div>
     <div style="position:relative;z-index:1;max-width:1180px;margin:0 auto;animation:cc-rise .9s ease both;">
-      <div style="display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:0.68rem;letter-spacing:0.24em;text-transform:uppercase;color:var(--ash);margin-bottom:clamp(1.6rem,3vw,2.4rem);">
+      <div style="display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:var(--fs-xs);letter-spacing:0.24em;text-transform:uppercase;color:var(--ash);margin-bottom:clamp(1.6rem,3vw,2.4rem);">
         <span style="width:28px;height:1px;background:var(--ember);"></span>Every essay, one index
       </div>
       <h1 style="margin:0;font-family:var(--display);font-weight:500;font-size:clamp(3rem,9vw,6.5rem);line-height:0.94;letter-spacing:-0.015em;">Topics<span style="color:var(--ember-vivid);">.</span></h1>
@@ -74,8 +74,8 @@ const markFor = (i: number) => marks[i % marks.length];
   </header>
 
   <section style="max-width:1180px;margin:0 auto;padding:0 clamp(22px,6vw,64px) clamp(5rem,9vw,7.5rem);">
-    <div data-reveal style="padding-bottom:clamp(1.6rem,3vw,2.4rem);border-bottom:1px solid var(--coal-line);">
-      <div style="display:flex;align-items:center;gap:16px;margin-bottom:clamp(1.6rem,3vw,2.4rem);font-family:var(--mono);font-size:0.66rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--ash);">
+    <div data-reveal class="tx-map" style="padding-bottom:clamp(1.6rem,3vw,2.4rem);border-bottom:1px solid var(--coal-line);">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:clamp(1.6rem,3vw,2.4rem);font-family:var(--mono);font-size:var(--fs-2xs);letter-spacing:0.18em;text-transform:uppercase;color:var(--ash);">
         <span style="width:6px;height:6px;background:var(--ember);transform:rotate(45deg);display:inline-block;flex:none;"></span>
         <span style="color:var(--bone);font-size:0.8rem;">The map</span>
         <span class="cc-rule"></span>

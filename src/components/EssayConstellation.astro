@@ -156,14 +156,14 @@ const edges = left
   .cn-cap {
     display: flex; flex-wrap: wrap; align-items: center; gap: 10px 22px;
     margin-top: clamp(1rem, 2vw, 1.6rem);
-    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.14em;
+    font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: 0.14em;
     text-transform: uppercase; color: var(--ash);
   }
   .cn-cap > span { display: inline-flex; align-items: center; gap: 9px; }
   .cn-key { width: 7px; height: 7px; transform: rotate(45deg); display: inline-block; }
   .cn-key-uly { background: var(--tide); }
   .cn-key-ili { background: var(--ember); }
-  .cn-cap-note { text-transform: none; letter-spacing: 0.06em; font-size: 0.7rem; }
+  .cn-cap-note { text-transform: none; letter-spacing: 0.06em; font-size: var(--fs-sm); }
 
   @media (prefers-reduced-motion: reduce) {
     .cn-dot, .cn-node text, .cn-node rect, .constellation [data-edge] { transition: none !important; animation: none !important; opacity: 1 !important; }

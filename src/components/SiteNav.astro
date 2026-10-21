@@ -41,7 +41,7 @@ const links = [
 <nav id="sn-bar" aria-label="Primary" transition:name="site-nav" style="position:fixed;top:0;left:0;right:0;z-index:7000;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:18px clamp(22px,5vw,52px);background:linear-gradient(180deg,var(--nav-scrim-a) 75%,var(--nav-scrim-b) 100%);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);font-family:var(--mono);">
   <a href="/" id="sn-wordmark" data-xray="The author, watching you. Literally." style="display:inline-flex;align-items:center;white-space:nowrap;font-family:var(--display);font-style:italic;font-weight:500;font-size:1.45rem;letter-spacing:0.01em;line-height:1;color:var(--bone);text-decoration:none;"><Face mode="stamp" px={52} uid="nav" class="sn-stamp" />Ilias Ennajmi</a>
 
-  <div id="sn-links" style="display:flex;align-items:center;gap:clamp(16px,3vw,40px);font-size:0.68rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ash);white-space:nowrap;">
+  <div id="sn-links" style="display:flex;align-items:center;gap:clamp(16px,3vw,40px);font-size:var(--fs-xs);letter-spacing:0.16em;text-transform:uppercase;color:var(--ash);white-space:nowrap;">
     <a href={links[0].href} class="sn-link" style={`position:relative;color:${active === links[0].key ? 'var(--bone)' : 'var(--ash)'};text-decoration:none;transition:color .25s;`}>
       {links[0].label}
       {active === links[0].key && <span style="position:absolute;left:0;right:0;bottom:-6px;height:1.5px;background:var(--ember);"></span>}
@@ -62,7 +62,7 @@ const links = [
         <div style="min-width:180px;background:var(--coal);border:1px solid var(--coal-line);padding:6px;">
           {readGroup.children.map((c) => (
             <a href={c.href} class="sn-read-item" style={`display:flex;flex-direction:column;gap:2px;padding:11px 14px;text-decoration:none;color:${active === c.key ? 'var(--bone)' : 'var(--ash)'};`}>
-              <span style={`font-family:var(--mono);font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:${active === c.key ? (c.key === 'ulysses' ? 'var(--tide)' : 'var(--ember)') : 'inherit'};`}>{c.label}</span>
+              <span style={`font-family:var(--mono);font-size:var(--fs-xs);letter-spacing:0.14em;text-transform:uppercase;color:${active === c.key ? (c.key === 'ulysses' ? 'var(--tide)' : 'var(--ember)') : 'inherit'};`}>{c.label}</span>
               <span style="font-family:var(--body);font-style:italic;font-size:0.78rem;letter-spacing:0;text-transform:none;color:var(--ash);">{c.sub}</span>
             </a>
           ))}
@@ -88,16 +88,16 @@ const links = [
     <button id="sn-theme-btn" type="button" aria-label="Switch between paper and ink theme" aria-pressed="false" style="display:flex;align-items:center;justify-content:center;background:none;border:1px solid var(--coal-line);cursor:pointer;color:var(--ash);width:44px;min-height:44px;padding:0;-webkit-tap-highlight-color:transparent;transition:color .25s,border-color .25s;">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/></svg>
     </button>
-    <button id="sn-search-btn" type="button" aria-label="⌘K Search essays" style="display:flex;align-items:center;gap:8px;background:none;border:1px solid var(--coal-line);cursor:pointer;font-family:var(--mono);font-size:0.68rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--ash);padding:8px 12px;min-height:44px;-webkit-tap-highlight-color:transparent;">
+    <button id="sn-search-btn" type="button" aria-label="⌘K Search essays" style="display:flex;align-items:center;gap:8px;background:none;border:1px solid var(--coal-line);cursor:pointer;font-family:var(--mono);font-size:var(--fs-xs);font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--ash);padding:8px 12px;min-height:44px;-webkit-tap-highlight-color:transparent;">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
       <span class="sn-search-label" style="display:none;">⌘K</span>
     </button>
-    <button id="sn-burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="sn-drawer" style="display:none;align-items:center;gap:10px;background:none;border:none;cursor:pointer;font-family:var(--mono);font-size:0.7rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--bone);padding:11px 0;min-height:44px;-webkit-tap-highlight-color:transparent;">
+    <button id="sn-burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="sn-drawer" style="display:none;align-items:center;gap:10px;background:none;border:none;cursor:pointer;font-family:var(--mono);font-size:var(--fs-sm);font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--bone);padding:11px 0;min-height:44px;-webkit-tap-highlight-color:transparent;">
       <span style="display:flex;flex-direction:column;gap:5px;width:24px;">
         <span style="height:1.5px;background:var(--bone);width:100%;"></span>
         <span style="height:1.5px;background:var(--bone);width:100%;"></span>
       </span>
-      Menu
+      <span class="sn-burger-label">Menu</span>
     </button>
   </div>
 </nav>
@@ -105,17 +105,17 @@ const links = [
 <div id="sn-drawer" aria-hidden="true" style="position:fixed;inset:0;z-index:8000;background:var(--coal);display:flex;flex-direction:column;font-family:var(--mono);">
   <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 18px;border-bottom:1px solid var(--coal-line);">
     <a href="/" data-close style="font-family:var(--display);font-style:italic;font-weight:500;font-size:1.16rem;color:var(--bone);text-decoration:none;">Ilias Ennajmi</a>
-    <button data-close type="button" aria-label="Close menu" style="display:inline-flex;align-items:center;gap:10px;background:none;border:none;cursor:pointer;font-family:var(--mono);font-size:0.7rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--bone);padding:11px 0;min-height:44px;-webkit-tap-highlight-color:transparent;">Close <span style="font-size:1.15em;line-height:1;">&#10005;</span></button>
+    <button data-close type="button" aria-label="Close menu" style="display:inline-flex;align-items:center;gap:10px;background:none;border:none;cursor:pointer;font-family:var(--mono);font-size:var(--fs-sm);font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--bone);padding:11px 0;min-height:44px;-webkit-tap-highlight-color:transparent;">Close <span style="font-size:1.15em;line-height:1;">&#10005;</span></button>
   </div>
   <nav aria-label="Pages" style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:clamp(14px,3vh,32px) clamp(22px,7vw,44px);overflow-y:auto;">
     <a data-close href={links[0].href} style="display:flex;align-items:baseline;gap:18px;padding:clamp(15px,2.3vh,22px) 0;border-bottom:1px solid var(--coal-line);min-height:44px;text-decoration:none;">
-      <span style={`font-family:var(--mono);font-size:0.68rem;font-weight:500;letter-spacing:0.14em;width:30px;flex:none;color:${active === links[0].key ? on : off};`}>{links[0].num}</span>
+      <span style={`font-family:var(--mono);font-size:var(--fs-xs);font-weight:500;letter-spacing:0.14em;width:30px;flex:none;color:${active === links[0].key ? on : off};`}>{links[0].num}</span>
       <span style="font-family:var(--display);font-weight:500;font-size:clamp(2.1rem,8vw,3rem);line-height:1;letter-spacing:-0.01em;color:var(--bone);">{links[0].label}</span>
     </a>
 
     <details class="sn-drawer-group" open={readActive} style="border-bottom:1px solid var(--coal-line);">
       <summary style="display:flex;align-items:baseline;gap:18px;padding:clamp(15px,2.3vh,22px) 0;min-height:44px;list-style:none;cursor:pointer;-webkit-tap-highlight-color:transparent;">
-        <span style={`font-family:var(--mono);font-size:0.68rem;font-weight:500;letter-spacing:0.14em;width:30px;flex:none;color:${readActive ? on : off};`}>{readGroup.num}</span>
+        <span style={`font-family:var(--mono);font-size:var(--fs-xs);font-weight:500;letter-spacing:0.14em;width:30px;flex:none;color:${readActive ? on : off};`}>{readGroup.num}</span>
         <span style="font-family:var(--display);font-weight:500;font-size:clamp(2.1rem,8vw,3rem);line-height:1;letter-spacing:-0.01em;color:var(--bone);">{readGroup.label}</span>
         <span class="sn-drawer-chev" aria-hidden="true" style="margin-left:auto;transition:transform .3s;color:var(--ash);">→</span>
       </summary>
@@ -131,13 +131,13 @@ const links = [
 
     {links.slice(1).map((l) => (
       <a data-close href={l.href} style="display:flex;align-items:baseline;gap:18px;padding:clamp(15px,2.3vh,22px) 0;border-bottom:1px solid var(--coal-line);min-height:44px;text-decoration:none;">
-        <span style={`font-family:var(--mono);font-size:0.68rem;font-weight:500;letter-spacing:0.14em;width:30px;flex:none;color:${active === l.key ? on : off};`}>{l.num}</span>
+        <span style={`font-family:var(--mono);font-size:var(--fs-xs);font-weight:500;letter-spacing:0.14em;width:30px;flex:none;color:${active === l.key ? on : off};`}>{l.num}</span>
         <span style="font-family:var(--display);font-weight:500;font-size:clamp(2.1rem,8vw,3rem);line-height:1;letter-spacing:-0.01em;color:var(--bone);">{l.label}</span>
-        {l.key === 'saved' && <span class="sn-progress-mobile" data-total={totalPublished} style="display:none;font-family:var(--mono);font-size:0.7rem;letter-spacing:0.1em;color:var(--ash);"></span>}
+        {l.key === 'saved' && <span class="sn-progress-mobile" data-total={totalPublished} style="display:none;font-family:var(--mono);font-size:var(--fs-sm);letter-spacing:0.1em;color:var(--ash);"></span>}
       </a>
     ))}
   </nav>
-  <div style="padding:clamp(18px,3vh,28px) clamp(22px,7vw,44px);border-top:1px solid var(--coal-line);display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);">
+  <div style="padding:clamp(18px,3vh,28px) clamp(22px,7vw,44px);border-top:1px solid var(--coal-line);display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:var(--fs-xs);letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);">
     <a data-close href="mailto:hello@iliasennajmi.com" style="min-height:44px;display:inline-flex;align-items:center;color:var(--bone);text-decoration:none;">Email &#8599;</a>
     <span>Built slowly, on purpose</span>
   </div>
@@ -238,7 +238,7 @@ const links = [
         const note = document.createElement('a');
         note.href = '/essays/defaults/';
         note.textContent = 'You just overrode a default. That’s essay #1. →';
-        note.style.cssText = 'position:fixed;right:clamp(14px,3vw,26px);top:70px;z-index:7100;background:var(--bone);color:var(--coal);font-family:var(--mono);font-size:0.7rem;letter-spacing:0.08em;padding:10px 16px;max-width:240px;text-decoration:none;opacity:0;transform:translateY(-6px);transition:opacity .4s ease,transform .4s ease;';
+        note.style.cssText = 'position:fixed;right:clamp(14px,3vw,26px);top:70px;z-index:7100;background:var(--bone);color:var(--coal);font-family:var(--mono);font-size:var(--fs-sm);letter-spacing:0.08em;padding:10px 16px;max-width:240px;text-decoration:none;opacity:0;transform:translateY(-6px);transition:opacity .4s ease,transform .4s ease;';
         document.body.appendChild(note);
         requestAnimationFrame(() => { note.style.opacity = '1'; note.style.transform = 'none'; });
         const dismiss = () => { note.style.opacity = '0'; note.style.transform = 'translateY(-6px)'; setTimeout(() => note.remove(), 400); };

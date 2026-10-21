@@ -4,8 +4,8 @@ const year = new Date().getFullYear();
 <footer style="position:relative;border-top:1px solid var(--coal-line);overflow:hidden;">
   <div data-reveal data-bigrise aria-hidden="true" style="font-family:var(--display);font-weight:800;font-size:clamp(4rem,20vw,16rem);line-height:0.8;color:var(--wm);text-align:center;letter-spacing:-0.03em;padding-top:clamp(1.5rem,4vw,3rem);user-select:none;pointer-events:none;white-space:nowrap;" class="footer-wm" data-text="ENNAJMI"></div>
   <div style="max-width:1180px;margin:0 auto;padding:1.6rem clamp(22px,6vw,64px) 2.4rem;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:18px;">
-    <span style="font-family:var(--mono);font-size:0.7rem;letter-spacing:0.1em;color:var(--ash);">&copy; {year} ILIAS ENNAJMI &middot; BUILT SLOWLY, ON PURPOSE</span>
-    <div style="display:flex;align-items:center;gap:clamp(16px,2.5vw,30px);font-family:var(--mono);font-size:0.7rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ash);">
+    <span style="font-family:var(--mono);font-size:var(--fs-sm);letter-spacing:0.1em;color:var(--ash);">&copy; {year} ILIAS ENNAJMI &middot; BUILT SLOWLY, ON PURPOSE</span>
+    <div class="footer-nav" style="display:flex;align-items:center;gap:clamp(16px,2.5vw,30px);font-family:var(--mono);font-size:var(--fs-sm);letter-spacing:0.16em;text-transform:uppercase;color:var(--ash);">
       <a href="/" class="footer-link" data-hover="bone">Home</a>
       <a href="/about/" class="footer-link" data-hover="bone">About</a>
       <a href="/ulysses/" class="footer-link" data-hover="tide">Ulysses</a>
@@ -21,6 +21,10 @@ const year = new Date().getFullYear();
 <style>
   .footer-wm::before { content: attr(data-text); }
   .footer-link { transition: color .3s; }
+  /* eight links on one line ran ~110px past a phone's edge */
+  @media (max-width: 640px) {
+    .footer-nav { flex-wrap: wrap; gap: 0 20px !important; }
+  }
   .footer-link[data-hover="bone"]:hover { color: var(--bone); }
   .footer-link[data-hover="tide"]:hover { color: var(--tide); }
   .footer-link[data-hover="ember"]:hover { color: var(--ember); }

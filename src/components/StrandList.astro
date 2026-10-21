@@ -35,7 +35,7 @@ const accentVar = `var(--${accent})`;
     <div style="position:relative;z-index:1;max-width:1180px;margin:0 auto;animation:cc-rise .9s ease both;">
       <div data-pll="0.10" data-watermark class={`wm wm-strong wm-${watermarkPos}`} style="top:6%;font-size:clamp(7rem,19vw,18rem);">{watermark}</div>
       <Face class="face-wm" duo={accent} mode="static" uid={`wm-${strand}`} />
-      <div style="display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:0.68rem;letter-spacing:0.24em;text-transform:uppercase;color:var(--acc);margin-bottom:clamp(1.6rem,3vw,2.4rem);">
+      <div style="display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:var(--fs-xs);letter-spacing:0.24em;text-transform:uppercase;color:var(--acc);margin-bottom:clamp(1.6rem,3vw,2.4rem);">
         <span style="width:28px;height:1px;background:var(--acc);"></span>{kicker}
       </div>
       <h1 style="margin:0;font-family:var(--display);font-weight:500;font-size:clamp(3.4rem,11vw,8.5rem);line-height:0.9;letter-spacing:-0.015em;">{title}<span style="color:var(--acc);">.</span></h1>
@@ -45,7 +45,7 @@ const accentVar = `var(--${accent})`;
 
   <!-- ESSAY LIST -->
   <section style="max-width:1180px;margin:0 auto;padding:0 clamp(22px,6vw,64px) clamp(4rem,8vw,7rem);">
-    <div data-reveal style="display:flex;align-items:baseline;gap:16px;margin-bottom:clamp(1.6rem,3vw,2.2rem);font-family:var(--mono);font-size:0.66rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ash);">
+    <div data-reveal style="display:flex;align-items:baseline;gap:16px;margin-bottom:clamp(1.6rem,3vw,2.2rem);font-family:var(--mono);font-size:var(--fs-2xs);letter-spacing:0.2em;text-transform:uppercase;color:var(--ash);">
       <span>Writing</span>
       <span class="cc-rule"></span>
       <span id="count-label">{posts.length} essays</span>
@@ -85,7 +85,7 @@ function boot() {
       // Fixed padding + min-height regardless of state, so the pill's hit
       // area always clears the 44px touch-target minimum and selecting a
       // tag doesn't reflow neighboring chips.
-      btn.style.cssText = 'font-family:var(--mono);font-size:0.68rem;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;background:none;border:none;cursor:pointer;display:inline-flex;align-items:center;min-height:44px;padding:0 15px;border-radius:40px;transition:color .25s,background .25s;'
+      btn.style.cssText = 'font-family:var(--mono);font-size:var(--fs-xs);font-weight:500;letter-spacing:0.16em;text-transform:uppercase;background:none;border:none;cursor:pointer;display:inline-flex;align-items:center;min-height:44px;padding:0 15px;border-radius:40px;transition:color .25s,background .25s;'
         + (active ? `color:var(--coal);background:${accentVar};` : 'color:var(--ash);');
       btn.addEventListener('click', () => { activeTag = name; renderTags(); renderList(); });
       bar.appendChild(btn);
@@ -110,7 +110,7 @@ function boot() {
       html += `<a href="${lead.href}" class="charge lead-card" data-reveal style="position:relative;display:block;border-top:1px solid var(--coal-line);border-bottom:1px solid var(--coal-line);padding:clamp(2rem,4vw,3.4rem) 0;transition:transform .4s cubic-bezier(.2,.7,.2,1);">
         <div style="position:absolute;left:-14px;top:14%;bottom:14%;width:3px;background:var(--acc);"></div>
         ${illus.has(lead.id) ? `<img src="/illus/${lead.id}-340.png" alt="" aria-hidden="true" class="illus illus--thumb illus--lead" loading="lazy" decoding="async">` : ''}
-        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:13px;margin-bottom:clamp(1rem,2vw,1.5rem);font-family:var(--mono);font-size:0.66rem;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--ash);">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:13px;margin-bottom:clamp(1rem,2vw,1.5rem);font-family:var(--mono);font-size:var(--fs-2xs);font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--ash);">
           <span style="color:var(--acc);">Latest</span>
           <span style="width:16px;height:1px;background:var(--coal-line);"></span>
           <span>${esc(lead.tag)}</span>
@@ -121,20 +121,20 @@ function boot() {
         </div>
         <div class="lead-title" style="font-family:var(--display);font-weight:500;font-size:clamp(2.4rem,6vw,4.6rem);line-height:0.98;letter-spacing:-0.015em;transition:color .35s;text-wrap:balance;overflow-wrap:break-word;">${esc(lead.title)}</div>
         <p style="font-family:var(--body);font-weight:400;font-size:clamp(1.1rem,1.8vw,1.35rem);color:var(--acc);margin:clamp(1rem,2vw,1.4rem) 0 0;max-width:64ch;line-height:1.5;text-wrap:pretty;">${esc(lead.standfirst)}</p>
-        <span style="display:inline-block;margin-top:clamp(1.2rem,2vw,1.8rem);font-family:var(--mono);font-size:0.7rem;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--acc);">Read essay →</span>
+        <span style="display:inline-block;margin-top:clamp(1.2rem,2vw,1.8rem);font-family:var(--mono);font-size:var(--fs-sm);font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--acc);">Read essay →</span>
       </a>`;
     }
     rest.forEach((p) => {
       html += `<a href="${p.href}" class="charge js-row" data-reveal style="position:relative;display:grid;grid-template-columns:64px 1fr auto;gap:clamp(16px,3vw,40px);align-items:baseline;padding:clamp(1.5rem,3vw,2.2rem) 0;border-bottom:1px solid var(--coal-line);transition:padding-left .4s cubic-bezier(.2,.7,.2,1);"><span class="row-tick"></span>
-        <span style="font-family:var(--mono);font-size:0.66rem;letter-spacing:0.04em;color:var(--acc);padding-top:0.4rem;">${illus.has(p.id) ? `<img src="/illus/${p.id}-92.png" alt="" aria-hidden="true" class="illus illus--thumb illus--row" loading="lazy" decoding="async">` : esc(p.no)}</span>
+        <span style="font-family:var(--mono);font-size:var(--fs-2xs);letter-spacing:0.04em;color:var(--acc);padding-top:0.4rem;">${illus.has(p.id) ? `<img src="/illus/${p.id}-92.png" alt="" aria-hidden="true" class="illus illus--thumb illus--row" loading="lazy" decoding="async">` : esc(p.no)}</span>
         <div style="min-width:0;">
-          <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:14px;margin-bottom:0.55rem;font-family:var(--mono);font-size:0.66rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);">
+          <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:14px;margin-bottom:0.55rem;font-family:var(--mono);font-size:var(--fs-2xs);letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);">
             <span style="color:var(--acc);">${esc(p.tag)}</span>
             <span>${esc(p.read)}</span>
           </div>
           <div class="row-title" style="font-family:var(--display);font-weight:500;font-size:clamp(1.5rem,3.2vw,2.5rem);line-height:1.04;letter-spacing:-0.01em;transition:color .35s;overflow-wrap:break-word;view-transition-name:essay-${esc(p.id)};">${esc(p.title)}</div>
         </div>
-        <span style="font-family:var(--mono);font-size:0.68rem;letter-spacing:0.06em;color:var(--ash);white-space:nowrap;padding-top:0.4rem;">${esc(p.date)}</span>
+        <span style="font-family:var(--mono);font-size:var(--fs-xs);letter-spacing:0.06em;color:var(--ash);white-space:nowrap;padding-top:0.4rem;">${esc(p.date)}</span>
       </a>`;
     });
     root.innerHTML = html;

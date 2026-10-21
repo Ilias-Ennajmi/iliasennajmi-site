@@ -74,7 +74,7 @@
   }
   .ad-kicker {
     display: flex; align-items: center; gap: 10px;
-    font-family: var(--mono); font-size: 0.68rem; font-weight: 600;
+    font-family: var(--mono); font-size: var(--fs-xs); font-weight: 600;
     letter-spacing: 0.2em; text-transform: uppercase; color: var(--ash);
     margin-bottom: 1.2rem;
   }
@@ -100,7 +100,7 @@
 
   .ad-actions { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; }
   .ad-btn {
-    font-family: var(--mono); font-size: 0.7rem; font-weight: 600;
+    font-family: var(--mono); font-size: var(--fs-sm); font-weight: 600;
     letter-spacing: 0.16em; text-transform: uppercase;
     background: none; color: var(--bone);
     border: 1px solid var(--coal-line);
@@ -111,15 +111,15 @@
   .ad-btn:hover { background: var(--bone); color: var(--coal); border-color: var(--bone); }
   .ad-btn-go { background: var(--bone); color: var(--coal); border-color: var(--bone); }
   .ad-btn-go:hover { background: var(--acc, var(--ember)); border-color: var(--acc, var(--ember)); }
-  .ad-btn-reset { padding: 11px 20px; min-height: 40px; font-size: 0.68rem; }
+  .ad-btn-reset { padding: 11px 20px; min-height: 40px; font-size: var(--fs-xs); }
 
   .ad-field { display: flex; flex-direction: column; gap: 7px; }
   .ad-label {
-    font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.16em;
+    font-family: var(--mono); font-size: var(--fs-2xs); letter-spacing: 0.16em;
     text-transform: uppercase; color: var(--ash);
   }
   .ad-error {
-    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.05em;
+    font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: 0.05em;
     color: var(--acc, var(--ember)); min-height: 1.4em;
   }
   .ad-error:empty { display: none; }
