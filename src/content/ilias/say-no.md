@@ -5,8 +5,12 @@ tag: "On Strategy"
 date: "Dec 2025"
 order: 6
 pairsWith: "belief"
-draft: true
 standfirst: "A plan that rules nothing out is a wish list. Real strategy starts the moment you give something up."
+interactive: "loss"
+effects: ["loss-aversion"]
+lines:
+  - "A real strategy always makes somebody in the room unhappy."
+  - "If you can't name any of them, you don't have a strategy yet. You have a hope, and probably a slide deck."
 ---
 When Steve Jobs came back to Apple in 1997, the company was months away from running out of money. It was also selling a remarkable number of things. Dozens of computer models, printers, a digital camera, a handheld gadget called the Newton. Slightly different versions for slightly different shops, with names nobody could keep straight.
 
@@ -27,6 +31,8 @@ Southwest Airlines has a story about this that gets told a lot. For years, the c
 It sounds almost petty. It's actually the whole point. A clear enough strategy makes a thousand small decisions for you, including the ones that sound nice.
 
 Michael Porter, probably the most quoted strategy professor there is, put it more formally in 1996. The essence of strategy, he wrote, is choosing what not to do. It's one of the most repeated lines in business schools and one of the most ignored in boardrooms.
+
+::interactive::
 
 Why is it so hard? Because saying no feels like losing money you haven't made yet. Every customer you decide not to serve is revenue you're walking away from, at least on paper. Every feature you refuse to build is a request from someone important you'll have to disappoint. Saying yes to everything feels safe. It even feels like ambition.
 

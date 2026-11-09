@@ -77,6 +77,8 @@ const proseFirst = active === 'essay' || active === 'about' || active === 'colop
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  {/* The homepage's largest paint is the portrait; without this it waited ~1s behind the fonts to be discovered. */}
+  {isHome && <link rel="preload" as="image" href="/face/336.png" fetchpriority="high" />}
   <link rel="preload" as="font" type="font/woff2" href={frauncesItalicUrl} crossorigin />
   <link rel="preload" as="font" type="font/woff2" href={spaceGroteskNormalUrl} crossorigin />
   <link rel="preload" as="font" type="font/woff2" href={ebGaramondItalicUrl} crossorigin />

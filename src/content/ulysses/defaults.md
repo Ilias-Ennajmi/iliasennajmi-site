@@ -6,12 +6,18 @@ date: "Apr 2026"
 order: 2
 pairsWith: "nobody-wants"
 standfirst: "Most of who you are was never chosen. It came pre-installed, and nobody ever asked you to check the settings."
+interactive: "defaults"
+effects: ["defaults"]
+lines:
+  - "A preference you've never questioned isn't really a preference. It's an inheritance."
 ---
 Ask someone why they bank where they bank. They'll give you a reason. Good rates, the app is fine, the branch is close. It'll sound completely reasonable. It was also made up about four seconds ago.
 
 The real answer is usually that their parents banked there. Or it was the one with a desk at their university. Or it was the first one they tried, and they never tried a second. Nobody chose it. It was the setting they were handed, and changing a setting needs a reason, while keeping one needs nothing at all.
 
 In marketing we have a boring word for this. The default. And if there's one thing everybody in the industry agrees on, from the people who design cereal boxes to the people who design pension plans, it's that the default almost always wins.
+
+::interactive::
 
 The most famous example is organ donation. In the early 2000s, two researchers, Eric Johnson and Daniel Goldstein, compared consent rates across Europe. In countries where you had to tick a box to become a donor, rates ran from about 4% to 28%. In countries where you were a donor unless you ticked a box to say no, every single one was above 85%, and most were close to 100%.
 

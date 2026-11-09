@@ -7,6 +7,11 @@ order: 6
 pairsWith: "first-number"
 startHereOrder: 3
 standfirst: "Economics built a lot of its models around one guy. He's calm, consistent and perfectly informed. He also doesn't exist."
+interactive: "framing"
+effects: ["loss-aversion", "framing"]
+lines:
+  - "That's fine, right up until the map tells you there's no river, and you're standing in the river."
+  - "So in a strange way, every business that makes real money from real people is a bet against him. And they mostly win."
 ---
 There's a guy at the center of a lot of economics. You've probably never been introduced, but you've been living in his world for a while.
 
@@ -19,6 +24,8 @@ To be fair to economists, most of them know he isn't real. He's a simplification
 The person who did the most damage to his reputation was a psychologist. Daniel Kahneman, working with Amos Tversky, spent decades running simple experiments that kept producing the same inconvenient result. People aren't irrational, exactly. They're rational about different things than the model expected.
 
 The best known is loss aversion. Losing €100 hurts more than winning €100 feels good. Not a little more. Roughly twice as much, in most of the experiments. Offer people a coin flip where tails costs them €100, and most won't take it unless heads pays somewhere around €200. On paper, anything above €100 is a good bet. In real life, almost nobody takes it at €120. (There's a version of this in [the Lab](/lab/#exp-loss) if you want to find your own number.)
+
+::interactive::
 
 Then there's framing. Tell people an operation has a 90% survival rate and most will go ahead with it. Tell them it has a 10% mortality rate and a lot of them won't. Same operation. Same odds. Same surgeon. The only thing that changed was the sentence.
 

@@ -8,6 +8,11 @@ pairsWith: "rational"
 startHereOrder: 4
 interactive: "anchor"
 standfirst: "The first price you hear decides what every price after it feels like. Anyone who has bargained in a souk already knows this."
+effects: ["anchoring"]
+lines:
+  - "He didn't just make an offer. He handed you the ruler."
+  - "The anchor doesn't feel like an anchor. It feels like your own judgment."
+  - "A discount is a confession about the first price."
 ---
 If you've ever bought anything in a souk, you already know how this works.
 

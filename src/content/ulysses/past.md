@@ -5,8 +5,10 @@ tag: "On Memory"
 date: "Mar 2026"
 order: 3
 pairsWith: "retention"
-draft: true
 standfirst: "Memory isn't a recording. It's a story you keep editing so you can keep living with yourself."
+lines:
+  - "So the past isn't a place you visit. It's a draft."
+  - "The photo keeps the one moment everyone was smiling. Nobody photographs the queue."
 ---
 Think of a big decision you made years ago that turned out well. Moving somewhere. Leaving a job. Ending something, or starting something.
 

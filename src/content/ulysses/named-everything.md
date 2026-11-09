@@ -7,6 +7,10 @@ order: 0
 startHereOrder: 1
 substackUrl: "https://iliasennajmi.substack.com/p/we-named-everything-and-fixed-nothing"
 standfirst: "Twenty years ago, nobody had their boundaries violated. Then the carousels showed up."
+effects: ["framing"]
+lines:
+  - "There's a strange thing that happens when you give discomfort a name and a depth it didn't ask for. It stops being weather and starts being climate."
+  - "Or maybe the map made the territory."
 ---
 I'm not a psychologist. Not a therapist, not a researcher, not someone with letters after their name. I work in marketing, which means I spend a lot of time thinking about why people feel what they feel and do what they do. Every once in a while that bleeds into something more personal. Call it an occupational side effect.
 

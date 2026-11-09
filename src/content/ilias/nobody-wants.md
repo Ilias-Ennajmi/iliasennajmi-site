@@ -6,6 +6,11 @@ date: "Feb 2026"
 order: 4
 pairsWith: "defaults"
 standfirst: "People don't buy the thing. They buy the version of themselves they think comes with it."
+interactive: "framing"
+effects: ["framing"]
+lines:
+  - "Nobody wants the hole either. They want the shelf."
+  - "They just matter as proof, not as the pitch."
 ---
 There's a line every marketing student hears in their first month. "People don't want a quarter-inch drill. They want a quarter-inch hole."
 
@@ -18,6 +23,8 @@ Nobody wants the hole either. They want the shelf. And they don't really want th
 I think about this every time a meeting starts with a list of features.
 
 Features are easy to talk about. They're concrete, they're measurable, they fit nicely on a slide. Bigger battery, faster chip, 30% lighter. And they persuade far less than we'd like them to, because a spec sheet answers a question the buyer isn't really asking.
+
+::interactive::
 
 They're not comparing gigabytes. They're checking whether owning the thing makes them feel a bit more like the person they picture when they picture themselves on a good day.
 

@@ -5,8 +5,12 @@ tag: "On Willpower"
 date: "Feb 2026"
 order: 4
 pairsWith: "friction"
-draft: true
 standfirst: "We treat self-control like character. It behaves more like money in an account, and everyone selling to you knows when you're overdrawn."
+interactive: "defaults"
+effects: ["defaults"]
+lines:
+  - "You don't need more willpower. You need fewer moments where you have to use it."
+  - "Nobody's testing your virtue at 11pm. They're checking your balance."
 ---
 At 9am, I'm a reasonable person. I eat properly, I answer emails calmly, and I definitely don't need to check my phone every four minutes.
 
@@ -41,6 +45,8 @@ There's research on this too, and it's held up better. People who score high on 
 Even the most famous willpower experiment of all points the same way. In the marshmallow test, from the late sixties onwards, Walter Mischel's team left young children alone with one marshmallow and a deal: eat it now, or wait fifteen minutes and get two. Later studies suggested the kids who waited did better in life, and the test became a symbol of self-control as a kind of inner strength. (A large follow-up in 2018 found that link much weaker than first reported, once family background was taken into account.)
 
 But look at what the kids who waited were actually doing. They weren't staring at the marshmallow and resisting. They covered their eyes. They turned around. They sang to themselves, kicked the table, played with their hair. The ones who lasted were the ones who found a way not to be in the fight at all.
+
+::interactive::
 
 The snacks never make it into the house. The phone charges in another room. The running shoes live by the door. The savings leave the account automatically on payday, before there's a chance to spend them. None of that takes willpower in the moment. It took one decision, once, on a good morning.
 

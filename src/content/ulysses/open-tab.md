@@ -6,6 +6,11 @@ date: "May 2026"
 order: 1
 pairsWith: "attention-rent"
 standfirst: "More options were supposed to feel like freedom. Mostly they feel like forty tabs you're scared to close."
+interactive: "defaults"
+effects: ["defaults"]
+lines:
+  - "It isn't a decision. It's a decision you've put in storage."
+  - "Close a tab. Not the important one. Any one."
 ---
 Count your tabs. Not the ones you're using. The other ones.
 
@@ -38,6 +43,8 @@ In one study that followed graduating students through their job hunt, the maxim
 The open tab is a maximizer's natural habitat. As long as it's open, the better option might still be out there. Closing it means settling, and settling feels like losing, even when what you settled on was perfectly good.
 
 Here's the part that's awkward to say from inside marketing. A lot of the industry runs on that hum. The abandoned basket email. The "still thinking about it?" ad that follows you around the internet for a week. The wishlist, which is really a tab you're allowed to keep forever. Nobody needs you to decide. They just need you to not quite leave.
+
+::interactive::
 
 And whatever you don't decide gets decided for you. The subscription renews. The next episode plays. The version of you from three weeks ago, the one who couldn't be bothered, gets the final say.
 

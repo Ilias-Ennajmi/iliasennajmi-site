@@ -1,0 +1,159 @@
+---
+// One page per effect: what it is, the classic study, an experiment to run
+// on yourself, where you'll meet it, and every essay and specimen on the
+// site that touches it. Built for the reader who searched "decoy effect"
+// and for the one who just finished an essay and wants the mechanism.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LabWidget from '../../components/LabWidget.astro';
+import { EFFECTS, type Effect } from '../../lib/effects';
+import { getPublishedCollection } from '../../lib/essays';
+import '../../styles/effects.css';
+
+export function getStaticPaths() {
+  return EFFECTS.map((effect, i) => ({ params: { slug: effect.slug }, props: { effect, i } }));
+}
+
+const { effect, i } = Astro.props as { effect: Effect; i: number };
+const prev = EFFECTS[(i - 1 + EFFECTS.length) % EFFECTS.length];
+const next = EFFECTS[(i + 1) % EFFECTS.length];
+
+const essays = [
+  ...(await getPublishedCollection('ulysses')).map((e) => ({ e, strand: 'Ulysses', accent: 'var(--tide)' })),
+  ...(await getPublishedCollection('ilias')).map((e) => ({ e, strand: 'Ilias', accent: 'var(--ember)' })),
+].filter(({ e }) => e.data.effects.includes(effect.slug));
+
+const url = new URL(`/effects/${effect.slug}/`, Astro.site).toString();
+const setUrl = new URL('/effects/', Astro.site).toString();
+const description = `${effect.short} What it is, the classic study, where you'll meet it, and an experiment to try it on yourself.`;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'DefinedTerm',
+      '@id': `${url}#term`,
+      name: effect.name,
+      ...(effect.aka ? { alternateName: effect.aka.split(', ') } : {}),
+      description: effect.short,
+      url,
+      inDefinedTermSet: { '@type': 'DefinedTermSet', name: 'The effects', url: setUrl },
+    },
+    {
+      '@type': 'Article',
+      headline: `${effect.name}: what it is and how it gets used on you`,
+      description,
+      about: { '@id': `${url}#term` },
+      author: { '@type': 'Person', name: 'Ilias Ennajmi', url: new URL('/about/', Astro.site).toString() },
+      mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+      image: new URL(`/og/effect-${effect.slug}.png`, Astro.site).toString(),
+      inLanguage: 'en',
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: new URL('/', Astro.site).toString() },
+        { '@type': 'ListItem', position: 2, name: 'The effects', item: setUrl },
+        { '@type': 'ListItem', position: 3, name: effect.name, item: url },
+      ],
+    },
+  ],
+};
+const n = (k: number) => String(k + 1).padStart(2, '0');
+---
+<BaseLayout
+  title={`${effect.name}: what it is, a classic study and a live experiment · Ilias Ennajmi`}
+  description={description}
+  active="lab"
+  ogImage={`/og/effect-${effect.slug}.png`}
+  jsonLd={jsonLd}
+  siteFx
+>
+<main id="main-content" style="--acc:var(--ember);">
+  <header data-cursor-light class="fx-head">
+    <div class="fx-head-bg" aria-hidden="true"></div>
+    <div class="fx-head-inner">
+      <nav aria-label="Breadcrumb" class="fx-crumbs">
+        <span class="fx-rule" aria-hidden="true"></span>
+        <a href="/effects/">The effects</a>
+        <span aria-hidden="true">·</span>
+        <span>{n(i)} / {n(EFFECTS.length - 1)}</span>
+      </nav>
+      <div class="fx-title-row">
+        <h1 class="fx-title">{effect.name}<span class="fx-dot">.</span></h1>
+        <img src={`/illus/lab-${effect.lab}-280.png`} alt="" width="140" height="140" class="illus fx-art" fetchpriority="high" decoding="async" />
+      </div>
+      {effect.aka && <p class="fx-aka">Also called {effect.aka}</p>}
+      <p class="fx-lead">{effect.short}</p>
+    </div>
+  </header>
+
+  <div class="fx-body">
+    <section aria-labelledby="fx-what">
+      <h2 id="fx-what" class="fx-h"><span class="fx-d" aria-hidden="true"></span>What it is</h2>
+      {effect.what.map((p) => <p class="fx-p">{p}</p>)}
+    </section>
+
+    <LabWidget id={effect.lab} linkEffect={false} />
+
+    <section aria-labelledby="fx-study">
+      <h2 id="fx-study" class="fx-h"><span class="fx-d" aria-hidden="true"></span>The classic study</h2>
+      <figure class="fx-study">
+        <p>{effect.study.text}</p>
+        <figcaption>{effect.study.cite}</figcaption>
+      </figure>
+    </section>
+
+    <section aria-labelledby="fx-seen">
+      <h2 id="fx-seen" class="fx-h"><span class="fx-d" aria-hidden="true"></span>Where you’ll meet it this week</h2>
+      <ul class="fx-list">
+        {effect.seen.map((s) => <li>{s}</li>)}
+      </ul>
+    </section>
+
+    <div class="fx-pair">
+      <section class="fx-card" aria-labelledby="fx-profits">
+        <h2 id="fx-profits" class="fx-card-h">Who profits</h2>
+        <p>{effect.profits}</p>
+      </section>
+      <section class="fx-card" aria-labelledby="fx-resist">
+        <h2 id="fx-resist" class="fx-card-h">How not to fall for it</h2>
+        <p>{effect.resist}</p>
+      </section>
+    </div>
+
+    {(essays.length > 0 || effect.specimens.length > 0) && (
+      <section aria-labelledby="fx-more">
+        <h2 id="fx-more" class="fx-h"><span class="fx-d" aria-hidden="true"></span>Keep going</h2>
+        <ul class="fx-more">
+          {essays.map(({ e, strand, accent }) => (
+            <li>
+              <a href={`/essays/${e.data.id}/`} class="fx-more-link charge">
+                <span class="fx-more-kind" style={`color:${accent};`}>Essay · {strand}</span>
+                <span class="fx-more-title">{e.data.title}</span>
+              </a>
+            </li>
+          ))}
+          {effect.specimens.map((sp) => (
+            <li>
+              <a href={`/specimens/#${sp.id}`} class="fx-more-link charge">
+                <span class="fx-more-kind">Specimen</span>
+                <span class="fx-more-title">{sp.name}</span>
+              </a>
+            </li>
+          ))}
+          <li>
+            <a href={`/lab/#exp-${effect.lab}`} class="fx-more-link charge">
+              <span class="fx-more-kind">The Lab</span>
+              <span class="fx-more-title">All six experiments, and your case file</span>
+            </a>
+          </li>
+        </ul>
+      </section>
+    )}
+
+    <nav class="fx-pager" aria-label="Other effects">
+      <a href={`/effects/${prev.slug}/`} class="charge"><span>← Previous</span>{prev.name}</a>
+      <a href={`/effects/${next.slug}/`} class="charge fx-pager-next"><span>Next →</span>{next.name}</a>
+    </nav>
+  </div>
+</main>
+</BaseLayout>

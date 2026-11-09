@@ -7,6 +7,12 @@ order: 3
 pairsWith: "open-tab"
 startHereOrder: 2
 standfirst: "Every platform is cheap until you depend on it. Then the rent goes up, and it only goes one way."
+interactive: "free"
+effects: ["zero-price"]
+lines:
+  - "The platform was never your audience. It was the road between you and them."
+  - "If a single company can switch off your business by changing a setting, you were never the owner. You were a tenant."
+  - "Spend the rented attention buying your way out of renting."
 ---
 Back in 1971, long before anyone had a phone in their pocket, the economist Herbert Simon wrote something that now reads like a prophecy. A wealth of information, he said, creates a poverty of attention.
 
@@ -17,6 +23,8 @@ Today attention is the thing everybody is fighting over. Brands, creators, news 
 You can't. You rent it. The lease is short, and the landlord raises the rent right after you've moved all your stuff in.
 
 Every platform goes through the same cycle. At the start, it's cheap, sometimes free, because it needs you more than you need it. It wants brands, creators, content, anything that will make people show up. So it's generous. You post something and people actually see it. The reach feels like a gift.
+
+::interactive::
 
 Then the platform fills up. Everyone arrives. The feed gets crowded, and the algorithm starts deciding who gets seen. The reach you used to get for nothing now comes with a price tag. And the price only goes one way.
 

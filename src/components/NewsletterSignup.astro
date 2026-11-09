@@ -3,7 +3,11 @@ interface Props {
   compact?: boolean;
 }
 const { compact = false } = Astro.props;
+import { getPublishedCollection } from '../lib/essays';
 const redirectUrl = new URL('/thanks/', Astro.site).toString();
+// "See what you'd get" points at the newest essay across both strands.
+const all = [...(await getPublishedCollection('ulysses')), ...(await getPublishedCollection('ilias'))];
+const latest = all.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime() || a.data.order - b.data.order)[0];
 ---
 <section class="no-print" style={`border-top:1px solid var(--coal-line);background:var(--coal-soft);${compact ? '' : ''}`}>
   <div data-reveal style="position:relative;max-width:760px;margin:0 auto;padding:clamp(2.6rem,5vw,4rem) clamp(22px,6vw,64px);">
@@ -13,8 +17,11 @@ const redirectUrl = new URL('/thanks/', Astro.site).toString();
       The occasional letter
     </div>
     <div style="font-family:var(--display);font-weight:500;font-size:clamp(1.5rem,3vw,2.2rem);line-height:1.1;letter-spacing:-0.01em;text-wrap:balance;">New essays, straight to your inbox.</div>
-    <p style="font-family:var(--body);font-weight:300;font-style:italic;color:var(--ash);margin:0.7rem 0 0;font-size:1.02rem;line-height:1.5;text-wrap:pretty;">No schedule and no &ldquo;quick favor&rdquo; emails. Just the essays, when they're done.</p>
-    <p style="font-family:var(--mono);font-size:var(--fs-sm);letter-spacing:0.06em;color:var(--ash);margin:0.6rem 0 0;">You won't hear from me unless there's something new to read.</p>
+    <ul class="nl-promise">
+      <li><b>One email per new essay.</b> Nothing in between: no roundups, no &ldquo;quick favor&rdquo; emails.</li>
+      <li><b>Your address is used for that and nothing else.</b> Never sold, never shared.</li>
+    </ul>
+    {latest && <p class="nl-sample">See what you&rsquo;d get: <a href={`/essays/${latest.data.id}/`} class="tap m-link">{latest.data.title}</a></p>}
 
     <form method="POST" action="https://api.web3forms.com/submit" class="nl-form" style="display:flex;flex-wrap:wrap;gap:12px;margin-top:1.6rem;">
       <input type="hidden" name="access_key" value="481caace-3748-4a49-9b59-4126cb718b94" />
@@ -32,6 +39,11 @@ const redirectUrl = new URL('/thanks/', Astro.site).toString();
 <style>
   .nl-btn:hover { background: var(--ember); border-color: var(--ember); color: var(--paper-hi); }
   .nl-form input:focus-visible { outline: 2px solid var(--ember); }
+  .nl-promise { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: 8px; max-width: 54ch; }
+  .nl-promise li { position: relative; padding-left: 20px; font-family: var(--body); font-size: 1.04rem; line-height: 1.45; color: var(--ash); text-wrap: pretty; }
+  .nl-promise li::before { content: ''; position: absolute; left: 2px; top: 0.6em; width: 6px; height: 6px; background: var(--ember); transform: rotate(45deg); }
+  .nl-promise b { font-weight: 600; color: var(--bone); }
+  .nl-sample { margin: 0.9rem 0 0; font-family: var(--body); font-style: italic; font-size: 1rem; color: var(--ash); }
 </style>
 
 <!--

@@ -1,0 +1,49 @@
+---
+// Any of the six Lab experiments by id, for use outside the Lab: inside an
+// essay at its ::interactive:: marker, and on each effect's page. The
+// anchoring demo carries its own "Try it" header; the others get the same
+// one here. Results land in the reader's Lab case file either way.
+import InteractiveAnchor from './InteractiveAnchor.astro';
+import Decoy from './lab/Decoy.astro';
+import Framing from './lab/Framing.astro';
+import LossAversion from './lab/LossAversion.astro';
+import Defaults from './lab/Defaults.astro';
+import ZeroPrice from './lab/ZeroPrice.astro';
+import { effectByLab } from '../lib/effects';
+import '../styles/lab.css';
+
+interface Props {
+  id: 'anchor' | 'decoy' | 'framing' | 'loss' | 'defaults' | 'free';
+  /** Link the header to the effect's page (off on the effect page itself). */
+  linkEffect?: boolean;
+}
+const { id, linkEffect = true } = Astro.props;
+const effect = effectByLab(id);
+---
+{id === 'anchor' ? (
+  <InteractiveAnchor />
+) : (
+  <aside class="lab-embed no-print" aria-label={`Interactive: ${effect?.name ?? 'experiment'}`}>
+    <div class="lab-embed-kicker">
+      <span class="lab-embed-diamond" aria-hidden="true"></span>
+      Try it on yourself
+      {linkEffect && effect && <a href={`/effects/${effect.slug}/`} class="lab-embed-link">{effect.name} →</a>}
+    </div>
+    {id === 'decoy' && <Decoy />}
+    {id === 'framing' && <Framing />}
+    {id === 'loss' && <LossAversion />}
+    {id === 'defaults' && <Defaults />}
+    {id === 'free' && <ZeroPrice />}
+  </aside>
+)}
+
+<style is:global>
+  .lab-embed { margin: clamp(2.4rem, 5vw, 3.6rem) 0; }
+  .lab-embed-kicker {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-bottom: 0.9rem;
+    font-family: var(--mono); font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ash);
+  }
+  .lab-embed-diamond { width: 7px; height: 7px; background: var(--acc, var(--ember)); transform: rotate(45deg); flex: none; }
+  .lab-embed-link { margin-left: auto; display: inline-flex; align-items: center; min-height: 32px; color: var(--acc, var(--ember)); text-decoration: none; letter-spacing: 0.12em; }
+  .lab-embed-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+</style>

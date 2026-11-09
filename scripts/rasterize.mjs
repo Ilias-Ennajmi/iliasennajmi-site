@@ -14,10 +14,10 @@ const out = (p) => path.join('public', p);
 const jobs = [];
 
 // essay objects: thumb rows (46px), start-here (110px), lead figure (170px), essay header (250px), lab instruments (140px)
-const sizes = { 92: 'thumb', 220: 'start', 340: 'lead', 500: 'essay', 280: 'lab' };
+const sizes = { 92: 'thumb', 144: 'lab card', 220: 'start', 340: 'lead', 500: 'essay', 280: 'lab' };
 for (const f of fs.readdirSync('src/assets/illus').filter((f) => f.endsWith('.svg'))) {
   const id = f.replace(/\.svg$/, '');
-  const widths = id.startsWith('lab-') ? [280] : id.startsWith('sp-') ? [360] : ['manicule', 'envelope', 'register'].includes(id) ? [120, 240] : [92, 220, 340, 500];
+  const widths = id.startsWith('lab-') ? [144, 280] : id.startsWith('sp-') ? [92, 360] : ['manicule', 'envelope', 'register'].includes(id) ? [120, 240] : [92, 220, 340, 500];
   for (const w of widths) jobs.push({ src: path.join('src/assets/illus', f), dest: out(`illus/${id}-${w}.png`), width: w });
 }
 // the portrait: nav stamp (26px), byline (34px), lab observer (96px), hero (168px)

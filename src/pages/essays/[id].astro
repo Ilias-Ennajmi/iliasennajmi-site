@@ -5,7 +5,8 @@ import NewsletterSignup from '../../components/NewsletterSignup.astro';
 import WhoProfits from '../../components/WhoProfits.astro';
 import Face from '../../components/Face.astro';
 import Illustration from '../../components/Illustration.astro';
-import InteractiveAnchor from '../../components/InteractiveAnchor.astro';
+import LabWidget from '../../components/LabWidget.astro';
+import { effectBySlug } from '../../lib/effects';
 import { getPublishedCollection, readMinutesOf, readTimeOf, getPairedEssay } from '../../lib/essays';
 import { wordCount } from '../../lib/readTime';
 import { shareLinks } from '../../lib/site';
@@ -80,6 +81,11 @@ const article = {
 const jsonLd = { '@context': 'https://schema.org', '@graph': [article, breadcrumbs] };
 const citation = `Ennajmi, Ilias. "${entry.data.title}." Ilias Ennajmi, ${entry.data.date}. ${canonicalUrl}.`;
 const share = shareLinks(canonicalUrl, entry.data.title);
+// The effects this essay leans on, each with its page and Lab experiment.
+// Only lines that really are in the essay, word for word (curly or straight quotes).
+const norm = (t: string) => t.replace(/[\u2018\u2019]/g, "'").replace(/[*_`]/g, '');
+const lines = entry.data.lines.filter((l) => norm(entry.body ?? '').includes(norm(l)));
+const effects = entry.data.effects.map((slug) => effectBySlug(slug)).filter((e) => !!e);
 
 // Author-set only (see content.config.ts) -- absent means no tag, same as
 // every other nullable-field convention on this site.
@@ -101,7 +107,7 @@ const epistemicLabel: Record<string, string> = {
   fxStrand={strand}
   fxProgress="article"
 >
-<div style={`--acc:${accentVar};`}>
+<div style={`--acc:${accentVar};`} data-essay-share data-title={entry.data.title} data-strand={strandLabel} data-url={canonicalUrl}>
   <div data-reading-meter data-minutes={readMinutes} data-xray="Progress: unfinished things itch (Zeigarnik)" style="position:fixed;left:clamp(14px,2vw,26px);bottom:clamp(14px,2.4vh,24px);z-index:7200;opacity:0;transition:opacity .5s ease;pointer-events:none;font-family:var(--mono);font-size:var(--fs-2xs);letter-spacing:0.14em;text-transform:uppercase;color:var(--acc);display:flex;align-items:center;gap:9px;">
     <span style="width:5px;height:5px;background:var(--acc);transform:rotate(45deg);"></span>
     <span data-meter-label>—</span>
@@ -115,6 +121,9 @@ const epistemicLabel: Record<string, string> = {
       </button>
       <button type="button" id="highlight-note-btn" style="background:none;color:var(--coal);font-family:var(--mono);font-size:var(--fs-sm);font-weight:500;letter-spacing:0.12em;text-transform:uppercase;border:none;padding:9px 16px;cursor:pointer;">
         Note
+      </button>
+      <button type="button" id="highlight-share-btn" style="background:none;color:var(--coal);font-family:var(--mono);font-size:var(--fs-sm);font-weight:500;letter-spacing:0.12em;text-transform:uppercase;border:none;border-left:1px solid color-mix(in srgb, var(--coal) 20%, transparent);padding:9px 16px;cursor:pointer;">
+        Share
       </button>
     </div>
     <div id="note-composer" style="display:none;background:var(--bone);padding:10px;width:240px;">
@@ -206,7 +215,7 @@ const epistemicLabel: Record<string, string> = {
       {/* Rendered here, then moved by JS to wherever ::interactive:: sits in the
           body. Server-rendered so there's no layout shift, and if the swap never
           runs the widget simply stays at the end rather than vanishing. */}
-      {entry.data.interactive === 'anchor' && <div data-interactive-source hidden><InteractiveAnchor /></div>}
+      {entry.data.interactive && <div data-interactive-source hidden><LabWidget id={entry.data.interactive} /></div>}
 
       <div data-reveal style="display:flex;align-items:center;gap:14px;margin-top:clamp(2.4rem,4vw,3.4rem);font-family:var(--mono);font-size:var(--fs-sm);letter-spacing:0.18em;text-transform:uppercase;color:var(--ash);">
         <span style="width:8px;height:8px;background:var(--acc);transform:rotate(45deg);display:inline-block;"></span>
@@ -223,6 +232,44 @@ const epistemicLabel: Record<string, string> = {
       <p data-pace-reveal class="no-print" style="margin:0.7rem 0 0;font-family:var(--body);font-style:italic;font-size:0.92rem;color:var(--ash);opacity:0;transition:opacity .6s ease;"></p>
       <WhoProfits />
     </article>
+
+    {lines.length > 0 && (
+      <section class="no-print cv steal" aria-labelledby="steal-title">
+        <div class="gd-inner">
+          <h2 id="steal-title" class="gd-kicker"><span class="gd-diamond" aria-hidden="true"></span>Lines worth stealing</h2>
+          <ul class="steal-list">
+            {lines.map((l) => (
+              <li class="steal-item">
+                <blockquote class="steal-q">{l}</blockquote>
+                <button type="button" class="steal-btn" data-share-line={l}>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V4M7.5 8.5 12 4l4.5 4.5M5 13v6h14v-6" /></svg>
+                  Share as a card
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )}
+
+    {effects.length > 0 && (
+      <section class="no-print cv go-deeper" aria-labelledby="go-deeper-title">
+        <div class="gd-inner">
+          <h2 id="go-deeper-title" class="gd-kicker"><span class="gd-diamond" aria-hidden="true"></span>The effect behind this essay</h2>
+          <div class="gd-grid">
+            {effects.map((fx) => (
+              <a href={`/effects/${fx.slug}/`} class="gd-card charge">
+                <img src={`/illus/lab-${fx.lab}-144.png`} alt="" width="64" height="64" loading="lazy" decoding="async" class="illus gd-art" />
+                <span class="gd-name">{fx.name}</span>
+                <span class="gd-short">{fx.short}</span>
+                <span class="gd-cta">The study, the examples, how to resist it →</span>
+              </a>
+            ))}
+          </div>
+          <a href="/lab/" class="gd-lab charge">Run all six experiments in the Lab →</a>
+        </div>
+      </section>
+    )}
 
     {paired && (
       <section class="no-print cv" style="border-top:1px solid var(--coal-line);background:var(--coal-soft);">
@@ -311,6 +358,30 @@ const epistemicLabel: Record<string, string> = {
   .share-link { transition: color .25s; }
   .share-link:hover { color: var(--bone); }
   .prevnext-link:hover { background: var(--coal-soft); }
+  .go-deeper, .steal { border-top: 1px solid var(--coal-line); }
+  .steal-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .steal-item { padding: clamp(18px, 3vw, 24px); border-left: 3px solid var(--acc); background: var(--coal-soft); }
+  .steal-q { margin: 0; font-family: var(--display); font-style: italic; font-weight: 500; font-size: clamp(1.3rem, 2.6vw, 1.7rem); line-height: 1.3; letter-spacing: -0.005em; color: var(--bone); text-wrap: pretty; }
+  .steal-q::before { content: '“'; color: var(--acc); }
+  .steal-q::after { content: '”'; color: var(--acc); }
+  .steal-btn { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-top: 10px; padding: 0 14px 0 0; background: none; border: 0; cursor: pointer; font-family: var(--mono); font-size: var(--fs-2xs); font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--acc); -webkit-tap-highlight-color: transparent; }
+  .steal-btn svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .steal-btn:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .steal-btn[disabled] { opacity: .6; }
+  #highlight-share-btn:hover { background: color-mix(in srgb, var(--coal) 6%, transparent); }
+  .gd-inner { max-width: 760px; margin: 0 auto; padding: clamp(2.6rem, 5vw, 4rem) clamp(22px, 6vw, 64px); }
+  .gd-kicker { display: flex; align-items: center; gap: 10px; margin: 0 0 1.2rem; font-family: var(--mono); font-size: var(--fs-sm); font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ash); }
+  .gd-diamond { width: 7px; height: 7px; transform: rotate(45deg); background: var(--acc); flex: none; }
+  .gd-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+  .gd-card { display: flex; flex-direction: column; gap: 8px; padding: clamp(18px, 3vw, 24px); border: 1px solid var(--coal-line); background: var(--coal-soft); text-decoration: none; color: var(--bone); transition: border-color .25s, transform .2s; }
+  .gd-card:hover { border-color: var(--acc); }
+  .gd-card:active { transform: scale(.99); }
+  .gd-art { width: 64px; height: 64px; object-fit: contain; object-position: left center; margin-bottom: 4px; }
+  .gd-name { font-family: var(--display); font-weight: 500; font-size: clamp(1.4rem, 2.6vw, 1.8rem); line-height: 1.1; }
+  .gd-short { font-family: var(--body); font-style: italic; font-size: 1.05rem; line-height: 1.45; color: var(--ash); text-wrap: pretty; }
+  .gd-cta { margin-top: 4px; font-family: var(--mono); font-size: var(--fs-2xs); letter-spacing: 0.14em; text-transform: uppercase; color: var(--acc); }
+  .gd-lab { display: inline-flex; align-items: center; min-height: 44px; margin-top: 1rem; font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: 0.16em; text-transform: uppercase; color: var(--bone); text-decoration: none; }
+  .gd-lab:hover { color: var(--acc); }
   .paired-link[data-accent="tide"]:hover .paired-title { color: var(--tide); }
   .paired-link[data-accent="ember"]:hover .paired-title { color: var(--ember); }
 </style>
@@ -831,4 +902,41 @@ const epistemicLabel: Record<string, string> = {
         .forEach((fn) => { if (fn) fn(); });
     });
   });
+</script>
+
+<script>
+  // Quote cards: the "Lines worth stealing" buttons, and Share in the
+  // text-selection popover. Separate from the page script above because
+  // that one is inline (define:vars) and can't import modules.
+  import { quoteCard, shareImage, EMBER, TIDE } from '../../lib/sharecard';
+
+  function initQuoteShare() {
+    const meta = document.querySelector<HTMLElement>('[data-essay-share]');
+    if (!meta) return;
+    const { title = '', strand = '', url = location.href } = meta.dataset;
+    const accent = strand === 'Ulysses' ? TIDE : EMBER;
+    const share = async (quote: string, btn: HTMLElement) => {
+      if (!quote) return;
+      const label = btn.innerHTML;
+      btn.setAttribute('disabled', '');
+      try {
+        const blob = await quoteCard({ quote, title, strand, accent, host: location.host.replace(/^www\./, '') });
+        const how = await shareImage(blob, 'ilias-ennajmi-quote.png', `“${quote}” — Ilias Ennajmi, ${title}`, url);
+        if (how === 'downloaded') btn.textContent = 'Saved to your device';
+      } catch {
+        btn.textContent = 'Couldn’t draw it';
+      }
+      window.setTimeout(() => { btn.innerHTML = label; btn.removeAttribute('disabled'); }, 2000);
+    };
+    const onClick = (e: MouseEvent) => {
+      const t = e.target as HTMLElement;
+      const line = t.closest<HTMLElement>('[data-share-line]');
+      if (line) { share(line.dataset.shareLine || '', line); return; }
+      const pop = t.closest<HTMLElement>('#highlight-share-btn');
+      if (pop) share(document.getElementById('highlight-copy-btn')?.dataset.quote || '', pop);
+    };
+    document.addEventListener('click', onClick);
+    (window as unknown as { __life?: { onLeave: (fn: () => void) => void } }).__life?.onLeave(() => document.removeEventListener('click', onClick));
+  }
+  document.addEventListener('site:ready', initQuoteShare);
 </script>

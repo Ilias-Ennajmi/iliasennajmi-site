@@ -5,8 +5,11 @@ tag: "On Growth"
 date: "Jan 2026"
 order: 5
 pairsWith: "past"
-draft: true
 standfirst: "Growth gets the headlines. The people who stay pay the bills, and nobody ever puts them in the press release."
+effects: ["zero-price"]
+lines:
+  - "Acquisition is a loan. Retention is income. Mixing the two up is how confident companies go broke."
+  - "A lot of growth stories are really churn stories. They just got told before the churn showed up."
 ---
 In 2018, a company called MoviePass had one of the best growth stories around. For $9.95 a month, you could see a film in a cinema every single day. People poured in. It went from around twenty thousand subscribers to more than three million in less than a year.
 

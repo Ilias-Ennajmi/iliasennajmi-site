@@ -63,6 +63,8 @@ const anchorEssay = essay('first-number');
           <dd>A deadline turns "should I?" into "I'll lose it if I don't." People who are hurrying don't compare prices, which is the whole idea.</dd>
           <dt>The rules</dt>
           <dd>In the EU, falsely claiming an offer is only available for a very limited time is on the list of practices banned outright.</dd>
+          <dt>The effect</dt>
+          <dd><a href="/effects/loss-aversion/">Loss aversion, explained</a>, with an experiment to try it on yourself.</dd>
           <dt>Who profits</dt>
           <dd class="sp-profits">The seller. The only real deadline was you closing the tab.</dd>
         </dl>
@@ -135,6 +137,8 @@ const anchorEssay = essay('first-number');
           <dd>The "no" is written so that clicking it means insulting yourself. Try saying no to this one. It asks twice.</dd>
           <dt>Why it works on you</dt>
           <dd>Nobody wants to confirm they're the kind of person who wastes money. The offer is weak, so the button borrows your self-image to do the selling.</dd>
+          <dt>The effect</dt>
+          <dd><a href="/effects/framing/">Framing, explained</a>, with an experiment to try it on yourself.</dd>
           <dt>Who profits</dt>
           <dd class="sp-profits">Whoever reports on email sign-ups this quarter. The list grows. Whether anyone wanted to be on it is a different number, and nobody puts that one in the deck.</dd>
         </dl>
@@ -165,6 +169,8 @@ const anchorEssay = essay('first-number');
           <dd>Defaults. Unticking takes noticing, and your attention is on the thing you came to buy.{defaultsEssay && <> More in <a href={defaultsEssay.href}>{defaultsEssay.title}</a>.</>}</dd>
           <dt>The rules</dt>
           <dd>Pre-ticked boxes for extra payments have been banned in the EU since 2014. Plenty of places never got the memo.</dd>
+          <dt>The effect</dt>
+          <dd><a href="/effects/defaults/">Defaults, explained</a>, with an experiment to try it on yourself.</dd>
           <dt>Who profits</dt>
           <dd class="sp-profits">The seller, and whoever sells them the insurance. Add-ons like this are often where the actual margin is.</dd>
         </dl>
@@ -195,6 +201,8 @@ const anchorEssay = essay('first-number');
           <dd>The first number becomes the anchor for the whole purchase.{anchorEssay && <> (<a href={anchorEssay.href}>That's this essay</a>.)</>} And every step you've already taken makes turning back feel like wasted effort.</dd>
           <dt>The rules</dt>
           <dd>In the US, a Federal Trade Commission rule against hidden fees on live-event tickets and short-term rentals took effect in 2025. The price you see first now has to include them.</dd>
+          <dt>The effect</dt>
+          <dd><a href="/effects/anchoring/">Anchoring, explained</a>, with an experiment to try it on yourself.</dd>
           <dt>Who profits</dt>
           <dd class="sp-profits">Everyone in the chain except you. The €49 was never the price.</dd>
         </dl>
@@ -255,18 +263,34 @@ const anchorEssay = essay('first-number');
           <dd>Friction, and loss aversion. Each screen shows you something you're about to lose, and each click costs a little more patience than the last.</dd>
           <dt>The rules</dt>
           <dd>In 2023 the US Federal Trade Commission sued Amazon over how hard it was to cancel Prime. According to the complaint, the cancellation flow had an internal name: Iliad. As in the very long poem about a very long war.</dd>
+          <dt>The effect</dt>
+          <dd><a href="/effects/loss-aversion/">Loss aversion, explained</a>, with an experiment to try it on yourself.</dd>
           <dt>Who profits</dt>
           <dd class="sp-profits">The retention dashboard, this quarter. The reviews, next year, go the other way.</dd>
         </dl>
       </div>
     </article>
 
-    <p style="margin:clamp(3rem,6vw,4.5rem) 0 0;font-family:var(--body);font-style:italic;font-size:clamp(1.05rem,1.9vw,1.25rem);color:var(--ash);line-height:1.55;max-width:56ch;">
-      Seen one in the wild that belongs in here? <a href="mailto:hello@iliasennajmi.com?subject=Specimen" class="charge" style="color:var(--ember);">Send it in</a>. Screenshots welcome, and I'll redraw it without the logo.
-    </p>
+    <section class="sp-submit" aria-labelledby="sp-submit-title">
+      <img src="/illus/envelope-240.png" alt="" width="96" height="96" loading="lazy" decoding="async" class="illus sp-submit-art" />
+      <h2 id="sp-submit-title" class="sp-submit-title">Spotted one in the wild?</h2>
+      <p class="sp-submit-p">The cabinet grows from what readers send in. Take a screenshot, say where you saw it, and I’ll redraw it here without the logo. No names, yours or theirs.</p>
+      <a class="sp-submit-btn charge" href="mailto:hello@iliasennajmi.com?subject=Specimen%20for%20the%20cabinet&body=Where I saw it:%0D%0A(a site, an app, a shop)%0D%0A%0D%0AWhat it did to me:%0D%0A%0D%0A(Attach a screenshot if you have one.)">Send a specimen <span aria-hidden="true">→</span></a>
+      <p class="sp-submit-fine">Opens your email app, with the questions already filled in.</p>
+    </section>
   </div>
 </main>
 </BaseLayout>
+
+<style>
+  .sp-submit { position: relative; margin: clamp(3rem, 6vw, 4.5rem) 0 0; padding: clamp(22px, 4vw, 34px); border: 1px solid var(--coal-line); background: var(--coal-soft); }
+  .sp-submit-art { position: absolute; right: clamp(14px, 3vw, 26px); top: clamp(14px, 3vw, 22px); width: clamp(64px, 12vw, 96px); height: auto; }
+  .sp-submit-title { margin: 0 clamp(70px, 14vw, 110px) 0.6rem 0; font-family: var(--display); font-weight: 500; font-size: clamp(1.6rem, 3.4vw, 2.3rem); line-height: 1.05; }
+  .sp-submit-p { margin: 0 0 1.3rem; max-width: 52ch; font-family: var(--body); font-style: italic; font-size: clamp(1.05rem, 1.9vw, 1.2rem); line-height: 1.5; color: var(--ash); }
+  .sp-submit-btn { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 24px; background: var(--bone); color: var(--coal); border-radius: 40px; text-decoration: none; font-family: var(--mono); font-size: var(--fs-sm); font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; transition: background .3s; }
+  .sp-submit-btn:hover { background: var(--ember); }
+  .sp-submit-fine { margin: 0.8rem 0 0; font-family: var(--mono); font-size: var(--fs-2xs); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ash); }
+</style>
 
 <script>
   import { life } from '../lib/lab';

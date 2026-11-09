@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { EFFECTS } from '../../lib/effects';
+import '../../styles/effects.css';
+
+const url = new URL('/effects/', Astro.site).toString();
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'DefinedTermSet',
+  name: 'The effects',
+  description: 'Six well-documented ways decisions get made for you, each with the classic study and an experiment to try on yourself.',
+  url,
+  hasDefinedTerm: EFFECTS.map((e) => ({
+    '@type': 'DefinedTerm',
+    name: e.name,
+    description: e.short,
+    url: new URL(`/effects/${e.slug}/`, Astro.site).toString(),
+  })),
+};
+---
+<BaseLayout
+  title="The effects: anchoring, decoys, framing, loss aversion, defaults and free · Ilias Ennajmi"
+  description="Six well-documented ways your decisions get made for you. Each one with a plain definition, the classic study, where you'll meet it this week, and an experiment to run on yourself."
+  active="lab"
+  jsonLd={jsonLd}
+  siteFx
+>
+<main id="main-content">
+  <header data-cursor-light class="fx-head">
+    <div class="fx-head-bg" aria-hidden="true"></div>
+    <div class="fx-head-inner">
+      <div class="fx-crumbs"><span class="fx-rule" aria-hidden="true"></span>A field guide</div>
+      <h1 class="fx-title">The effects<span class="fx-dot">.</span></h1>
+      <p class="fx-lead">Six well-documented ways your decisions get made for you. Each one has a plain definition, the study that made it famous, where you’ll meet it this week, and an experiment you can run on yourself.</p>
+    </div>
+  </header>
+
+  <div class="fxi-wrap">
+    <ol class="fxi-grid">
+      {EFFECTS.map((e, i) => (
+        <li>
+          <a href={`/effects/${e.slug}/`} class="fxi-card charge">
+            <span class="fxi-top">
+              <span class="fxi-n">{String(i + 1).padStart(2, '0')}</span>
+              <img src={`/illus/lab-${e.lab}-144.png`} alt="" width="72" height="72" loading={i < 2 ? 'eager' : 'lazy'} decoding="async" class="illus fxi-art" />
+            </span>
+            <span class="fxi-name">{e.name}</span>
+            <span class="fxi-short">{e.short}</span>
+            <span class="fxi-cta">Read it, then try it →</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+    <p class="fxi-foot">Prefer to be tricked first and read later? <a href="/lab/" class="charge m-link">Run all six in the Lab</a>, or see them in the wild in <a href="/specimens/" class="charge m-link">the specimen cabinet</a>.</p>
+  </div>
+</main>
+</BaseLayout>
+
+<style>
+  .fxi-wrap { max-width: 1080px; margin: 0 auto; padding: clamp(1rem, 3vw, 2rem) clamp(22px, 6vw, 64px) clamp(4rem, 8vw, 6rem); }
+  .fxi-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 12px; }
+  .fxi-card { height: 100%; display: flex; flex-direction: column; gap: 10px; padding: clamp(18px, 3vw, 26px); border: 1px solid var(--coal-line); background: var(--coal-soft); text-decoration: none; color: var(--bone); transition: border-color .25s, transform .2s; }
+  .fxi-card:hover { border-color: var(--ember); }
+  .fxi-card:active { transform: scale(.99); }
+  .fxi-top { display: flex; align-items: flex-end; justify-content: space-between; }
+  .fxi-n { font-family: var(--display); font-style: italic; font-weight: 500; font-size: 2.2rem; line-height: 1; color: var(--ember-vivid); }
+  .fxi-art { width: 72px; height: 72px; object-fit: contain; }
+  .fxi-name { font-family: var(--display); font-weight: 500; font-size: clamp(1.5rem, 2.6vw, 1.9rem); line-height: 1.1; }
+  .fxi-short { font-family: var(--body); font-style: italic; font-size: 1.08rem; line-height: 1.45; color: var(--ash); text-wrap: pretty; flex: 1; }
+  .fxi-cta { font-family: var(--mono); font-size: var(--fs-2xs); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ember); }
+  .fxi-foot { margin: clamp(2.6rem, 5vw, 3.6rem) 0 0; font-family: var(--body); font-style: italic; font-size: clamp(1.05rem, 1.9vw, 1.2rem); color: var(--ash); line-height: 1.55; max-width: 56ch; }
+</style>

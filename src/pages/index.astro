@@ -4,6 +4,7 @@ import ContactLinks from '../components/ContactLinks.astro';
 import HeroTitlePage from '../components/HeroTitlePage.astro';
 import NewsletterSignup from '../components/NewsletterSignup.astro';
 import SectionPath from '../components/SectionPath.astro';
+import Illustration from '../components/Illustration.astro';
 import { getPublishedCollection, getStartHerePath, readMinutesOf } from '../lib/essays';
 import { SITE } from '../lib/site';
 
@@ -28,6 +29,13 @@ for (const e of allEssays) {
   pairMap[e.data.id] = e.data.pairsWith ?? null;
 }
 const allEssayIds = allEssays.map((e) => e.data.id);
+
+// Newest first, across both strands: the first thing after the hero is
+// something to read, not a bio. (On a phone it used to be four screens down.)
+const byDate = [...allEssays].sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime() || a.data.order - b.data.order);
+const strandOf = (id: string) => (ulyssesEntries.some((e) => e.data.id === id) ? { label: 'Ulysses', acc: 'var(--tide)' } : { label: 'Ilias', acc: 'var(--ember)' });
+const [lead, ...recent] = byDate;
+const leadStrand = strandOf(lead.data.id);
 
 const shelves = [
   { label: 'My latest reads', items: [
@@ -94,6 +102,37 @@ const jsonLd = {
 
   <SectionPath />
   <HeroTitlePage />
+
+  <!-- ============ LATEST (straight after the hero) ============ -->
+  <section id="latest" class="hl-latest" aria-labelledby="hl-latest-title">
+    <div class="hl-inner">
+      <h2 id="hl-latest-title" class="hl-kicker"><span class="hl-diamond" aria-hidden="true"></span>Latest essay</h2>
+      <a href={`/essays/${lead.data.id}/`} class="hl-lead charge" style={`--acc:${leadStrand.acc};`}>
+        <Illustration id={lead.data.id} class="hl-art" size={340} />
+        <span class="hl-meta">{leadStrand.label} · {lead.data.tag} · {readMinutesOf(lead)} min</span>
+        <span class="hl-title">{lead.data.title}</span>
+        <span class="hl-stand">{lead.data.standfirst}</span>
+        <span class="hl-cta">Read it →</span>
+      </a>
+      <ul class="hl-recent">
+        {recent.slice(0, 3).map((e) => (
+          <li>
+            <a href={`/essays/${e.data.id}/`} class="hl-row charge" style={`--acc:${strandOf(e.data.id).acc};`}>
+              <Illustration id={e.data.id} class="hl-thumb" thumb />
+              <span class="hl-row-text">
+                <span class="hl-meta">{strandOf(e.data.id).label} · {e.data.tag}</span>
+                <span class="hl-row-title">{e.data.title}</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <div class="hl-more">
+        <a href="/topics/" class="charge">All {allEssays.length} essays →</a>
+        <a href="/effects/" class="charge">The effects, explained →</a>
+      </div>
+    </div>
+  </section>
 
   <!-- ============ 01 — ABOUT (grounding band) ============ -->
   <section id="about" style="position:relative;border-top:1px solid var(--coal-line);background:var(--coal-soft);">
@@ -286,6 +325,29 @@ const jsonLd = {
 </BaseLayout>
 
 <style>
+  .hl-latest { border-top: 1px solid var(--coal-line); }
+  .hl-inner { max-width: 1180px; margin: 0 auto; padding: clamp(3rem, 7vw, 6rem) clamp(22px, 6vw, 64px); display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(14px, 2vw, 22px); }
+  @media (min-width: 900px) { .hl-inner { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); align-items: start; } .hl-kicker, .hl-more { grid-column: 1 / -1; } }
+  .hl-kicker { display: flex; align-items: center; gap: 10px; margin: 0; font-family: var(--mono); font-size: var(--fs-sm); font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ash); }
+  .hl-diamond { width: 7px; height: 7px; background: var(--ember); transform: rotate(45deg); flex: none; }
+  .hl-lead { position: relative; display: flex; flex-direction: column; gap: 10px; padding: clamp(20px, 3.5vw, 34px); border: 1px solid var(--coal-line); border-left: 3px solid var(--acc); background: var(--coal-soft); text-decoration: none; color: var(--bone); transition: border-color .25s, transform .2s; }
+  .hl-lead:hover { border-color: var(--acc); }
+  .hl-lead:active, .hl-row:active { transform: scale(.99); }
+  :global(.hl-art) { width: clamp(96px, 22vw, 150px); height: auto; margin-bottom: 4px; }
+  .hl-meta { font-family: var(--mono); font-size: var(--fs-2xs); letter-spacing: 0.14em; text-transform: uppercase; color: var(--acc, var(--ash)); }
+  .hl-title { font-family: var(--display); font-weight: 500; font-size: clamp(1.9rem, 4.4vw, 3rem); line-height: 1.02; letter-spacing: -0.012em; text-wrap: balance; }
+  .hl-stand { font-family: var(--body); font-style: italic; font-size: clamp(1.08rem, 1.9vw, 1.25rem); line-height: 1.45; color: var(--ash); text-wrap: pretty; }
+  .hl-cta { margin-top: 4px; font-family: var(--mono); font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--acc); }
+  .hl-recent { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; border-top: 1px solid var(--coal-line); }
+  .hl-row { display: flex; align-items: center; gap: 14px; padding: 14px 0; min-height: 72px; border-bottom: 1px solid var(--coal-line); text-decoration: none; color: var(--bone); transition: transform .2s; }
+  .hl-row:hover .hl-row-title { color: var(--acc); }
+  :global(.hl-thumb) { width: 48px; height: 48px; object-fit: contain; flex: none; }
+  .hl-row-text { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .hl-row-title { font-family: var(--display); font-weight: 500; font-size: clamp(1.12rem, 2vw, 1.3rem); line-height: 1.2; transition: color .2s; text-wrap: balance; }
+  .hl-more { display: flex; flex-wrap: wrap; gap: 4px 24px; }
+  .hl-more a { display: inline-flex; align-items: center; min-height: 44px; font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: 0.16em; text-transform: uppercase; color: var(--ember); text-decoration: none; }
+  .hl-more a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
   .more-link:hover { gap: 16px; }
   .start-pill:hover { border-color: var(--ember); color: var(--ember); }
   .js-ulysses:hover { background: var(--coal-soft); }

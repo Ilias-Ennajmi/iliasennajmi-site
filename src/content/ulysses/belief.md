@@ -5,8 +5,10 @@ tag: "On Belief"
 date: "Jan 2026"
 order: 5
 pairsWith: "say-no"
-draft: true
 standfirst: "Being smart doesn't protect you from bad ideas. It just makes you a better lawyer for them."
+lines:
+  - "Intelligence makes you a better lawyer, not a better judge."
+  - "If every smart person you know already agrees with you, that's not proof you're right. It might just mean you've stopped looking."
 ---
 Everyone has that one friend. Smart, well read, genuinely good at their job. And there's one topic where, the moment it comes up, they turn into someone you don't recognize.
 

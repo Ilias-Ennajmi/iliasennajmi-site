@@ -5,8 +5,12 @@ tag: "On Funnels"
 date: "Apr 2026"
 order: 2
 pairsWith: "willpower"
-draft: true
 standfirst: "Signing up takes one tap. Cancelling takes a phone call during office hours. Somebody designed that."
+interactive: "defaults"
+effects: ["defaults"]
+lines:
+  - "But those customers aren't being retained. They're being held."
+  - "If a business needs a maze to keep you, the maze is telling you something about the business."
 ---
 Think about the last subscription you signed up for. How long did it take? Thirty seconds, maybe. Email, card, done. There was probably a free trial, and a big friendly button.
 
@@ -19,6 +23,8 @@ That isn't bad design. That's the design working.
 In my industry we talk about friction all the time. Friction is anything that makes an action harder. An extra step, an extra field, an extra second of thinking. Remove friction and more people do the thing. Add it and fewer do. It's one of the most reliable levers there is.
 
 Most companies pull it in only one direction. Every step between you and paying gets sanded down. Every step between you and leaving gets a bit more gravel.
+
+::interactive::
 
 A designer called Harry Brignull started collecting tricks like this in 2010 and gave them a name: dark patterns. This one he called the roach motel. Easy to get in. Hard to get out.
 
