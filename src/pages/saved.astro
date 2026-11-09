@@ -21,7 +21,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   </header>
 
   <section style="max-width:1180px;margin:0 auto;padding:0 clamp(22px,6vw,64px) clamp(3rem,6vw,4.5rem);">
-    <div id="saved-root"></div>
+    <div id="saved-root">{/* empty state in the HTML, so the page doesn't jump when the script finds nothing saved (same markup the script writes) */}<Fragment set:html={`<div style="padding:clamp(3rem,6vw,5rem) 0;text-align:center;">
+        <div aria-hidden="true" style="color:var(--coal-line);font-size:1.4rem;letter-spacing:0.4em;margin-bottom:1.4rem;">◇ ◇ ◇</div>
+        <p style="margin:0;font-family:var(--display);font-weight:500;font-size:clamp(1.4rem,3vw,2rem);color:var(--bone);">Nothing saved yet.</p>
+        <p style="margin:1rem 0 0;font-family:var(--body);font-style:italic;color:var(--ash);font-size:1.05rem;">Rented attention doesn't stick around on its own. Open any essay and press &ldquo;Save&rdquo; next to the share links.</p>
+        <div style="display:flex;gap:clamp(18px,3vw,32px);justify-content:center;margin-top:2.2rem;font-family:var(--mono);font-size:var(--fs-2xs);letter-spacing:0.2em;text-transform:uppercase;">
+          <a href="/ulysses/" style="color:var(--tide);border-bottom:1px solid var(--coal-line);padding-bottom:4px;">Ulysses</a>
+          <a href="/ilias/" style="color:var(--ember);border-bottom:1px solid var(--coal-line);padding-bottom:4px;">Ilias</a>
+        </div>
+      </div>`} /></div>
   </section>
 
   <section style="max-width:1180px;margin:0 auto;padding:0 clamp(22px,6vw,64px) clamp(5rem,9vw,7.5rem);border-top:1px solid var(--coal-line);padding-top:clamp(3rem,6vw,4.5rem);">
@@ -29,7 +37,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <span>Your reading, honestly</span>
       <span class="cc-rule" style="transform:scaleX(1);"></span>
     </div>
-    <div id="reading-log-root"></div>
+    <div id="reading-log-root"><Fragment set:html={`<div style="padding:clamp(2rem,4vw,3rem) 0;text-align:center;">
+        <p style="margin:0;font-family:var(--body);font-style:italic;color:var(--ash);font-size:1.05rem;">Nothing recorded yet. Finish an essay and it shows up here.</p>
+      </div>`} /></div>
   </section>
 </main>
 </BaseLayout>

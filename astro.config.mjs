@@ -20,7 +20,8 @@ export default defineConfig({
   // search engines back here rather than claim to be the original.
   site: process.env.SITE_URL || vercelProductionUrl || 'https://www.ennajmi.space',
   trailingSlash: 'always',
-  integrations: [sitemap(), siteCsp({ env })],
+  // /thanks/ is noindex (it's only the after-subscribe page), so it stays out of the sitemap
+  integrations: [sitemap({ filter: (page) => !page.includes('/thanks/') }), siteCsp({ env })],
   build: {
     // One global stylesheet (~5 KB gzipped). Inlining it removes a
     // render-blocking round trip, which costs ~250 ms on the high-latency
