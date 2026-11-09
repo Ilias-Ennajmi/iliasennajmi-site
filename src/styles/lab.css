@@ -215,7 +215,7 @@
 .sp-notes dt { font-family: var(--mono); font-size: var(--fs-2xs); font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ember); margin: 1.1rem 0 0.3rem; }
 .sp-notes dt:first-child { margin-top: 0; }
 .sp-notes dd { margin: 0; font-family: var(--body); font-size: clamp(1rem, 1.7vw, 1.1rem); line-height: 1.6; color: var(--bone); text-wrap: pretty; }
-.sp-notes dd a { color: var(--ember); }
+.sp-notes dd a { color: var(--ember); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 .sp-notes dd.sp-profits { font-style: italic; color: var(--ash); }
 
 @media (prefers-reduced-motion: reduce) {
