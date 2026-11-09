@@ -36,8 +36,8 @@ export const EFFECTS: Effect[] = [
     aka: 'the anchoring effect, anchoring bias',
     short: 'The first number you see becomes the ruler for every number after it, even when it has nothing to do with anything.',
     what: [
-      'Anchoring is the pull a first number has on every estimate that follows it. You adjust away from it, but almost never far enough, so the starting point quietly sets the range of what feels reasonable.',
-      'It works even when you know the number is arbitrary. The anchor doesn’t feel like an outside influence. It feels like your own judgment, which is what makes it so hard to notice.',
+      'Anchoring is the pull a first number has on every estimate that follows it. You adjust away from it, but almost never far enough, so the starting point sets the range of what feels reasonable.',
+      'It works even when you know the number is arbitrary. You experience the adjusted figure as your own judgment, so you rarely notice the pull.',
     ],
     study: {
       text: 'Amos Tversky and Daniel Kahneman spun a wheel of fortune rigged to stop at 10 or 65, then asked people what percentage of African countries were in the United Nations. People who saw 10 gave a median guess of 25%. People who saw 65 said 45%. A random number on a wheel moved their answer by twenty points.',
@@ -50,7 +50,7 @@ export const EFFECTS: Effect[] = [
       'A souk, where the seller’s first price is the whole game',
     ],
     profits: 'Whoever gets to say a number first. Sellers, negotiators, and every menu you’ve ever read.',
-    resist: 'Decide what something is worth to you before you see their number. Then their number is just information, not an instruction.',
+    resist: 'Decide what something is worth to you before you see their number. Then their number is just information.',
     specimens: [{ id: 'drip', name: 'Drip pricing' }],
   },
   {
@@ -60,8 +60,8 @@ export const EFFECTS: Effect[] = [
     aka: 'asymmetric dominance',
     short: 'Add an option nobody wants, and the option next to it suddenly looks like a bargain.',
     what: [
-      'The decoy effect happens when a third option, clearly worse than one of the others, changes which of the first two you pick. Nobody chooses the decoy. It’s there to make its neighbour look good by comparison.',
-      'It works because we rarely judge a price on its own. We judge it against whatever happens to be next to it, and the seller chose what that would be.',
+      'The decoy effect happens when a third option, clearly worse than one of the others, changes which of the first two you pick. Almost nobody picks the decoy. Its job is to make the option beside it look better.',
+      'You rarely judge a price on its own. You judge it against whatever sits next to it, and the seller picked what sits there.',
     ],
     study: {
       text: 'Dan Ariely showed 100 MIT students a real magazine subscription ad: web only for $59, print only for $125, print and web for $125. With the print-only decoy on the page, 84 picked the bundle. With the decoy removed, only 32 did. Nobody had chosen the decoy, and it still moved more than half the class.',
@@ -84,7 +84,7 @@ export const EFFECTS: Effect[] = [
     short: 'Same facts, different sentence, different decision. How a choice is worded changes what people choose.',
     what: [
       'The framing effect is what happens when two descriptions of the exact same situation lead people to opposite choices. Describe an outcome as a gain and people play it safe. Describe the same outcome as a loss and they take risks to avoid it.',
-      'Nothing about the facts changes. Only the sentence does, which is why whoever writes the sentence has more power than it looks.',
+      'The facts stay the same in both versions. The wording changes, and whoever writes it gets more say over your choice than you’d guess.',
     ],
     study: {
       text: 'Tversky and Kahneman told people a disease was expected to kill 600 and asked them to pick a program. When the safe option was put as “200 people will be saved”, 72% chose it. When the identical option was put as “400 people will die”, 78% chose the risky alternative instead.',
@@ -96,7 +96,7 @@ export const EFFECTS: Effect[] = [
       'Buttons that make saying no sound shameful: “No thanks, I don’t like saving money”',
     ],
     profits: 'Whoever writes the sentence. “95% fat free” sells. “5% fat” doesn’t, and it’s the same yoghurt.',
-    resist: 'Say it the other way round. If “90% survive” and “10% die” get different answers from you, the wording is deciding, not you.',
+    resist: 'Say it the other way round. If “90% survive” and “10% die” get different answers from you, the wording made the choice.',
     specimens: [{ id: 'shame', name: 'Confirmshaming' }],
   },
   {
@@ -126,10 +126,10 @@ export const EFFECTS: Effect[] = [
     lab: 'defaults',
     name: 'Defaults',
     aka: 'the default effect',
-    short: 'Whatever is already selected tends to stay selected. Most choices are made by whoever set the switch.',
+    short: 'Whatever is already selected tends to stay selected. Whoever sets the switch makes most of the choices.',
     what: [
       'The default effect is our strong tendency to stick with whatever option is preselected. Changing it takes a moment of effort and a reason, and most of the time we have neither, so the default wins.',
-      'Defaults don’t feel like decisions, which is their power. Nobody pushed you. The box was just already ticked.',
+      'A default doesn’t feel like a decision. Nobody asked you anything: the box arrived ticked, and leaving it alone took no effort.',
     ],
     study: {
       text: 'Eric Johnson and Daniel Goldstein compared organ donation across Europe. In countries where you had to opt in, consent rates were as low as 12% (Germany). In neighbouring countries where you had to opt out, they were close to 100% (Austria, 99.98%). Same kind of people, one different box.',
@@ -149,10 +149,10 @@ export const EFFECTS: Effect[] = [
     lab: 'free',
     name: 'The zero-price effect',
     aka: 'the power of free',
-    short: 'Free isn’t just a low price. It’s a different decision, and it switches off the part of you that weighs costs.',
+    short: 'A price of zero changes how you decide. You stop weighing what the thing costs you.',
     what: [
       'The zero-price effect is the outsized pull of anything that costs nothing. Dropping a price from one cent to zero changes behaviour far more than dropping it from two cents to one, because “free” feels like there’s no downside at all.',
-      'There usually is one. It just isn’t paid in money, so it doesn’t get counted: your time, your data, your attention, or a subscription that starts later.',
+      'There usually is one, paid in something other than money, so you don’t count it: your time, your data, your attention, or a subscription that starts later.',
     ],
     study: {
       text: 'Kristina Shampanier, Nina Mazar and Dan Ariely offered people a Lindt truffle for 15 cents or a Hershey’s Kiss for 1 cent, and 73% chose the truffle. Then they cut both prices by exactly one cent. With the Kiss now free, 69% took the Kiss instead.',
@@ -163,8 +163,8 @@ export const EFFECTS: Effect[] = [
       'Free apps, paid for with attention and data',
       'Free trials that turn into a subscription you forget to cancel',
     ],
-    profits: 'Every “free” app you use. Free isn’t a price, it’s a different decision, and the bill shows up somewhere else.',
-    resist: 'Ask what it costs in something other than money. If you can’t find the price, you might be it.',
+    profits: 'Every “free” app you use. The bill arrives somewhere other than the price tag.',
+    resist: 'Ask what it costs you in time, data, attention, or a renewal date nobody mentioned.',
     specimens: [],
   },
 ];

@@ -10,7 +10,7 @@ lines:
   - "Intelligence makes you a better lawyer, not a better judge."
   - "If every smart person you know already agrees with you, that's not proof you're right. It might just mean you've stopped looking."
 ---
-Everyone has that one friend. Smart, well read, genuinely good at their job. And there's one topic where, the moment it comes up, they turn into someone you don't recognize.
+Everyone has that one friend. Smart, well read, good at their job. And there's one topic where, the moment it comes up, they turn into someone you don't recognize.
 
 Maybe it's a diet. Maybe it's crypto, or a politician, or a theory about what's really in the water. You bring up a fact and they have three counter-facts ready, with sources. You walk away with a slight headache and the feeling that you somehow lost an argument you were right about.
 
@@ -18,7 +18,7 @@ If you're honest, you're probably also that friend to somebody. I'm fairly sure 
 
 We like to think bad beliefs come from not thinking hard enough. Give people more information, more education, more intelligence, and the bad ideas fall away. It's a lovely theory. It's also, as far as the research can tell, mostly wrong.
 
-Here's the uncomfortable version. Intelligence makes you a better lawyer, not a better judge.
+Intelligence makes you a better lawyer, not a better judge.
 
 A judge weighs the evidence and then decides. A lawyer already knows which side they're on and goes looking for evidence that helps. Most of us, most of the time, think like lawyers and feel like judges. Psychologists call this motivated reasoning. The name makes it sound like a rare malfunction. It's closer to the factory setting.
 

@@ -18,13 +18,13 @@ Most people can't. And the ones who think they can are probably wrong.
 
 Every time you remember something, you're not playing back a recording. You're rebuilding it, from whatever pieces are lying around. And you rebuild it for whoever is doing the remembering today, which isn't quite the person it happened to.
 
-This isn't a figure of speech. It's one of the sturdiest findings in psychology.
+Psychologists count it among the sturdiest findings they have.
 
 In 1974, Elizabeth Loftus showed people a short film of a car crash. Afterwards, she asked some of them how fast the cars were going when they "hit" each other. She asked the others how fast they were going when they "smashed" into each other. The "smashed" group guessed higher speeds. And a week later, they were more than twice as likely to remember seeing broken glass.
 
 There was no broken glass in the film.
 
-One word, one week, and a detail that never existed. Loftus spent the rest of her career showing how far this goes. In later studies, people came to remember being lost in a shopping mall as a child, sometimes with vivid detail, when it never happened. Memory isn't a hard drive. It's more like a story told at every family dinner, a little different each time, until nobody knows which version came first.
+One word, one week, and a detail that never existed. Loftus spent the rest of her career showing how far this goes. In later studies, people came to remember being lost in a shopping mall as a child, sometimes with vivid detail, when it never happened. Memory works more like a story told at every family dinner, a little different each time, until nobody knows which version came first.
 
 So the past isn't a place you visit. It's a draft.
 

@@ -38,7 +38,7 @@ The supermarket doesn't put sweets at the checkout by accident. It's the one spo
 
 Nobody's testing your virtue at 11pm. They're checking your balance.
 
-Here's the part I find genuinely useful. The people who look incredibly disciplined usually aren't winning more fights than you. They're having fewer of them.
+This is the part I use. The people who look disciplined usually aren't winning more fights than you. They're having fewer of them.
 
 There's research on this too, and it's held up better. People who score high on self-control don't seem to spend their days heroically resisting temptation. They report running into fewer temptations in the first place. They've set up their lives so the fight rarely comes up.
 

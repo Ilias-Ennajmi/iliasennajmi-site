@@ -39,12 +39,12 @@ Kahneman won the Nobel Prize for this work in 2002. In economics. A psychologist
 
 Richard Thaler, who won the same prize in 2017, has a nice way of putting it. He splits the world into Econs, the imaginary people in the textbook, and Humans, the rest of us. Econs don't need any help. Humans forget to cancel free trials.
 
-Here's the thing nobody in my industry says out loud. Marketing always knew. We didn't need the Nobel committee. Nobody who has ever designed a price tag believed in the rational actor, because the rational actor doesn't buy anything interesting.
+Nobody in my industry says this out loud: marketing always knew. We didn't need the Nobel committee. Nobody who has ever designed a price tag believed in the rational actor, because the rational actor doesn't buy anything interesting.
 
 He doesn't pay extra for the brand. He doesn't get talked into the medium coffee because the large is right there next to it. He feels nothing about a countdown timer. He has never grabbed a chocolate bar at the till. If everyone behaved like him, most of what's on your kitchen counter wouldn't exist, and neither would my job.
 
 So in a strange way, every business that makes real money from real people is a bet against him. And they mostly win.
 
-I'm not saying we should throw the models out. You can't think without some kind of model, and some of them are genuinely useful. I'm saying remember what they are. A model is a map, and a map leaves things out on purpose.
+Nobody should throw the models out. You can't think without some kind of model, and some of them are useful. Just remember what they are. A model is a map, and a map leaves things out on purpose.
 
 That's fine, right up until the map tells you there's no river, and you're standing in the river.

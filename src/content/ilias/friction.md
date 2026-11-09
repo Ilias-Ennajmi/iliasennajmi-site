@@ -30,7 +30,7 @@ A designer called Harry Brignull started collecting tricks like this in 2010 and
 
 Gyms are the classic offline version. Joining takes five minutes and a smile at the front desk. Leaving, at plenty of them, has meant a letter, a notice period, a cancellation fee, or a trip back in person to a manager who's somehow never there. Everybody has a gym story. Nobody's gym story makes them want to join a gym.
 
-Here's the part I find almost funny. In 1999, Amazon was granted a patent for 1-Click ordering. A button that let you buy something without even seeing a basket. It was one of the most celebrated pieces of friction removal in the history of online shopping, and the company guarded it for nearly twenty years.
+I find this part almost funny. In 1999, Amazon was granted a patent for 1-Click ordering. A button that let you buy something without even seeing a basket. It was one of the most celebrated pieces of friction removal in the history of online shopping, and the company guarded it for nearly twenty years.
 
 The same company, it turns out, knew exactly how friction works in the other direction too.
 

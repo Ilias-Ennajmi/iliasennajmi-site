@@ -35,7 +35,7 @@ I understand why companies chase growth anyway. It's visible. It's exciting. It'
 
 It also forces some uncomfortable questions. Why did they leave? Was the product ever as good as the ad said? Did we attract the wrong people with the wrong promise? Growth lets you put those questions off for a while. Retention makes you answer them.
 
-Some of the best retention in the world right now belongs to a green owl. Duolingo built its product around the streak: the number of days in a row you've practiced. Miss a day and the streak resets. People keep streaks going for years. Some of them are genuinely learning a language. Some of them are mostly protecting a number, which is a kind of retention too, just a slightly haunted one.
+Some of the best retention in the world right now belongs to a green owl. Duolingo built its product around the streak: the number of days in a row you've practiced. Miss a day and the streak resets. People keep streaks going for years. Some of them are learning a language. Some of them are mostly protecting a number, which is a kind of retention too, just a slightly haunted one.
 
 There's a simpler test I like better. It comes from the growth marketer Sean Ellis, and it's one question. How would you feel if you could no longer use this product? If fewer than about 40% of your users say "very disappointed," you probably don't have something people really need yet. No amount of growth fixes that. It just helps you find out faster.
 

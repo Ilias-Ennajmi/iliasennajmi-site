@@ -46,7 +46,7 @@ This can go wrong, and it goes wrong a lot. Promise someone an identity the prod
 
 So the features still matter. They just matter as proof, not as the pitch. Get the identity right, and the features become evidence that the story is true. Get it wrong, and there isn't a feature in the world that will save you.
 
-There's something slightly uncomfortable in all this, and I don't want to skip past it. If people buy who they want to become, then marketing is partly in the business of telling people who to want to become. That's a lot of influence for an industry that mostly uses it to sell trainers.
+One part of this bothers me, and I don't want to skip past it. If people buy who they want to become, then marketing is partly in the business of telling people who to want to become. That's a lot of influence for an industry that mostly uses it to sell trainers.
 
 I don't have a tidy answer to that. I just think it's worth knowing the next time you're about to buy something and it feels like more than a purchase.
 

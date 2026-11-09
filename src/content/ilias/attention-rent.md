@@ -34,7 +34,7 @@ The writer Cory Doctorow has a word for this cycle: enshittification. First a pl
 
 The platform was never your audience. It was the road between you and them. And whoever owns the road can charge whatever the traffic will bear.
 
-This isn't only a brand problem. It's the musician with a big following on one app. The small restaurant that lives or dies by its rating on one map. The writer whose readers only find them through one feed. When the algorithm changes, and it always changes, they find out overnight how much of their business they never owned.
+Brands aren't the only ones stuck with this. Think of the musician with a big following on one app. The small restaurant that lives or dies by its rating on one map. The writer whose readers only find them through one feed. When the algorithm changes, and it always changes, they find out overnight how much of their business they never owned.
 
 If a single company can switch off your business by changing a setting, you were never the owner. You were a tenant.
 

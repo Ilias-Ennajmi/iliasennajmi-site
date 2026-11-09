@@ -38,7 +38,7 @@ That's the unsettling part. The anchor doesn't feel like an anchor. It feels lik
 
 Once you know this, you start seeing anchors everywhere.
 
-The restaurant menu has one dish near the top that almost nobody orders, at a price almost nobody pays. It isn't there to sell. It's there so the second most expensive thing looks sensible. Software companies do the same with the enterprise plan, the one that says "contact us" or costs ten times the others. Almost nobody buys it. It makes the middle plan look like a bargain.
+The restaurant menu has one dish near the top that almost nobody orders, at a price almost nobody pays. Its job is to make the second most expensive thing look sensible. Software companies do the same with the enterprise plan, the one that says "contact us" or costs ten times the others. Almost nobody buys it. It makes the middle plan look like a bargain.
 
 The "was €200, now €99" label works the same way. The €200 may never have been a real price. It doesn't need to be. It just needs to be the first number you see.
 
