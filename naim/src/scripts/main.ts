@@ -85,7 +85,7 @@ $$('.reveal').forEach((el) => {
 function scramble(el: HTMLElement) {
   const final = el.dataset.scramble || el.textContent || '';
   if (reduced) return;
-  const glyphs = 'NΛIMÏ✶#/◊Ø×0123456789';
+  const glyphs = 'NΛIMVAXK';
   let frame = 0;
   const total = 26;
   const tick = () => {
@@ -147,7 +147,7 @@ form?.addEventListener('submit', (e) => {
   e.preventDefault();
   const d = new FormData(form);
   const to = $<HTMLAnchorElement>('.booking__mail')?.textContent?.trim() || '';
-  const subject = `Booking request — ${d.get('type')} — ${d.get('venue') || 'TBC'} — ${d.get('date') || 'date TBC'}`;
+  const subject = `Booking request: ${d.get('type')}, ${d.get('venue') || 'city TBC'}, ${d.get('date') || 'date TBC'}`;
   const body = [
     `Name: ${d.get('name')}`, `Email: ${d.get('email')}`, `Type: ${d.get('type')}`,
     `Date: ${d.get('date') || 'TBC'}`, `City / venue: ${d.get('venue') || 'TBC'}`, '', String(d.get('message') || ''),
@@ -225,10 +225,10 @@ pkForm?.addEventListener('submit', async (e) => {
     const url = await decrypt(data, input.value);
     if (!pkMsg) return;
     if (/^(https?:)?\//.test(url)) {
-      pkMsg.innerHTML = `Unlocked ✓ — <a href="${encodeURI(url)}" target="_blank" rel="noopener">open the press kit</a>`;
+      pkMsg.innerHTML = `Unlocked. <a href="${encodeURI(url)}" target="_blank" rel="noopener">open the press kit</a>`;
       window.open(url, '_blank', 'noopener');
     } else {
-      pkMsg.textContent = 'Unlocked ✓ — the press kit is being updated. Back very soon.';
+      pkMsg.textContent = 'Unlocked. The press kit is being updated, back very soon.';
     }
   } catch {
     if (pkMsg) pkMsg.textContent = 'Wrong password. Try again.';

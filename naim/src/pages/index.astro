@@ -4,14 +4,15 @@ import '@fontsource/space-mono/400.css';
 import '@fontsource/space-mono/700.css';
 import '../styles/global.css';
 import Btn from '../components/Btn.astro';
+import Socials from '../components/Socials.astro';
 import {
-  artist, socials, bio, journey, photos, venues, dates, videos, release, pressKitIncludes,
+  artist, socials, bio, photos, venues, dates, videos, release, pressKitIncludes,
 } from '../data/naim';
 import presskit from '../data/presskit.json';
 
 const site = Astro.site?.href ?? '/';
-const title = `${artist.name} — DJ · Morocco ⇄ France`;
-const description = `${artist.name} (${artist.stylised}) is a DJ from ${artist.origin}, based between Morocco and France. Upcoming dates, sets, the new single “${release.title}”, booking and press kit.`;
+const title = `${artist.name} | DJ, Morocco and France`;
+const description = `${artist.name} is a DJ from Morocco, playing between Morocco and France. Dates, sets, the single ${release.title}, booking and press kit.`;
 
 const icon = (n: string) => `/img/icons/${n}.png`;
 const typeIcon: Record<string, string> = { club: 'cocktail', festival: 'tent', release: 'vinyl', event: 'calendar', radio: 'boombox' };
@@ -19,6 +20,7 @@ const typeLabel: Record<string, string> = { club: 'Club', festival: 'Festival', 
 
 const today = new Date().toISOString().slice(0, 10);
 const upcoming = dates.filter((d) => d.date >= today).sort((a, b) => a.date.localeCompare(b.date));
+const typesPresent = (['club', 'festival', 'release', 'event', 'radio'] as const).filter((t) => upcoming.some((d) => d.type === t));
 const fmt = (iso: string) => {
   const d = new Date(iso + 'T12:00:00Z');
   return {
@@ -28,6 +30,7 @@ const fmt = (iso: string) => {
     weekday: d.toLocaleDateString('en-GB', { weekday: 'short', timeZone: 'UTC' }).toUpperCase(),
   };
 };
+const pad = (n: number) => String(n).padStart(2, '0');
 
 // The icon sheet as a system: five categories, three marks each.
 const alphabet = [
@@ -37,33 +40,26 @@ const alphabet = [
   { label: 'Events', icons: ['phone', 'runner', 'calendar'] },
   { label: 'Radio', icons: ['boombox', 'alien', 'moon'] },
 ];
-const sections = [
-  ['about', '01', 'About'], ['live', '02', 'Live'], ['journey', '03', 'Journey'], ['venues', '04', 'Played at'],
-  ['booking', '05', 'Booking'], ['sets', '06', 'Sets'], ['release', '07', 'Paraiso'], ['dates', '08', 'Dates'],
-  ['booth', '09', 'The booth'], ['press', '10', 'Press kit'],
+const venueRows = [
+  { label: 'Festivals', items: venues.filter((v) => v.kind === 'festival') },
+  { label: 'Clubs', items: venues.filter((v) => v.kind === 'club') },
 ];
-const typesPresent = (['club', 'festival', 'release', 'event', 'radio'] as const).filter((t) => upcoming.some((d) => d.type === t));
-const venueRows = [venues, [...venues].reverse()];
-const pad = (n: number) => String(n).padStart(2, '0');
+const sections = [
+  ['live', '01', 'Live'], ['about', '02', 'About'], ['press', '03', 'Press kit'], ['venues', '04', 'Played at'],
+  ['sets', '05', 'Sets'], ['release', '06', 'Paraiso'], ['dates', '07', 'Dates'], ['booth', '08', 'The booth'], ['booking', '09', 'Booking'],
+];
 
 const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
     {
-      '@type': 'MusicGroup',
-      name: artist.name,
-      alternateName: artist.stylised,
-      genre: ['House', 'Electronic', 'Afro house'],
-      url: site,
-      image: new URL('/img/og.jpg', site).href,
-      sameAs: socials.map((s) => s.href),
+      '@type': 'MusicGroup', name: artist.name, alternateName: artist.stylised, genre: ['House', 'Electronic'],
+      url: site, image: new URL('/img/og.jpg', site).href, sameAs: socials.map((s) => s.href),
     },
     ...upcoming.filter((d) => d.type !== 'release').map((d) => ({
-      '@type': 'MusicEvent',
-      name: `${artist.name} at ${d.venue}`,
-      startDate: d.date,
+      '@type': 'MusicEvent', name: `${artist.name} at ${d.venue}`, startDate: d.date,
       eventAttendanceMode: d.type === 'radio' ? 'https://schema.org/OnlineEventAttendanceMode' : 'https://schema.org/OfflineEventAttendanceMode',
-      location: { '@type': 'Place', name: d.venue, address: `${d.city}, ${d.country}` },
+      location: { '@type': 'Place', name: d.venue, address: [d.city, d.country].filter(Boolean).join(', ') },
       performer: { '@type': 'MusicGroup', name: artist.name },
     })),
   ],
@@ -92,15 +88,15 @@ const jsonLd = {
     <canvas class="dust" data-dust aria-hidden="true"></canvas>
     <div class="grain" aria-hidden="true"></div>
 
-    <!-- ───────── NAV ───────── -->
+    <!-- NAV -->
     <header class="nav" data-nav>
-      <a href="#top" class="nav__logo" aria-label={`${artist.name} — home`}><span class="logo-mask"></span></a>
+      <a href="#top" class="nav__logo" aria-label={`${artist.name}, home`}><span class="logo-mask"></span></a>
       <nav aria-label="Main">
         <ul class="nav__links">
-          <li><a href="#about"><i>01</i>About</a></li>
-          <li><a href="#sets"><i>06</i>Sets</a></li>
-          <li><a href="#dates"><i>08</i>Dates</a></li>
-          <li><a href="#press"><i>10</i>Press</a></li>
+          <li><a href="#about"><i>02</i>About</a></li>
+          <li><a href="#sets"><i>05</i>Sets</a></li>
+          <li><a href="#dates"><i>07</i>Dates</a></li>
+          <li><a href="#press"><i>03</i>Press</a></li>
         </ul>
       </nav>
       <div class="nav__end">
@@ -119,55 +115,29 @@ const jsonLd = {
           {sections.map(([id, n, label]) => <li><a href={`#${id}`} data-menu-link><i>{n}</i>{label}</a></li>)}
         </ol>
       </nav>
-      <div class="menu__foot">
-        <a class="lnk" href={`mailto:${artist.bookingEmail}`}>{artist.bookingEmail}</a>
-        <ul class="links">{socials.map((s) => <li><a class="lnk" href={s.href} target="_blank" rel="noopener">{s.short}<span aria-hidden="true">↗</span></a></li>)}</ul>
-      </div>
+      <div class="menu__foot"><Socials tone="dark" /></div>
     </div>
 
     <main id="main">
-      <!-- ───────── COVER ───────── -->
+      <!-- COVER -->
       <section class="hero" id="top" aria-label="Cover">
         <div class="hero__bg" aria-hidden="true"></div>
         <picture class="hero__photo">
           <source type="image/webp" srcset="/img/naim-520.webp 520w, /img/naim-800.webp 800w, /img/naim-1179.webp 1179w" sizes="(min-width: 900px) 50vw, 100vw" />
-          <img src="/img/naim-1179.jpg" alt="Naïm sitting in a rust armchair, red glasses on, a rotary phone to his ear, a boombox and a disco ball at his feet" width="1179" height="1769" fetchpriority="high" />
+          <img src="/img/naim-1179.jpg" alt="Naïm in a rust armchair, red glasses on, a rotary phone to his ear, a boombox and a disco ball at his feet" width="1179" height="1769" fetchpriority="high" />
         </picture>
-        <div class="hero__strip" aria-hidden="true">
-          <span>{artist.stylised} — DJ — MA ⇄ FR — {new Date().getFullYear()}</span>
-          <span>{release.bpm} BPM · {release.title.toUpperCase()} · OUT NOW</span>
-        </div>
         <h1 class="hero__logo">
           <span class="visually-hidden">{artist.name}</span>
           <span class="logo-mask logo-mask--hero" aria-hidden="true"></span>
         </h1>
-        <p class="hero__line mono" aria-hidden="true"><span>Selector</span><span>{artist.origin} ⇄ France</span></p>
+        <p class="hero__line mono" aria-hidden="true"><span>DJ</span><span>Morocco / France</span></p>
       </section>
 
-
-      <!-- ───────── NAME + BIO ───────── -->
-      <section class="intro sec" id="about">
-        <div class="gradient" aria-hidden="true"><i></i><i></i><i></i></div>
-        <div class="wrap">
-          <header class="sh reveal"><span class="sh__n">01</span><span class="sh__k">{artist.tagline}</span></header>
-          <h2 class="intro__name reveal" aria-label={artist.name}><span data-scramble="NΛIM">NΛIM</span></h2>
-          <div class="intro__grid">
-            <p class="intro__lead reveal">{bio[0]}</p>
-            <div class="intro__side reveal">
-              <p>{bio[1]}</p>
-              <ul class="links">
-                {socials.map((s) => <li><a class="lnk" href={s.href} target="_blank" rel="noopener">{s.label}<span aria-hidden="true">↗</span></a></li>)}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ───────── LIVE CAROUSEL ───────── -->
-      <section class="live sec" id="live" aria-labelledby="live-title">
+      <!-- 01 LIVE -->
+      <section class="live sec sec--tight" id="live" aria-labelledby="live-title">
         <div class="wrap row-head">
           <header class="sh reveal">
-            <span class="sh__n">02</span><span class="sh__k">Live</span>
+            <span class="sh__n">01</span><span class="sh__k">Live</span>
             <h2 id="live-title" class="sh__t">In the room</h2>
           </header>
           <div class="live__controls">
@@ -179,12 +149,8 @@ const jsonLd = {
         <div class="carousel" data-carousel tabindex="0" aria-roledescription="carousel" aria-label="Performance photos">
           {photos.map((p, i) => (
             <figure class="slide" aria-roledescription="slide" aria-label={`${i + 1} of ${photos.length}`}>
-              {p.src ? (
-                <img src={p.src} alt={p.alt} loading="lazy" />
-              ) : (
-                <div class={`slide__ph slide__ph--${i % 3}`}>
-                  <span class="mono">Photo {pad(i + 1)} — soon</span>
-                </div>
+              {p.src ? <img src={p.src} alt={p.alt} loading="lazy" /> : (
+                <div class={`slide__ph slide__ph--${i % 3}`}><span class="mono">Photo {pad(i + 1)}</span></div>
               )}
               <figcaption class="mono"><span>{pad(i + 1)}</span>{p.caption}</figcaption>
             </figure>
@@ -193,122 +159,90 @@ const jsonLd = {
         <div class="wrap"><div class="progress" aria-hidden="true"><i data-carousel-bar></i></div></div>
       </section>
 
-      <!-- ───────── JOURNEY ───────── -->
-      <section class="journey sec" id="journey" aria-labelledby="journey-title">
+      <!-- 02 BIO -->
+      <section class="intro sec" id="about" aria-label="About">
+        <div class="gradient" aria-hidden="true"><i></i><i></i><i></i></div>
         <div class="wrap">
-          <header class="sh reveal"><span class="sh__n">03</span><span class="sh__k">{journey.kicker}</span></header>
-          <h2 id="journey-title" class="journey__title">
-            {journey.title.map((l, i) => <span class={`reveal line line--${i}`}>{l}</span>)}
-          </h2>
-          <div class="journey__text">
-            {journey.paragraphs.map((p) => <p class="reveal">{p}</p>)}
+          <header class="sh reveal"><span class="sh__n">02</span><span class="sh__k">{artist.tagline}</span></header>
+          <h2 class="intro__name reveal" aria-label={artist.name}><span data-scramble="NΛIM">NΛIM</span></h2>
+          <div class="intro__grid">
+            <p class="intro__lead reveal">{bio[0]}</p>
+            <div class="intro__side reveal">
+              <p>{bio[1]}</p>
+              <Socials />
+            </div>
           </div>
-          <ul class="stats">
-            {journey.stats.map((s) => (
-              <li class="reveal"><b>{s.value}</b><span class="mono">{s.label}</span></li>
-            ))}
-          </ul>
         </div>
       </section>
 
-      <!-- ───────── VENUES (horizontal) ───────── -->
+      <!-- 03 PRESS KIT -->
+      <section class="press sec sec--tight" id="press" aria-labelledby="press-title">
+        <div class="wrap press__inner">
+          <header class="sh reveal">
+            <span class="sh__n">03</span><span class="sh__k">For promoters and press</span>
+            <h2 id="press-title" class="sh__t">Press kit</h2>
+          </header>
+          <ul class="press__list mono reveal">{pressKitIncludes.map((x) => <li>{x}</li>)}</ul>
+          <div class="press__action reveal">
+            <Btn variant="red" end="↓" data-press-open>Download press kit</Btn>
+            <p class="mono">Password protected. <a class="lnk" href={`mailto:${artist.managementEmail}?subject=Press%20kit%20access`}>Ask for it</a></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 04 VENUES -->
       <section class="venues sec sec--ink" id="venues" aria-labelledby="venues-title">
         <div class="wrap">
           <header class="sh reveal">
             <span class="sh__n">04</span><span class="sh__k">Played at</span>
-            <h2 id="venues-title" class="sh__t">Rooms that stayed late</h2>
+            <h2 id="venues-title" class="sh__t">Dancefloors that stayed late</h2>
           </header>
         </div>
         <div class="venues__rows">
           {venueRows.map((row, r) => (
-            <div class={`marquee marquee--${r}`}>
-              <ul class="marquee__track">
-                {[...row, ...row].map((v, k) => (
-                  <li class={`venue venue--${v.style}`} aria-hidden={k >= row.length ? 'true' : undefined}>
-                    {v.logo ? <img src={v.logo} alt={v.name} /> : <b>{v.name}</b>}
-                    <span class="mono">{v.city}</span>
-                  </li>
-                ))}
-              </ul>
+            <div class="vrow">
+              <span class="vrow__label mono">{row.label}</span>
+              <div class={`marquee marquee--${r}`}>
+                <ul class="marquee__track" aria-label={row.label}>
+                  {[...row.items, ...row.items, ...row.items].map((v, k) => (
+                    <li class={`venue venue--${v.style}`} aria-hidden={k >= row.items.length ? 'true' : undefined}>
+                      {v.logo ? <img src={v.logo} alt={v.name} /> : <b>{v.name}</b>}
+                      <span class="mono">{v.city}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           ))}
         </div>
       </section>
 
-      <!-- ───────── BOOKING ───────── -->
-      <section class="booking sec" id="booking" aria-labelledby="booking-title">
-        <div class="gradient gradient--hot" aria-hidden="true"><i></i><i></i><i></i></div>
-        <div class="wrap booking__inner">
-          <div class="booking__lead" data-ring>
-            <img class="booking__phone" src={icon('phone')} alt="" width="256" height="256" />
-            <header class="sh reveal"><span class="sh__n">05</span><span class="sh__k">Booking — worldwide</span></header>
-            <h2 id="booking-title" class="booking__title reveal">Pick up<br />the phone.</h2>
-            <p class="booking__sub reveal">Clubs, festivals, private events, radio. Tell us the date and the room — we'll take it from there.</p>
-            <div class="booking__contact">
-              <a class="lnk lnk--big booking__mail" href={`mailto:${artist.bookingEmail}`}>{artist.bookingEmail}</a>
-              <button class="key key--text" data-copy={artist.bookingEmail}>Copy</button>
-            </div>
-          </div>
-          <form class="form reveal" data-booking-form>
-            <div class="form__row">
-              <label><span class="mono">Your name</span><input name="name" required autocomplete="name" /></label>
-              <label><span class="mono">Email</span><input name="email" type="email" required autocomplete="email" /></label>
-            </div>
-            <div class="form__row">
-              <label><span class="mono">Date</span><input name="date" type="date" /></label>
-              <label><span class="mono">City / venue</span><input name="venue" /></label>
-            </div>
-            <fieldset class="form__type">
-              <legend class="mono">Type of gig</legend>
-              {['Club', 'Festival', 'Private', 'Radio'].map((t, i) => (
-                <label class="tog"><input type="radio" name="type" value={t} checked={i === 0} /><span>{t}</span></label>
-              ))}
-            </fieldset>
-            <label><span class="mono">Tell us more</span><textarea name="message" rows="3"></textarea></label>
-            <Btn type="submit" variant="ink" size="lg" end="→" class="form__send">Send request</Btn>
-            <p class="form__note mono">Opens your email app with everything filled in.</p>
-          </form>
-        </div>
-      </section>
-
-      <!-- ───────── VIDEOS ───────── -->
-      <section class="sets sec" id="sets" aria-labelledby="sets-title">
-        <div class="wrap">
+      <!-- 05 REELS -->
+      <section class="sets sec sec--tight" id="sets" aria-labelledby="sets-title">
+        <div class="wrap row-head">
           <header class="sh reveal">
-            <span class="sh__n">06</span><span class="sh__k">Watch</span>
-            <h2 id="sets-title" class="sh__t">Hear what he plays</h2>
+            <span class="sh__n">05</span><span class="sh__k">Watch</span>
+            <h2 id="sets-title" class="sh__t">What he plays</h2>
           </header>
-          <div class="player" data-player>
-            <div class="player__screen" data-player-screen>
-              <button class="player__poster" data-player-play aria-label={`Play ${videos[0]?.title}`}>
-                <span class="player__btn" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg></span>
-                <span class="player__title"><b data-player-title>{videos[0]?.title}</b><span class="mono" data-player-place>{videos[0]?.place}</span></span>
-              </button>
-            </div>
-            <ol class="player__list">
-              {videos.map((v, i) => (
-                <li>
-                  <button
-                    class:list={['track', { 'is-active': i === 0 }]}
-                    data-video-index={i}
-                    data-yt={v.youtubeId || ''}
-                    data-mp4={v.mp4 || ''}
-                    data-title={v.title}
-                    data-place={v.place}
-                  >
-                    <span class="mono track__n">{pad(i + 1)}</span>
-                    <span class="track__t"><b>{v.title}</b><span class="mono">{v.place}</span></span>
-                    <span class="mono track__l">{v.length}</span>
-                    <span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>
-                  </button>
-                </li>
-              ))}
-            </ol>
+          <div class="live__controls">
+            <button class="key" data-reels-prev aria-label="Previous clip">←</button>
+            <button class="key" data-reels-next aria-label="Next clip">→</button>
           </div>
         </div>
+        <ul class="reels" data-reels aria-label="Video clips">
+          {videos.map((v, i) => (
+            <li class="reel" data-yt={v.youtubeId || ''} data-mp4={v.mp4 || ''} data-title={v.title}>
+              <button class="reel__poster" data-reel-play aria-label={`Play ${v.title}, ${v.place}`} style={v.poster ? `background-image:url(${v.poster})` : undefined}>
+                <span class={`reel__ph reel__ph--${i % 3}`} aria-hidden="true"></span>
+                <span class="reel__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg></span>
+                <span class="reel__meta"><b>{v.title}</b><span class="mono">{v.place}</span></span>
+              </button>
+            </li>
+          ))}
+        </ul>
       </section>
 
-      <!-- ───────── RELEASE ───────── -->
+      <!-- 06 RELEASE -->
       <section class="release sec" id="release" aria-labelledby="release-title">
         <div class="wrap release__inner">
           <div class="release__art reveal" aria-hidden="true">
@@ -321,18 +255,16 @@ const jsonLd = {
                 ))}
               </svg>
               <div class="cover__blur"></div>
-              <span class="cover__strip mono">{release.title.toUpperCase()} — {release.bpm} BPM — {release.key} — {release.year} — {release.artist}</span>
+              <span class="cover__strip mono">{release.title.toUpperCase()} · {release.bpm} BPM · {release.key} · {release.year}</span>
               <span class="logo-mask cover__logo"></span>
             </div>
           </div>
           <div class="release__copy">
-            <header class="sh reveal"><span class="sh__n">07</span><span class="sh__k">New single</span></header>
+            <header class="sh reveal"><span class="sh__n">06</span><span class="sh__k">New single</span></header>
             <h2 id="release-title" class="release__title reveal">{release.title}</h2>
-            <p class="reveal">A warm, sun-bleached roller built for the hour when the room stops thinking. Out now.</p>
+            <p class="reveal">{release.blurb}</p>
             {release.spotifyTrackId ? (
-              <iframe
-                class="spotify"
-                title={`${release.title} on Spotify`}
+              <iframe class="spotify" title={`${release.title} on Spotify`}
                 src={`https://open.spotify.com/embed/track/${release.spotifyTrackId}?utm_source=generator&theme=0`}
                 width="100%" height="152" loading="lazy"
                 allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
@@ -343,19 +275,19 @@ const jsonLd = {
                   <div class="deck__meta"><b>{release.title}</b><span class="mono">{release.artist} · {release.bpm} BPM</span></div>
                   <div class="wave" aria-hidden="true">{Array.from({ length: 56 }, (_, i) => <i style={`--h:${(0.22 + Math.abs(Math.sin(i * 1.7) * Math.cos(i * 0.4))).toFixed(2)}`}></i>)}</div>
                 </div>
-                <a class="lnk deck__sp" href={release.spotifyUrl} target="_blank" rel="noopener">Spotify<span aria-hidden="true">↗</span></a>
+                <a class="lnk deck__sp" href={release.spotifyUrl} target="_blank" rel="noopener">Listen on Spotify<span aria-hidden="true">↗</span></a>
               </div>
             )}
           </div>
         </div>
       </section>
 
-      <!-- ───────── DATES ───────── -->
+      <!-- 07 DATES -->
       <section class="dates sec" id="dates" aria-labelledby="dates-title">
         <div class="wrap">
           <div class="row-head">
             <header class="sh reveal">
-              <span class="sh__n">08</span><span class="sh__k">On tour</span>
+              <span class="sh__n">07</span><span class="sh__k">On tour</span>
               <h2 id="dates-title" class="sh__t">Upcoming dates</h2>
             </header>
             <div class="filters" role="group" aria-label="Filter dates by type" data-filters>
@@ -372,11 +304,11 @@ const jsonLd = {
               {upcoming.map((d) => {
                 const f = fmt(d.date);
                 return (
-                  <li class="gig reveal" data-date={d.date} data-type={d.type} data-title={`${artist.name} — ${d.venue}`} data-place={`${d.venue}, ${d.city}`}>
+                  <li class="gig reveal" data-date={d.date} data-type={d.type} data-title={`${artist.name} at ${d.venue}`} data-place={[d.venue, d.city].join(', ')}>
                     <time datetime={d.date} class="gig__date"><b>{f.day}</b><span class="mono">{f.month} {f.year}<br />{f.weekday}</span></time>
                     <img class="gig__icon" src={icon(typeIcon[d.type])} alt={typeLabel[d.type]} width="64" height="64" />
-                    <div class="gig__where"><b>{d.city}{d.country !== '—' && <span class="mono"> {d.country}</span>}</b><span>{d.venue}</span></div>
-                    <button class="lnk gig__cal" data-ics>Add to calendar<span aria-hidden="true">＋</span></button>
+                    <div class="gig__where"><b>{d.city}{d.country && <span class="mono"> {d.country}</span>}</b><span>{d.venue}</span></div>
+                    <button class="lnk gig__cal" data-ics>Add to calendar<span aria-hidden="true">+</span></button>
                     <div class="gig__cta">
                       {d.status === 'soldout' ? <span class="tag tag--out mono">Sold out</span>
                         : d.status === 'free' ? <span class="tag mono">Free</span>
@@ -392,22 +324,22 @@ const jsonLd = {
         </div>
       </section>
 
-      <!-- ───────── THE BOOTH ───────── -->
+      <!-- 08 BOOTH -->
       <section class="booth sec sec--ink" id="booth" aria-labelledby="booth-title">
         <div class="wrap">
           <div class="row-head">
             <header class="sh reveal">
-              <span class="sh__n">09</span><span class="sh__k">Something special</span>
+              <span class="sh__n">08</span><span class="sh__k">Play</span>
               <h2 id="booth-title" class="sh__t">Take the booth</h2>
             </header>
-            <p class="booth__copy reveal">Tap the grid, hit play, make a groove at Naïm's tempo. Every row is a sound — every icon is his.</p>
+            <p class="booth__copy reveal">Tap the grid. Press play. Make a groove at his tempo.</p>
           </div>
           <div class="seq reveal" data-seq>
             <div class="seq__bar">
               <Btn variant="red" size="sm" end="▶" data-seq-play aria-pressed="false"><span data-seq-label>Play</span></Btn>
               <label class="seq__bpm mono">BPM <input type="range" min="96" max="140" value={release.bpm} data-seq-bpm aria-label="Tempo" /><output data-seq-bpm-out>{release.bpm}</output></label>
               <span class="seq__tools">
-                <button class="key key--text" data-seq-random>Naïm it ✶</button>
+                <button class="key key--text" data-seq-random>Shuffle ✶</button>
                 <button class="key key--text" data-seq-clear>Clear</button>
               </span>
             </div>
@@ -416,33 +348,48 @@ const jsonLd = {
         </div>
       </section>
 
-      <!-- ───────── PRESS KIT ───────── -->
-      <section class="press sec" id="press" aria-labelledby="press-title">
-        <div class="wrap press__inner">
-          <header class="sh reveal">
-            <span class="sh__n">10</span><span class="sh__k">For promoters & press</span>
-            <h2 id="press-title" class="sh__t">Press kit</h2>
-          </header>
-          <ul class="press__list mono reveal">{pressKitIncludes.map((x, i) => <li><i>{pad(i + 1)}</i>{x}</li>)}</ul>
-          <div class="press__action reveal">
-            <Btn variant="red" size="lg" end="↓" data-press-open>Download press kit</Btn>
-            <p class="mono">Password protected. No password? <a class="lnk" href={`mailto:${artist.managementEmail}?subject=Press%20kit%20access`}>Ask for it</a></p>
+      <!-- 09 BOOKING (small, last) -->
+      <section class="booking sec sec--tight" id="booking" aria-labelledby="booking-title">
+        <div class="gradient gradient--hot" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="wrap booking__inner">
+          <div class="booking__lead" data-ring>
+            <img class="booking__phone" src={icon('phone')} alt="" width="256" height="256" />
+            <header class="sh reveal"><span class="sh__n">09</span><span class="sh__k">Booking worldwide</span></header>
+            <h2 id="booking-title" class="booking__title reveal">Pick up the phone.</h2>
+            <p class="booking__sub reveal">Clubs, festivals, private events, radio. Send the date and the city.</p>
+            <div class="booking__contact">
+              <a class="lnk lnk--big booking__mail" href={`mailto:${artist.bookingEmail}`}>{artist.bookingEmail}</a>
+              <button class="key key--text" data-copy={artist.bookingEmail}>Copy</button>
+            </div>
           </div>
+          <form class="form reveal" data-booking-form>
+            <div class="form__row">
+              <label><span class="mono">Name</span><input name="name" required autocomplete="name" /></label>
+              <label><span class="mono">Email</span><input name="email" type="email" required autocomplete="email" /></label>
+            </div>
+            <div class="form__row">
+              <label><span class="mono">Date</span><input name="date" type="date" /></label>
+              <label><span class="mono">City or venue</span><input name="venue" /></label>
+            </div>
+            <fieldset class="form__type">
+              <legend class="mono">Type</legend>
+              {['Club', 'Festival', 'Private', 'Radio'].map((t, i) => (
+                <label class="tog"><input type="radio" name="type" value={t} checked={i === 0} /><span>{t}</span></label>
+              ))}
+            </fieldset>
+            <Btn type="submit" variant="ink" end="→" class="form__send">Send request</Btn>
+          </form>
         </div>
       </section>
     </main>
 
-    <!-- ───────── FOOTER ───────── -->
+    <!-- FOOTER -->
     <footer class="footer">
-      <div class="gradient gradient--low" aria-hidden="true"><i></i><i></i><i></i></div>
       <div class="wrap footer__inner">
-        <div class="footer__cta">
-          <header class="sh"><span class="sh__n">∞</span><span class="sh__k">Booking & management</span></header>
+        <div class="footer__top">
           <a class="footer__mail" href={`mailto:${artist.bookingEmail}`}>{artist.bookingEmail}</a>
+          <Socials />
         </div>
-        <ul class="links">
-          {socials.map((s) => <li><a class="lnk" href={s.href} target="_blank" rel="noopener">{s.label}<span aria-hidden="true">↗</span></a></li>)}
-        </ul>
         <figure class="alphabet" aria-label="The NΛIM icon alphabet">
           {alphabet.map((g) => (
             <div class="alphabet__col">
@@ -452,7 +399,7 @@ const jsonLd = {
           ))}
         </figure>
         <span class="logo-mask footer__logo" aria-hidden="true"></span>
-        <p class="footer__legal mono"><span>© {new Date().getFullYear()} {artist.name}</span><span>Morocco ⇄ France</span><a class="lnk" href="#top">Back to top ↑</a></p>
+        <p class="footer__legal mono"><span>© {new Date().getFullYear()} {artist.name}</span><span>Morocco / France</span><a class="lnk" href="#top">Back to top ↑</a></p>
       </div>
     </footer>
 
@@ -460,9 +407,9 @@ const jsonLd = {
 
     <dialog class="modal" data-press-modal aria-labelledby="pk-title">
       <form method="dialog" class="modal__close"><button class="key" aria-label="Close">✕</button></form>
-      <span class="modal__lock mono" aria-hidden="true">10 — Press</span>
+      <span class="modal__lock mono" aria-hidden="true">Press kit</span>
       <h3 id="pk-title">Members only</h3>
-      <p>Enter the password to download the press kit.</p>
+      <p>Enter the password to download.</p>
       <form class="modal__form" data-press-form>
         <label class="visually-hidden" for="pk-pass">Password</label>
         <input id="pk-pass" type="password" autocomplete="off" placeholder="Password" required />

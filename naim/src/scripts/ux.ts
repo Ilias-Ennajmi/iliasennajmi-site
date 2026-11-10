@@ -119,5 +119,47 @@ $$<HTMLButtonElement>('[data-ics]').forEach((b) => b.addEventListener('click', (
   a.download = `naim-${g.dataset.date}.ics`;
   a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-  toast('Saved — open it to add to your calendar');
+  toast('Saved. Open it to add to your calendar');
 }));
+
+/* ───────── Reels: vertical clips, loaded only on tap, one at a time ───────── */
+const reels = $('[data-reels]');
+if (reels) {
+  const stopAll = (except?: HTMLElement) => {
+    $$<HTMLElement>('.reel.is-playing', reels).forEach((r) => {
+      if (r === except) return;
+      r.querySelector('iframe, video')?.remove();
+      r.classList.remove('is-playing');
+    });
+  };
+  $$<HTMLElement>('.reel', reels).forEach((r) => {
+    $('[data-reel-play]', r)?.addEventListener('click', () => {
+      stopAll(r);
+      const { yt, mp4, title } = r.dataset;
+      if (yt) {
+        const f = document.createElement('iframe');
+        f.src = `https://www.youtube-nocookie.com/embed/${yt}?autoplay=1&playsinline=1&rel=0&modestbranding=1&loop=1&playlist=${yt}`;
+        f.title = title || 'Clip';
+        f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+        f.allowFullscreen = true;
+        r.append(f);
+        r.classList.add('is-playing');
+      } else if (mp4) {
+        const v = document.createElement('video');
+        v.src = mp4; v.autoplay = true; v.controls = true; v.playsInline = true; v.loop = true; v.preload = 'none';
+        r.append(v);
+        r.classList.add('is-playing');
+      } else {
+        toast('This clip drops soon');
+      }
+    });
+  });
+  // Pause what scrolls out of view
+  const vis = new IntersectionObserver((entries) => {
+    for (const e of entries) if (!e.isIntersecting && e.target.classList.contains('is-playing')) stopAll();
+  }, { threshold: 0.2 });
+  $$('.reel', reels).forEach((r) => vis.observe(r));
+  const step = () => ($('.reel', reels)?.getBoundingClientRect().width || 240) + 16;
+  $('[data-reels-prev]')?.addEventListener('click', () => reels.scrollBy({ left: -step(), behavior: reduced ? 'auto' : 'smooth' }));
+  $('[data-reels-next]')?.addEventListener('click', () => reels.scrollBy({ left: step(), behavior: reduced ? 'auto' : 'smooth' }));
+}

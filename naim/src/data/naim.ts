@@ -1,77 +1,66 @@
-// ─────────────────────────────────────────────────────────────
-//  Everything on the site that changes lives in this one file.
-//  Anything marked PLACEHOLDER is waiting for the real thing.
-// ─────────────────────────────────────────────────────────────
+// Everything on the site that changes lives in this one file.
+// Anything marked PLACEHOLDER is waiting for the real thing.
+// House style: short sentences, no em dashes.
 
 export const artist = {
   name: 'Naïm',
   stylised: 'NΛIM',
-  tagline: 'Selector · DJ · Morocco ⇄ France',
+  tagline: 'DJ · Morocco / France',
   origin: 'Morocco',
-  base: 'Paris',
   bookingEmail: 'booking@naim.example.com', // PLACEHOLDER
   managementEmail: 'hello@naim.example.com', // PLACEHOLDER
 };
 
-export const socials = [
-  { label: 'Instagram', short: 'IG', href: 'https://instagram.com/' }, // PLACEHOLDER handle
-  { label: 'SoundCloud', short: 'SC', href: 'https://soundcloud.com/naim_wav' },
-  { label: 'Spotify', short: 'SP', href: 'https://open.spotify.com/search/Paraiso%20Naim' }, // PLACEHOLDER artist link
-  { label: 'Resident Advisor', short: 'RA', href: 'https://ra.co/' }, // PLACEHOLDER
+export const socials: { label: string; href: string; icon: 'instagram' | 'soundcloud' | 'spotify' | 'ra' }[] = [
+  { label: 'Instagram', href: 'https://www.instagram.com/naim_wav/', icon: 'instagram' },
+  { label: 'SoundCloud', href: 'https://soundcloud.com/naim_wav', icon: 'soundcloud' },
+  { label: 'Spotify', href: 'https://open.spotify.com/search/Paraiso%20Naim', icon: 'spotify' }, // PLACEHOLDER artist link
+  { label: 'Resident Advisor', href: 'https://ra.co/', icon: 'ra' }, // PLACEHOLDER
 ];
 
-// Short bio that sits under the name.
 export const bio = [
-  `Naïm is a DJ raised on Moroccan wedding tapes, Parisian basements and everything that crackled in between. Born in Morocco and sharpened on the French circuit, he plays long, patient sets where house, tribal percussion and leftfield edits melt into one slow-burning temperature.`,
-  `He doesn't play tracks — he curates a room. Records nobody Shazams on the first listen, a groove that refuses to break, and the exact moment the lights go red.`,
+  `Naïm is a DJ from Morocco, playing between Morocco and France. House music with a lot of percussion, long blends, and records you won't hear twice in the same week.`,
+  `Clubs, festivals, rooftops, radio. He reads the room first, then plays for it.`,
 ];
 
-// The longer "journey" text.
-export const journey = {
-  kicker: 'The Journey',
-  title: ['From the medina', 'to the dancefloor'],
-  paragraphs: [
-    `It started with a cassette player and a crate of borrowed tapes: chaabi, gnawa, Cheb Hasni bootlegs, a dubbed copy of a Detroit mix nobody could name. In Morocco, music was never background — it was the reason everyone was in the same room.`,
-    `France gave him the booths. Small clubs first, then the late slots, then the rooms that stay open until the sun is an insult. Night after night he learned the oldest rule in the job: read the floor, then take it somewhere it didn't know it wanted to go.`,
-    `Today his sets move like a road trip between both shores — hypnotic house, desert-dry percussion, warm analog low end and the odd unreleased edit that makes the whole room turn to look at the booth. Unique without trying. Curated without being precious.`,
-  ],
-  stats: [
-    { value: '2', label: 'Shores — Morocco & France' },
-    { value: '125', label: 'BPM, give or take a heartbeat' },
-    { value: '∞', label: 'Records still to dig' },
-  ],
-};
-
-// Performance photos for the carousel. Drop files in /public/img/live/
-// and set src (e.g. '/img/live/01.jpg'). Empty src shows a styled placeholder.
-export const photos: { src: string; alt: string; caption: string; icon: string }[] = [
-  { src: '', alt: 'Naïm behind the decks', caption: 'Live — Club night', icon: 'globe' },
-  { src: '', alt: 'Crowd at a festival', caption: 'Festival — Sunset slot', icon: 'sun' },
-  { src: '', alt: 'Close-up on the mixer', caption: 'Booth — Hands on', icon: 'vinyl' },
-  { src: '', alt: 'Dancefloor in red light', caption: 'Warehouse — 4 AM', icon: 'diver' },
-  { src: '', alt: 'Naïm on stage', caption: 'Open air — Main stage', icon: 'tent' },
-  { src: '', alt: 'Crowd hands up', caption: 'Closing set', icon: 'crowd' },
+// Performance photos. Drop files in /public/img/live/ and set src
+// (e.g. '/img/live/01.jpg'). Empty src shows a placeholder.
+export const photos: { src: string; alt: string; caption: string }[] = [
+  { src: '', alt: 'Naïm behind the decks', caption: 'Club night' },
+  { src: '', alt: 'Festival crowd at sunset', caption: 'Sunset slot' },
+  { src: '', alt: 'Hands on the mixer', caption: 'In the booth' },
+  { src: '', alt: 'Dancefloor in red light', caption: '4 AM' },
+  { src: '', alt: 'Naïm on an open air stage', caption: 'Open air' },
+  { src: '', alt: 'Crowd with hands up', caption: 'Closing set' },
 ];
 
-// Venues band. Swap names for real ones, or set logo: '/img/venues/x.svg'.
-// PLACEHOLDER names — fictional, replace with the clubs he has played.
-export const venues: { name: string; city: string; style: 'grotesk' | 'mono' | 'serif' | 'outline' | 'stencil'; logo?: string }[] = [
-  { name: 'Le Sous-Sol', city: 'Paris', style: 'serif' },
-  { name: 'DAR BEAT', city: 'Casablanca', style: 'stencil' },
-  { name: 'Salle Noire', city: 'Lyon', style: 'grotesk' },
-  { name: 'MEDINA SOUND', city: 'Marrakech', style: 'outline' },
-  { name: 'club.parallèle', city: 'Paris', style: 'mono' },
-  { name: 'Atlas Open Air', city: 'Agadir', style: 'grotesk' },
-  { name: 'La Cave Rouge', city: 'Marseille', style: 'serif' },
-  { name: 'TANGIER NIGHTS', city: 'Tangier', style: 'stencil' },
-  { name: 'Hangar 21', city: 'Bordeaux', style: 'outline' },
-  { name: 'rabat/radio', city: 'Rabat', style: 'mono' },
-  { name: 'Le Jardin', city: 'Nice', style: 'serif' },
-  { name: 'SAHARA SESSIONS', city: 'Merzouga', style: 'grotesk' },
+// Venue rows. kind picks the row: festivals on top, clubs below.
+// Use a real name, or set logo: '/img/venues/x.svg'.
+// PLACEHOLDER names, all fictional. Replace with the real ones.
+export const venues: {
+  name: string;
+  city: string;
+  kind: 'festival' | 'club';
+  style: 'grotesk' | 'mono' | 'serif' | 'outline' | 'stencil';
+  logo?: string;
+}[] = [
+  { name: 'Atlas Open Air', city: 'Agadir', kind: 'festival', style: 'grotesk' },
+  { name: 'Sahara Sessions', city: 'Merzouga', kind: 'festival', style: 'stencil' },
+  { name: 'Dunes Festival', city: 'Essaouira', kind: 'festival', style: 'serif' },
+  { name: 'Côte Sauvage', city: 'Biarritz', kind: 'festival', style: 'outline' },
+  { name: 'atlantique.open', city: 'Dakhla', kind: 'festival', style: 'mono' },
+  { name: 'Les Nuits Chaudes', city: 'Marseille', kind: 'festival', style: 'serif' },
+  { name: 'Le Sous-Sol', city: 'Paris', kind: 'club', style: 'serif' },
+  { name: 'Dar Beat', city: 'Casablanca', kind: 'club', style: 'stencil' },
+  { name: 'Salle Noire', city: 'Lyon', kind: 'club', style: 'grotesk' },
+  { name: 'club.parallèle', city: 'Paris', kind: 'club', style: 'mono' },
+  { name: 'La Cave Rouge', city: 'Marseille', kind: 'club', style: 'serif' },
+  { name: 'Hangar 21', city: 'Bordeaux', kind: 'club', style: 'outline' },
+  { name: 'Tanger Club', city: 'Tangier', kind: 'club', style: 'grotesk' },
 ];
 
 // Upcoming dates. type picks the icon: club | festival | release | event | radio.
-// Past dates hide themselves automatically. PLACEHOLDER dates.
+// Past dates hide themselves. PLACEHOLDER dates.
 export const dates: {
   date: string; // YYYY-MM-DD
   city: string;
@@ -82,35 +71,37 @@ export const dates: {
   status?: 'soldout' | 'free' | 'soon';
 }[] = [
   { date: '2026-11-21', city: 'Casablanca', country: 'MA', venue: 'Dar Beat', type: 'club', tickets: '#' },
-  { date: '2026-11-28', city: 'Paris', country: 'FR', venue: 'Le Sous-Sol — All Night Long', type: 'club', status: 'soldout' },
-  { date: '2026-12-06', city: 'Online', country: '—', venue: 'Rabat/Radio — 2h guest mix', type: 'radio', status: 'free' },
-  { date: '2026-12-31', city: 'Marrakech', country: 'MA', venue: 'Medina Sound — NYE', type: 'event', tickets: '#' },
-  { date: '2027-01-16', city: 'Everywhere', country: '—', venue: '“Paraiso” — out on all platforms', type: 'release' },
-  { date: '2027-03-14', city: 'Agadir', country: 'MA', venue: 'Atlas Open Air Festival', type: 'festival', status: 'soon' },
+  { date: '2026-11-28', city: 'Paris', country: 'FR', venue: 'Le Sous-Sol, all night long', type: 'club', status: 'soldout' },
+  { date: '2026-12-06', city: 'Online', country: '', venue: 'Guest mix, 2 hours', type: 'radio', status: 'free' },
+  { date: '2026-12-31', city: 'Marrakech', country: 'MA', venue: 'New Year’s Eve', type: 'event', tickets: '#' },
+  { date: '2027-01-16', city: 'Everywhere', country: '', venue: 'Paraiso, on all platforms', type: 'release' },
+  { date: '2027-03-14', city: 'Agadir', country: 'MA', venue: 'Atlas Open Air', type: 'festival', status: 'soon' },
 ];
 
-// Video sets. Use a YouTube ID (the bit after v=) or a direct mp4 path.
-// Empty = placeholder card. PLACEHOLDER entries.
-export const videos: { title: string; place: string; length: string; youtubeId?: string; mp4?: string; poster?: string }[] = [
-  { title: 'Sunset set', place: 'Rooftop, Casablanca', length: '1:02:14', youtubeId: '' },
-  { title: 'Late night session', place: 'Le Sous-Sol, Paris', length: '58:40', youtubeId: '' },
-  { title: 'Boiler-style live cut', place: 'Warehouse, Lyon', length: '24:07', youtubeId: '' },
-  { title: 'Desert sunrise', place: 'Merzouga', length: '1:15:00', youtubeId: '' },
+// Reels: vertical clips. Use a YouTube Shorts ID or a vertical mp4 in /public/video/.
+// poster is optional (a still from the clip). Empty = placeholder card.
+export const videos: { title: string; place: string; youtubeId?: string; mp4?: string; poster?: string }[] = [
+  { title: 'Sunset set', place: 'Casablanca', youtubeId: '' },
+  { title: 'Late night', place: 'Paris', youtubeId: '' },
+  { title: 'Closing track', place: 'Lyon', youtubeId: '' },
+  { title: 'Open air', place: 'Agadir', youtubeId: '' },
+  { title: 'Back to back', place: 'Marseille', youtubeId: '' },
 ];
 
 // The single. Paste the Spotify track ID (open.spotify.com/track/<ID>)
-// to switch from the custom card to the real Spotify embed.
+// to switch from the preview card to the real Spotify player.
 export const release = {
   title: 'Paraiso',
   artist: 'NΛIM',
   year: '2026',
-  spotifyTrackId: '', // PLACEHOLDER — couldn't find it on Spotify yet
+  blurb: 'New single. Warm, percussive, built for late. Out now.',
+  spotifyTrackId: '', // PLACEHOLDER
   spotifyUrl: 'https://open.spotify.com/search/Paraiso%20Naim',
   bpm: 124,
   key: 'A min',
 };
 
-// Press kit. The password and the link are set with:
+// Press kit. Password and link are set with:
 //   npm run presskit -- "password" "https://link-to-press-kit"
 // Current placeholder password: paraiso
-export const pressKitIncludes = ['Bio (EN / FR)', 'Hi-res photos', 'Logo pack', 'Technical rider', 'Hospitality rider'];
+export const pressKitIncludes = ['Bio, EN and FR', 'Hi-res photos', 'Logo pack', 'Tech rider', 'Hospitality rider'];
