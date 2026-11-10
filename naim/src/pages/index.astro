@@ -31,15 +31,9 @@ const fmt = (iso: string) => {
   };
 };
 const pad = (n: number) => String(n).padStart(2, '0');
+const nextGig = upcoming.find((d) => d.type !== 'release');
+const nextLabel = nextGig ? (() => { const f = fmt(nextGig.date); return { date: `${f.day} ${f.month}`, city: nextGig.city }; })() : null;
 
-// The icon sheet as a system: five categories, three marks each.
-const alphabet = [
-  { label: 'Clubs', icons: ['globe', 'diver', 'cocktail'] },
-  { label: 'Festival', icons: ['sun', 'tent', 'crowd'] },
-  { label: 'Release', icons: ['vinyl', 'angel', 'tape'] },
-  { label: 'Events', icons: ['phone', 'runner', 'calendar'] },
-  { label: 'Radio', icons: ['boombox', 'alien', 'moon'] },
-];
 const venueRows = [
   { label: 'Festivals', items: venues.filter((v) => v.kind === 'festival') },
   { label: 'Clubs', items: venues.filter((v) => v.kind === 'club') },
@@ -90,18 +84,27 @@ const jsonLd = {
 
     <!-- NAV -->
     <header class="nav" data-nav>
-      <a href="#top" class="nav__logo" aria-label={`${artist.name}, home`}><span class="logo-mask"></span></a>
-      <nav aria-label="Main">
-        <ul class="nav__links">
-          <li><a href="#about"><i>02</i>About</a></li>
-          <li><a href="#sets"><i>05</i>Sets</a></li>
-          <li><a href="#dates"><i>07</i>Dates</a></li>
-          <li><a href="#press"><i>03</i>Press</a></li>
-        </ul>
-      </nav>
-      <div class="nav__end">
-        <Btn href="#booking" variant="red" size="sm" end="→">Booking</Btn>
-        <button class="key key--text nav__menu" data-menu-open aria-expanded="false" aria-controls="menu">Menu</button>
+      <div class="nav__bar">
+        <a href="#top" class="nav__logo" aria-label={`${artist.name}, home`}><span class="logo-mask"></span></a>
+        <nav class="nav__main" aria-label="Main">
+          <ul class="nav__links" data-nav-links>
+            <li><a href="#about"><i>02</i>About</a></li>
+            <li><a href="#press"><i>03</i>Press</a></li>
+            <li><a href="#sets"><i>05</i>Sets</a></li>
+            <li><a href="#dates"><i>07</i>Dates</a></li>
+          </ul>
+          <span class="nav__ink" data-nav-ink aria-hidden="true"></span>
+        </nav>
+        <div class="nav__end">
+          {nextLabel && (
+            <a class="nav__next" href="#dates" aria-label={`Next date: ${nextLabel.date}, ${nextLabel.city}`}>
+              <i class="pulse" aria-hidden="true"></i><span>Next</span><b>{nextLabel.date}<span class="nav__city"> · {nextLabel.city}</span></b>
+            </a>
+          )}
+          <Btn href="#booking" variant="red" size="sm" end="→">Booking</Btn>
+          <button class="key key--text nav__menu" data-menu-open aria-expanded="false" aria-controls="menu">Menu</button>
+        </div>
+        <i class="nav__progress" data-nav-progress aria-hidden="true"></i>
       </div>
     </header>
 
@@ -122,6 +125,7 @@ const jsonLd = {
       <!-- COVER -->
       <section class="hero" id="top" aria-label="Cover">
         <div class="hero__bg" aria-hidden="true"></div>
+        <div class="hero__ambient" aria-hidden="true"></div>
         <picture class="hero__photo">
           <source type="image/webp" srcset="/img/naim-520.webp 520w, /img/naim-800.webp 800w, /img/naim-1179.webp 1179w" sizes="(min-width: 900px) 50vw, 100vw" />
           <img src="/img/naim-1179.jpg" alt="Naïm in a rust armchair, red glasses on, a rotary phone to his ear, a boombox and a disco ball at his feet" width="1179" height="1769" fetchpriority="high" />
@@ -138,7 +142,7 @@ const jsonLd = {
         <div class="wrap row-head">
           <header class="sh reveal">
             <span class="sh__n">01</span><span class="sh__k">Live</span>
-            <h2 id="live-title" class="sh__t">In the room</h2>
+            <h2 id="live-title" class="sh__t">On the dancefloor</h2>
           </header>
           <div class="live__controls">
             <span class="mono live__count"><b data-carousel-index>01</b> / {pad(photos.length)}</span>
@@ -390,14 +394,6 @@ const jsonLd = {
           <a class="footer__mail" href={`mailto:${artist.bookingEmail}`}>{artist.bookingEmail}</a>
           <Socials />
         </div>
-        <figure class="alphabet" aria-label="The NΛIM icon alphabet">
-          {alphabet.map((g) => (
-            <div class="alphabet__col">
-              <span class="mono">{g.label}</span>
-              <div>{g.icons.map((n) => <img src={icon(n)} alt="" width="72" height="72" loading="lazy" />)}</div>
-            </div>
-          ))}
-        </figure>
         <span class="logo-mask footer__logo" aria-hidden="true"></span>
         <p class="footer__legal mono"><span>© {new Date().getFullYear()} {artist.name}</span><span>Morocco / France</span><a class="lnk" href="#top">Back to top ↑</a></p>
       </div>

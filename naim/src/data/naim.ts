@@ -20,7 +20,7 @@ export const socials: { label: string; href: string; icon: 'instagram' | 'soundc
 
 export const bio = [
   `Naïm is a DJ from Morocco, playing between Morocco and France. House music with a lot of percussion, long blends, and records you won't hear twice in the same week.`,
-  `Clubs, festivals, rooftops, radio. He reads the room first, then plays for it.`,
+  `Clubs, festivals, rooftops, radio. He reads the dancefloor first, then plays for it.`,
 ];
 
 // Performance photos. Drop files in /public/img/live/ and set src

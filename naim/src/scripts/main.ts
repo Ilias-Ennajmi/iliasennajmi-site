@@ -16,12 +16,12 @@ if (dust && !reduced) {
     W = innerWidth; H = innerHeight;
     dust.width = W * dpr; dust.height = H * dpr;
     c.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const n = Math.round(Math.min(90, (W * H) / 16000));
+    const n = Math.round(Math.min(44, (W * H) / 28000));
     ps = Array.from({ length: n }, () => ({
       x: Math.random() * W, y: Math.random() * H,
       r: Math.random() < 0.85 ? Math.random() * 0.9 + 0.3 : Math.random() * 1.6 + 1,
       vx: (Math.random() - 0.5) * 0.08, vy: -(Math.random() * 0.12 + 0.02),
-      a: Math.random() * 0.5 + 0.15, tw: Math.random() * Math.PI * 2,
+      a: Math.random() * 0.32 + 0.1, tw: Math.random() * Math.PI * 2,
     }));
   };
   resize();

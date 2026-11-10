@@ -43,16 +43,45 @@ if (menu && menuOpen) {
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menu.hidden) close(); });
 }
 
+/* ───────── Nav: sliding marker, scroll progress, cover depth ───────── */
+const ink = $('[data-nav-ink]');
+const moveInk = () => {
+  const cur = $<HTMLElement>('.nav__links a.is-current');
+  if (!ink) return;
+  if (!cur) { ink.classList.remove('is-on'); return; }
+  const parent = ink.parentElement!.getBoundingClientRect();
+  const r = cur.getBoundingClientRect();
+  ink.style.width = `${r.width - 24}px`;
+  ink.style.transform = `translateX(${r.left - parent.left + 12}px)`;
+  ink.classList.add('is-on');
+};
+addEventListener('resize', moveInk);
+const progress = $('[data-nav-progress]');
+const hero = $('.hero');
+let ticking = false;
+addEventListener('scroll', () => {
+  if (ticking) return;
+  ticking = true;
+  requestAnimationFrame(() => {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    progress?.style.setProperty('--p', String(max > 0 ? scrollY / max : 0));
+    if (hero && !reduced && scrollY < innerHeight * 1.2) hero.style.setProperty('--sy', String(scrollY));
+    ticking = false;
+  });
+}, { passive: true });
+
 /* ───────── Nav: highlight the section you're in ───────── */
 const navLinks = $$<HTMLAnchorElement>('.nav__links a');
-const spyTargets = navLinks.map((a) => $(a.hash)).filter(Boolean) as HTMLElement[];
+const spyTargets = $$<HTMLElement>('main section[id]:not(#top)');
 if (spyTargets.length) {
   const spy = new IntersectionObserver((entries) => {
     for (const e of entries) {
       if (!e.isIntersecting) continue;
       navLinks.forEach((a) => a.classList.toggle('is-current', a.hash === `#${e.target.id}`));
+      moveInk();
     }
   }, { rootMargin: '-45% 0px -50% 0px' });
+  addEventListener('scroll', () => { if (scrollY < innerHeight * .5) { navLinks.forEach((a) => a.classList.remove('is-current')); moveInk(); } }, { passive: true });
   spyTargets.forEach((t) => spy.observe(t));
 }
 
