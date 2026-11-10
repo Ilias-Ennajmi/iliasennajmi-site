@@ -1,0 +1,27 @@
+---
+// Brand button: grainy block, wide caps label, a separate end cell, and the
+// red hand-drawn orbit from the icon set that draws itself around it on hover.
+interface Props {
+  href?: string;
+  variant?: 'ink' | 'red' | 'bone';
+  size?: 'md' | 'sm' | 'lg';
+  end?: string;
+  type?: 'button' | 'submit';
+  class?: string;
+  [key: string]: unknown;
+}
+const { href, variant = 'ink', size = 'md', end = '↗', type = 'button', class: cls = '', ...rest } = Astro.props;
+const Tag = href ? 'a' : 'button';
+---
+<Tag
+  class:list={['b', `b--${variant}`, `b--${size}`, cls]}
+  href={href}
+  type={href ? undefined : type}
+  {...rest}
+>
+  <span class="b__l"><slot /></span>
+  {end && <span class="b__e" aria-hidden="true">{end}</span>}
+  <svg class="b__o" viewBox="0 0 240 70" preserveAspectRatio="none" aria-hidden="true">
+    <path pathLength="1" d="M22 44 C 4 20, 70 3, 128 3 C 196 3, 238 16, 237 35 C 236 58, 168 68, 112 67 C 52 66, 4 57, 6 37 C 7 25, 22 15, 48 10" />
+  </svg>
+</Tag>

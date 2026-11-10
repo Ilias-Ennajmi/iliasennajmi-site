@@ -3,6 +3,7 @@ import '@fontsource-variable/archivo/wdth.css';
 import '@fontsource/space-mono/400.css';
 import '@fontsource/space-mono/700.css';
 import '../styles/global.css';
+import Btn from '../components/Btn.astro';
 import {
   artist, socials, bio, journey, photos, venues, dates, videos, release, pressKitIncludes,
 } from '../data/naim';
@@ -30,9 +31,8 @@ const fmt = (iso: string) => {
 
 const tickerWords = ['Clubs', 'Festival', 'Release', 'Events', 'Radio'];
 const tickerIcons = ['globe', 'sun', 'vinyl', 'phone', 'boombox'];
-
-// Three columns for the vertical venues band
-const cols = [0, 1, 2].map((c) => venues.filter((_, i) => i % 3 === c));
+const venueRows = [venues, [...venues].reverse()];
+const pad = (n: number) => String(n).padStart(2, '0');
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -77,6 +77,7 @@ const jsonLd = {
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
+    <canvas class="dust" data-dust aria-hidden="true"></canvas>
     <div class="grain" aria-hidden="true"></div>
 
     <!-- ───────── NAV ───────── -->
@@ -84,44 +85,32 @@ const jsonLd = {
       <a href="#top" class="nav__logo" aria-label={`${artist.name} — home`}><span class="logo-mask"></span></a>
       <nav aria-label="Main">
         <ul class="nav__links">
-          <li><a href="#about">About</a></li>
-          <li><a href="#sets">Sets</a></li>
-          <li><a href="#dates">Dates</a></li>
-          <li><a href="#press">Press</a></li>
+          <li><a href="#about"><i>01</i>About</a></li>
+          <li><a href="#sets"><i>06</i>Sets</a></li>
+          <li><a href="#dates"><i>08</i>Dates</a></li>
+          <li><a href="#press"><i>10</i>Press</a></li>
         </ul>
       </nav>
-      <a href="#booking" class="btn btn--small btn--red">Booking</a>
+      <Btn href="#booking" variant="red" size="sm" end="→">Booking</Btn>
     </header>
 
     <main id="main">
-      <!-- ───────── 1 · COVER ───────── -->
+      <!-- ───────── COVER ───────── -->
       <section class="hero" id="top" aria-label="Cover">
         <div class="hero__bg" aria-hidden="true"></div>
         <picture class="hero__photo">
           <source type="image/webp" srcset="/img/naim-520.webp 520w, /img/naim-800.webp 800w, /img/naim-1179.webp 1179w" sizes="(min-width: 900px) 50vw, 100vw" />
           <img src="/img/naim-1179.jpg" alt="Naïm sitting in a rust armchair, red glasses on, a rotary phone to his ear, a boombox and a disco ball at his feet" width="1179" height="1769" fetchpriority="high" />
         </picture>
-
         <div class="hero__strip" aria-hidden="true">
           <span>{artist.stylised} — DJ — MA ⇄ FR — {new Date().getFullYear()}</span>
-          <span>124 BPM · {release.title.toUpperCase()} · OUT NOW</span>
+          <span>{release.bpm} BPM · {release.title.toUpperCase()} · OUT NOW</span>
         </div>
-
-        <div class="hero__meta mono" aria-hidden="true">
-          <span>N°001</span><span>Selector</span><span>{artist.origin} ⇄ France</span>
-        </div>
-
-        <img class="sticker sticker--hero-a" src={icon('phone')} alt="" aria-hidden="true" width="128" height="128" />
-        <img class="sticker sticker--hero-b" src={icon('globe')} alt="" aria-hidden="true" width="128" height="128" />
-
         <h1 class="hero__logo">
           <span class="visually-hidden">{artist.name}</span>
           <span class="logo-mask logo-mask--hero" aria-hidden="true"></span>
         </h1>
-
-        <a href="#about" class="hero__scroll mono" aria-label="Scroll to the story">
-          <span>Scroll</span><i></i>
-        </a>
+        <p class="hero__line mono" aria-hidden="true"><span>Selector</span><span>{artist.origin} ⇄ France</span></p>
       </section>
 
       <!-- ───────── TICKER ───────── -->
@@ -129,43 +118,41 @@ const jsonLd = {
         <div class="ticker__track">
           {[0, 1].map(() => (
             <div class="ticker__group">
-              {tickerWords.map((w, i) => (<><span>{w}</span><img src={icon(tickerIcons[i])} alt="" width="56" height="56" /></>))}
-              {tickerWords.map((w, i) => (<><span>{w}</span><img src={icon(tickerIcons[i])} alt="" width="56" height="56" /></>))}
+              {[...tickerWords, ...tickerWords].map((w, i) => (<><span>{w}</span><img src={icon(tickerIcons[i % 5])} alt="" width="40" height="40" /></>))}
             </div>
           ))}
         </div>
       </div>
 
-      <!-- ───────── 2 · NAME + BIO ───────── -->
-      <section class="intro" id="about">
+      <!-- ───────── NAME + BIO ───────── -->
+      <section class="intro sec" id="about">
         <div class="gradient" aria-hidden="true"><i></i><i></i><i></i></div>
-        <div class="intro__side mono" aria-hidden="true">
-          <span>{artist.stylised}</span><span>—</span><span>BIO</span><span>—</span><span>#01</span>
-        </div>
-        <div class="intro__inner wrap">
-          <p class="kicker mono reveal">{artist.tagline}</p>
-          <h2 class="intro__name reveal" aria-label={artist.name}>
-            <span data-scramble="NΛIM">NΛIM</span>
-          </h2>
-          <div class="intro__bio">
-            {bio.map((p, i) => <p class={`reveal ${i === 0 ? 'lead' : ''}`}>{p}</p>)}
-          </div>
-          <div class="intro__links reveal">
-            {socials.map((s) => (
-              <a href={s.href} target="_blank" rel="noopener" class="chip">{s.label} <span aria-hidden="true">↗</span></a>
-            ))}
+        <div class="wrap">
+          <header class="sh reveal"><span class="sh__n">01</span><span class="sh__k">{artist.tagline}</span></header>
+          <h2 class="intro__name reveal" aria-label={artist.name}><span data-scramble="NΛIM">NΛIM</span></h2>
+          <div class="intro__grid">
+            <p class="intro__lead reveal">{bio[0]}</p>
+            <div class="intro__side reveal">
+              <p>{bio[1]}</p>
+              <ul class="links">
+                {socials.map((s) => <li><a class="lnk" href={s.href} target="_blank" rel="noopener">{s.label}<span aria-hidden="true">↗</span></a></li>)}
+              </ul>
+            </div>
           </div>
         </div>
       </section>
 
-      <!-- ───────── 3 · CAROUSEL ───────── -->
-      <section class="live" aria-labelledby="live-title">
-        <div class="wrap live__head">
-          <h2 id="live-title" class="h-section reveal"><span class="mono kicker">Live</span>In the room</h2>
+      <!-- ───────── LIVE CAROUSEL ───────── -->
+      <section class="live sec" aria-labelledby="live-title">
+        <div class="wrap row-head">
+          <header class="sh reveal">
+            <span class="sh__n">02</span><span class="sh__k">Live</span>
+            <h2 id="live-title" class="sh__t">In the room</h2>
+          </header>
           <div class="live__controls">
-            <span class="mono live__count"><b data-carousel-index>01</b> / {String(photos.length).padStart(2, '0')}</span>
-            <button class="round" data-carousel-prev aria-label="Previous photo">←</button>
-            <button class="round" data-carousel-next aria-label="Next photo">→</button>
+            <span class="mono live__count"><b data-carousel-index>01</b> / {pad(photos.length)}</span>
+            <button class="key" data-carousel-prev aria-label="Previous photo">←</button>
+            <button class="key" data-carousel-next aria-label="Next photo">→</button>
           </div>
         </div>
         <div class="carousel" data-carousel tabindex="0" aria-roledescription="carousel" aria-label="Performance photos">
@@ -176,57 +163,47 @@ const jsonLd = {
               ) : (
                 <div class={`slide__ph slide__ph--${i % 3}`}>
                   <img src={icon(p.icon)} alt="" width="200" height="200" />
-                  <span class="mono">Performance photo {String(i + 1).padStart(2, '0')}</span>
                 </div>
               )}
-              <figcaption class="mono"><span>{String(i + 1).padStart(2, '0')}</span>{p.caption}</figcaption>
+              <figcaption class="mono"><span>{pad(i + 1)}</span>{p.caption}</figcaption>
             </figure>
           ))}
         </div>
         <div class="wrap"><div class="progress" aria-hidden="true"><i data-carousel-bar></i></div></div>
       </section>
 
-      <!-- ───────── 4 · JOURNEY ───────── -->
-      <section class="journey wrap" aria-labelledby="journey-title">
-        <p class="kicker mono reveal">{journey.kicker}</p>
-        <h2 id="journey-title" class="journey__title">
-          {journey.title.map((l, i) => <span class={`reveal line line--${i}`}>{l}</span>)}
-        </h2>
-        <div class="journey__grid">
-          <div class="journey__map reveal" aria-hidden="true">
-            <svg viewBox="0 0 300 360" class="route">
-              <path class="route__path" d="M150 330 C 60 280, 230 220, 140 170 S 90 70, 170 30" />
-              <circle cx="150" cy="330" r="7" /><circle cx="170" cy="30" r="7" />
-              <text x="168" y="342" class="mono">MA</text><text x="186" y="34" class="mono">FR</text>
-            </svg>
-            <img class="journey__icon a" src={icon('tape')} alt="" width="120" height="120" />
-            <img class="journey__icon b" src={icon('angel')} alt="" width="120" height="120" />
-          </div>
+      <!-- ───────── JOURNEY ───────── -->
+      <section class="journey sec" aria-labelledby="journey-title">
+        <div class="wrap">
+          <header class="sh reveal"><span class="sh__n">03</span><span class="sh__k">{journey.kicker}</span></header>
+          <h2 id="journey-title" class="journey__title">
+            {journey.title.map((l, i) => <span class={`reveal line line--${i}`}>{l}</span>)}
+          </h2>
           <div class="journey__text">
             {journey.paragraphs.map((p) => <p class="reveal">{p}</p>)}
           </div>
+          <ul class="stats">
+            {journey.stats.map((s) => (
+              <li class="reveal"><b>{s.value}</b><span class="mono">{s.label}</span></li>
+            ))}
+          </ul>
         </div>
-        <ul class="stats">
-          {journey.stats.map((s) => (
-            <li class="reveal"><b>{s.value}</b><span class="mono">{s.label}</span></li>
-          ))}
-        </ul>
       </section>
 
-      <!-- ───────── 5 · VENUES (vertical band) ───────── -->
-      <section class="venues" aria-labelledby="venues-title">
-        <div class="venues__copy">
-          <p class="kicker mono">Played at</p>
-          <h2 id="venues-title" class="h-section">Rooms that<br />stayed late</h2>
-          <p>From basement clubs to open-air stages, on both sides of the Mediterranean.</p>
-          <img class="venues__icon" src={icon('cocktail')} alt="" width="160" height="160" />
+      <!-- ───────── VENUES (horizontal) ───────── -->
+      <section class="venues sec sec--ink" aria-labelledby="venues-title">
+        <div class="wrap">
+          <header class="sh reveal">
+            <span class="sh__n">04</span><span class="sh__k">Played at</span>
+            <h2 id="venues-title" class="sh__t">Rooms that stayed late</h2>
+          </header>
         </div>
-        <div class="venues__band" aria-label="Venues list">
-          {cols.map((col, ci) => (
-            <div class={`venues__col venues__col--${ci}`}>
-              <ul class="venues__track">
-                {[...col, ...col].map((v, k) => (
-                  <li class={`venue venue--${v.style}`} aria-hidden={k >= col.length ? 'true' : undefined}>
+        <div class="venues__rows">
+          {venueRows.map((row, r) => (
+            <div class={`marquee marquee--${r}`}>
+              <ul class="marquee__track">
+                {[...row, ...row].map((v, k) => (
+                  <li class={`venue venue--${v.style}`} aria-hidden={k >= row.length ? 'true' : undefined}>
                     {v.logo ? <img src={v.logo} alt={v.name} /> : <b>{v.name}</b>}
                     <span class="mono">{v.city}</span>
                   </li>
@@ -237,18 +214,17 @@ const jsonLd = {
         </div>
       </section>
 
-      <!-- ───────── 6 · BOOKING CTA ───────── -->
-      <section class="booking" id="booking" aria-labelledby="booking-title">
+      <!-- ───────── BOOKING ───────── -->
+      <section class="booking sec" id="booking" aria-labelledby="booking-title">
         <div class="gradient gradient--hot" aria-hidden="true"><i></i><i></i><i></i></div>
         <div class="wrap booking__inner">
           <div class="booking__lead">
-            <img class="booking__phone" src={icon('phone')} alt="" width="220" height="220" />
-            <p class="kicker mono">Booking — worldwide</p>
-            <h2 id="booking-title" class="booking__title">Pick up<br />the phone.</h2>
-            <p class="booking__sub">Clubs, festivals, private events, radio. Tell us the date and the room — we'll take it from there.</p>
-            <a class="booking__mail" href={`mailto:${artist.bookingEmail}`}>{artist.bookingEmail}</a>
+            <header class="sh reveal"><span class="sh__n">05</span><span class="sh__k">Booking — worldwide</span></header>
+            <h2 id="booking-title" class="booking__title reveal">Pick up<br />the phone.</h2>
+            <p class="booking__sub reveal">Clubs, festivals, private events, radio. Tell us the date and the room — we'll take it from there.</p>
+            <a class="lnk lnk--big booking__mail" href={`mailto:${artist.bookingEmail}`}>{artist.bookingEmail}</a>
           </div>
-          <form class="form" data-booking-form>
+          <form class="form reveal" data-booking-form>
             <div class="form__row">
               <label><span class="mono">Your name</span><input name="name" required autocomplete="name" /></label>
               <label><span class="mono">Email</span><input name="email" type="email" required autocomplete="email" /></label>
@@ -260,54 +236,55 @@ const jsonLd = {
             <fieldset class="form__type">
               <legend class="mono">Type of gig</legend>
               {['Club', 'Festival', 'Private', 'Radio'].map((t, i) => (
-                <label class="pill"><input type="radio" name="type" value={t} checked={i === 0} /><span>{t}</span></label>
+                <label class="tog"><input type="radio" name="type" value={t} checked={i === 0} /><span>{t}</span></label>
               ))}
             </fieldset>
             <label><span class="mono">Tell us more</span><textarea name="message" rows="3"></textarea></label>
-            <button class="btn btn--ink" type="submit">Send booking request <span aria-hidden="true">→</span></button>
+            <Btn type="submit" variant="ink" size="lg" end="→" class="form__send">Send request</Btn>
             <p class="form__note mono">Opens your email app with everything filled in.</p>
           </form>
         </div>
       </section>
 
-      <!-- ───────── 7 · VIDEOS ───────── -->
-      <section class="sets wrap" id="sets" aria-labelledby="sets-title">
-        <div class="sets__head">
-          <h2 id="sets-title" class="h-section reveal"><span class="mono kicker">Watch</span>Hear what he plays</h2>
-          <img class="sticker sticker--sets" src={icon('runner')} alt="" width="140" height="140" />
-        </div>
-        <div class="player" data-player>
-          <div class="player__screen" data-player-screen>
-            <button class="player__poster" data-player-play aria-label={`Play ${videos[0]?.title}`}>
-              <span class="player__icon"><img src={icon('tape')} alt="" width="160" height="160" /></span>
-              <span class="player__btn" aria-hidden="true">▶</span>
-              <span class="player__title"><b data-player-title>{videos[0]?.title}</b><span class="mono" data-player-place>{videos[0]?.place}</span></span>
-            </button>
+      <!-- ───────── VIDEOS ───────── -->
+      <section class="sets sec" id="sets" aria-labelledby="sets-title">
+        <div class="wrap">
+          <header class="sh reveal">
+            <span class="sh__n">06</span><span class="sh__k">Watch</span>
+            <h2 id="sets-title" class="sh__t">Hear what he plays</h2>
+          </header>
+          <div class="player" data-player>
+            <div class="player__screen" data-player-screen>
+              <button class="player__poster" data-player-play aria-label={`Play ${videos[0]?.title}`}>
+                <span class="player__btn" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg></span>
+                <span class="player__title"><b data-player-title>{videos[0]?.title}</b><span class="mono" data-player-place>{videos[0]?.place}</span></span>
+              </button>
+            </div>
+            <ol class="player__list">
+              {videos.map((v, i) => (
+                <li>
+                  <button
+                    class:list={['track', { 'is-active': i === 0 }]}
+                    data-video-index={i}
+                    data-yt={v.youtubeId || ''}
+                    data-mp4={v.mp4 || ''}
+                    data-title={v.title}
+                    data-place={v.place}
+                  >
+                    <span class="mono track__n">{pad(i + 1)}</span>
+                    <span class="track__t"><b>{v.title}</b><span class="mono">{v.place}</span></span>
+                    <span class="mono track__l">{v.length}</span>
+                    <span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>
+                  </button>
+                </li>
+              ))}
+            </ol>
           </div>
-          <ol class="player__list">
-            {videos.map((v, i) => (
-              <li>
-                <button
-                  class:list={['track', { 'is-active': i === 0 }]}
-                  data-video-index={i}
-                  data-yt={v.youtubeId || ''}
-                  data-mp4={v.mp4 || ''}
-                  data-title={v.title}
-                  data-place={v.place}
-                >
-                  <span class="mono track__n">{String(i + 1).padStart(2, '0')}</span>
-                  <span class="track__t"><b>{v.title}</b><span class="mono">{v.place}</span></span>
-                  <span class="mono track__l">{v.length}</span>
-                  <span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>
-                </button>
-              </li>
-            ))}
-          </ol>
         </div>
       </section>
 
-      <!-- ───────── 8 · RELEASE / SPOTIFY ───────── -->
-      <section class="release" aria-labelledby="release-title">
+      <!-- ───────── RELEASE ───────── -->
+      <section class="release sec" aria-labelledby="release-title">
         <div class="wrap release__inner">
           <div class="release__art reveal" aria-hidden="true">
             <div class="cover">
@@ -322,12 +299,11 @@ const jsonLd = {
               <span class="cover__strip mono">{release.title.toUpperCase()} — {release.bpm} BPM — {release.key} — {release.year} — {release.artist}</span>
               <span class="logo-mask cover__logo"></span>
             </div>
-            <img class="release__vinyl" src={icon('vinyl')} alt="" width="200" height="200" />
           </div>
           <div class="release__copy">
-            <p class="kicker mono">New single</p>
-            <h2 id="release-title" class="release__title">{release.title}</h2>
-            <p>A warm, sun-bleached roller built for the hour when the room stops thinking. Out now.</p>
+            <header class="sh reveal"><span class="sh__n">07</span><span class="sh__k">New single</span></header>
+            <h2 id="release-title" class="release__title reveal">{release.title}</h2>
+            <p class="reveal">A warm, sun-bleached roller built for the hour when the room stops thinking. Out now.</p>
             {release.spotifyTrackId ? (
               <iframe
                 class="spotify"
@@ -336,83 +312,91 @@ const jsonLd = {
                 width="100%" height="152" loading="lazy"
                 allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
             ) : (
-              <div class="mini-player" data-mini>
-                <button class="mini-player__play" data-mini-play aria-label={`Preview ${release.title}`}>▶</button>
-                <div class="mini-player__body">
-                  <div class="mini-player__meta"><b>{release.title}</b><span class="mono">{release.artist}</span></div>
-                  <div class="wave" aria-hidden="true">{Array.from({ length: 48 }, (_, i) => <i style={`--h:${(0.25 + Math.abs(Math.sin(i * 1.7) * Math.cos(i * 0.4))).toFixed(2)}`}></i>)}</div>
+              <div class="deck reveal" data-mini>
+                <button class="deck__play" data-mini-play aria-label={`Preview ${release.title}`}><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg></button>
+                <div class="deck__body">
+                  <div class="deck__meta"><b>{release.title}</b><span class="mono">{release.artist} · {release.bpm} BPM</span></div>
+                  <div class="wave" aria-hidden="true">{Array.from({ length: 56 }, (_, i) => <i style={`--h:${(0.22 + Math.abs(Math.sin(i * 1.7) * Math.cos(i * 0.4))).toFixed(2)}`}></i>)}</div>
                 </div>
-                <a class="mini-player__sp mono" href={release.spotifyUrl} target="_blank" rel="noopener">Spotify ↗</a>
+                <a class="lnk deck__sp" href={release.spotifyUrl} target="_blank" rel="noopener">Spotify<span aria-hidden="true">↗</span></a>
               </div>
             )}
           </div>
         </div>
       </section>
 
-      <!-- ───────── 9 · DATES ───────── -->
-      <section class="dates wrap" id="dates" aria-labelledby="dates-title">
-        <div class="dates__head">
-          <h2 id="dates-title" class="h-section reveal"><span class="mono kicker">On tour</span>Upcoming dates</h2>
-          <ul class="legend mono" aria-label="Legend">
-            {Object.keys(typeIcon).map((t) => <li><img src={icon(typeIcon[t])} alt="" width="28" height="28" />{typeLabel[t]}</li>)}
-          </ul>
+      <!-- ───────── DATES ───────── -->
+      <section class="dates sec" id="dates" aria-labelledby="dates-title">
+        <div class="wrap">
+          <div class="row-head">
+            <header class="sh reveal">
+              <span class="sh__n">08</span><span class="sh__k">On tour</span>
+              <h2 id="dates-title" class="sh__t">Upcoming dates</h2>
+            </header>
+            <ul class="legend mono" aria-label="Legend">
+              {Object.keys(typeIcon).map((t) => <li><img src={icon(typeIcon[t])} alt="" width="28" height="28" />{typeLabel[t]}</li>)}
+            </ul>
+          </div>
+          {upcoming.length ? (
+            <ol class="gigs">
+              {upcoming.map((d) => {
+                const f = fmt(d.date);
+                return (
+                  <li class="gig reveal" data-date={d.date}>
+                    <time datetime={d.date} class="gig__date"><b>{f.day}</b><span class="mono">{f.month} {f.year}<br />{f.weekday}</span></time>
+                    <img class="gig__icon" src={icon(typeIcon[d.type])} alt={typeLabel[d.type]} width="64" height="64" />
+                    <div class="gig__where"><b>{d.city}{d.country !== '—' && <span class="mono"> {d.country}</span>}</b><span>{d.venue}</span></div>
+                    <span class="gig__type mono">{typeLabel[d.type]}</span>
+                    <div class="gig__cta">
+                      {d.status === 'soldout' ? <span class="tag tag--out mono">Sold out</span>
+                        : d.status === 'free' ? <span class="tag mono">Free</span>
+                        : d.status === 'soon' ? <span class="tag tag--soon mono">Tickets soon</span>
+                        : d.tickets ? <Btn href={d.tickets} size="sm">Tickets</Btn>
+                        : <span class="tag mono">{d.type === 'release' ? 'Out soon' : 'Info soon'}</span>}
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+          ) : <p class="mono">New dates soon. Want him in your city? <a href="#booking">Book here.</a></p>}
         </div>
-        {upcoming.length ? (
-          <ol class="gigs">
-            {upcoming.map((d) => {
-              const f = fmt(d.date);
-              return (
-                <li class="gig reveal" data-date={d.date}>
-                  <time datetime={d.date} class="gig__date"><b>{f.day}</b><span class="mono">{f.month} {f.year}<br />{f.weekday}</span></time>
-                  <img class="gig__icon" src={icon(typeIcon[d.type])} alt={typeLabel[d.type]} width="64" height="64" />
-                  <div class="gig__where"><b>{d.city}{d.country !== '—' && <span class="mono"> {d.country}</span>}</b><span>{d.venue}</span></div>
-                  <span class="gig__type mono">{typeLabel[d.type]}</span>
-                  <div class="gig__cta">
-                    {d.status === 'soldout' ? <span class="tag tag--out mono">Sold out</span>
-                      : d.status === 'free' ? <span class="tag mono">Free</span>
-                      : d.status === 'soon' ? <span class="tag tag--soon mono">Tickets soon</span>
-                      : d.tickets ? <a class="btn btn--small btn--ink" href={d.tickets}>Tickets ↗</a>
-                      : <span class="tag mono">{d.type === 'release' ? 'Out soon' : 'Info soon'}</span>}
-                  </div>
-                </li>
-              );
-            })}
-          </ol>
-        ) : <p class="mono">New dates soon. Want him in your city? <a href="#booking">Book here.</a></p>}
       </section>
 
-      <!-- ───────── 10 · THE BOOTH (special) ───────── -->
-      <section class="booth" aria-labelledby="booth-title">
+      <!-- ───────── THE BOOTH ───────── -->
+      <section class="booth sec sec--ink" aria-labelledby="booth-title">
         <div class="wrap">
-          <div class="booth__head">
-            <p class="kicker mono">Something special</p>
-            <h2 id="booth-title" class="h-section">Take the booth</h2>
-            <p>Tap the grid, hit play, and make a groove at Naïm's tempo. Every row is a sound — every icon is his.</p>
+          <div class="row-head">
+            <header class="sh reveal">
+              <span class="sh__n">09</span><span class="sh__k">Something special</span>
+              <h2 id="booth-title" class="sh__t">Take the booth</h2>
+            </header>
+            <p class="booth__copy reveal">Tap the grid, hit play, make a groove at Naïm's tempo. Every row is a sound — every icon is his.</p>
           </div>
-          <div class="seq" data-seq>
+          <div class="seq reveal" data-seq>
             <div class="seq__bar">
-              <button class="btn btn--red btn--small" data-seq-play aria-pressed="false"><span data-seq-label>Play</span></button>
-              <label class="seq__bpm mono">BPM <input type="range" min="96" max="140" value="124" data-seq-bpm aria-label="Tempo" /><output data-seq-bpm-out>124</output></label>
-              <button class="btn btn--ghost btn--small" data-seq-random>Naïm it ✶</button>
-              <button class="btn btn--ghost btn--small" data-seq-clear>Clear</button>
+              <Btn variant="red" size="sm" end="▶" data-seq-play aria-pressed="false"><span data-seq-label>Play</span></Btn>
+              <label class="seq__bpm mono">BPM <input type="range" min="96" max="140" value={release.bpm} data-seq-bpm aria-label="Tempo" /><output data-seq-bpm-out>{release.bpm}</output></label>
+              <span class="seq__tools">
+                <button class="key key--text" data-seq-random>Naïm it ✶</button>
+                <button class="key key--text" data-seq-clear>Clear</button>
+              </span>
             </div>
             <div class="seq__grid" data-seq-grid role="grid" aria-label="Step sequencer"></div>
           </div>
         </div>
       </section>
 
-      <!-- ───────── 11 · PRESS KIT ───────── -->
-      <section class="press wrap" id="press" aria-labelledby="press-title">
-        <div class="press__card">
-          <img class="press__icon" src={icon('calendar')} alt="" width="160" height="160" />
-          <div>
-            <p class="kicker mono">For promoters & press</p>
-            <h2 id="press-title" class="h-section">Press kit</h2>
-            <ul class="press__list mono">{pressKitIncludes.map((x) => <li>{x}</li>)}</ul>
-          </div>
-          <div class="press__action">
-            <button class="btn btn--red btn--big" data-press-open>Download press kit <span aria-hidden="true">↓</span></button>
-            <p class="mono">Password protected. No password? <a href={`mailto:${artist.managementEmail}?subject=Press%20kit%20access`}>Ask for it</a>.</p>
+      <!-- ───────── PRESS KIT ───────── -->
+      <section class="press sec" id="press" aria-labelledby="press-title">
+        <div class="wrap press__inner">
+          <header class="sh reveal">
+            <span class="sh__n">10</span><span class="sh__k">For promoters & press</span>
+            <h2 id="press-title" class="sh__t">Press kit</h2>
+          </header>
+          <ul class="press__list mono reveal">{pressKitIncludes.map((x, i) => <li><i>{pad(i + 1)}</i>{x}</li>)}</ul>
+          <div class="press__action reveal">
+            <Btn variant="red" size="lg" end="↓" data-press-open>Download press kit</Btn>
+            <p class="mono">Password protected. No password? <a class="lnk" href={`mailto:${artist.managementEmail}?subject=Press%20kit%20access`}>Ask for it</a></p>
           </div>
         </div>
       </section>
@@ -423,31 +407,28 @@ const jsonLd = {
       <div class="gradient gradient--low" aria-hidden="true"><i></i><i></i><i></i></div>
       <div class="wrap footer__inner">
         <div class="footer__cta">
-          <p class="kicker mono">Booking & management</p>
+          <header class="sh"><span class="sh__n">∞</span><span class="sh__k">Booking & management</span></header>
           <a class="footer__mail" href={`mailto:${artist.bookingEmail}`}>{artist.bookingEmail}</a>
         </div>
-        <ul class="footer__social">
-          {socials.map((s) => <li><a href={s.href} target="_blank" rel="noopener">{s.label} ↗</a></li>)}
+        <ul class="links">
+          {socials.map((s) => <li><a class="lnk" href={s.href} target="_blank" rel="noopener">{s.label}<span aria-hidden="true">↗</span></a></li>)}
         </ul>
-        <div class="footer__icons" aria-hidden="true">
-          {['globe', 'diver', 'cocktail', 'sun', 'tent', 'crowd', 'vinyl', 'angel', 'tape', 'phone', 'runner', 'calendar', 'boombox', 'alien', 'moon'].map((n) => <img src={icon(n)} alt="" width="64" height="64" loading="lazy" />)}
-        </div>
         <span class="logo-mask footer__logo" aria-hidden="true"></span>
-        <p class="footer__legal mono"><span>© {new Date().getFullYear()} {artist.name}</span><span>Morocco ⇄ France</span><a href="#top">Back to top ↑</a></p>
+        <p class="footer__legal mono"><span>© {new Date().getFullYear()} {artist.name}</span><span>Morocco ⇄ France</span><a class="lnk" href="#top">Back to top ↑</a></p>
       </div>
     </footer>
 
-    <a href="#booking" class="fab" data-fab>Book {artist.name} <span aria-hidden="true">→</span></a>
+    <div class="fab" data-fab><Btn href="#booking" variant="red" end="→">Book {artist.name}</Btn></div>
 
     <dialog class="modal" data-press-modal aria-labelledby="pk-title">
-      <form method="dialog" class="modal__close"><button aria-label="Close">✕</button></form>
-      <img src={icon('alien')} alt="" width="120" height="120" class="modal__icon" />
+      <form method="dialog" class="modal__close"><button class="key" aria-label="Close">✕</button></form>
+      <img src={icon('alien')} alt="" width="96" height="96" class="modal__icon" />
       <h3 id="pk-title">Members only</h3>
       <p>Enter the password to download the press kit.</p>
       <form class="modal__form" data-press-form>
         <label class="visually-hidden" for="pk-pass">Password</label>
         <input id="pk-pass" type="password" autocomplete="off" placeholder="Password" required />
-        <button class="btn btn--red" type="submit">Unlock</button>
+        <Btn type="submit" variant="red" end="→">Unlock</Btn>
       </form>
       <p class="modal__msg mono" data-press-msg role="status" aria-live="polite"></p>
     </dialog>

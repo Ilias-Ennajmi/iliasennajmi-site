@@ -4,6 +4,48 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 document.documentElement.classList.add('js');
 
+/* ───────── Dust: slow specks drifting like in a projector beam ───────── */
+const dust = $<HTMLCanvasElement>('[data-dust]');
+if (dust && !reduced) {
+  const c = dust.getContext('2d')!;
+  const dpr = Math.min(devicePixelRatio || 1, 2);
+  let W = 0, H = 0;
+  type P = { x: number; y: number; r: number; vx: number; vy: number; a: number; tw: number };
+  let ps: P[] = [];
+  const resize = () => {
+    W = innerWidth; H = innerHeight;
+    dust.width = W * dpr; dust.height = H * dpr;
+    c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const n = Math.round(Math.min(90, (W * H) / 16000));
+    ps = Array.from({ length: n }, () => ({
+      x: Math.random() * W, y: Math.random() * H,
+      r: Math.random() < 0.85 ? Math.random() * 0.9 + 0.3 : Math.random() * 1.6 + 1,
+      vx: (Math.random() - 0.5) * 0.08, vy: -(Math.random() * 0.12 + 0.02),
+      a: Math.random() * 0.5 + 0.15, tw: Math.random() * Math.PI * 2,
+    }));
+  };
+  resize();
+  addEventListener('resize', resize);
+  let sy = scrollY, push = 0;
+  addEventListener('scroll', () => { push += (scrollY - sy) * 0.02; sy = scrollY; }, { passive: true });
+  const loop = (t: number) => {
+    c.clearRect(0, 0, W, H);
+    push *= 0.92;
+    for (const p of ps) {
+      p.x += p.vx + Math.sin(t / 4000 + p.tw) * 0.05;
+      p.y += p.vy - push;
+      if (p.y < -5) p.y = H + 5; if (p.y > H + 5) p.y = -5;
+      if (p.x < -5) p.x = W + 5; if (p.x > W + 5) p.x = -5;
+      c.globalAlpha = p.a * (0.6 + 0.4 * Math.sin(t / 900 + p.tw));
+      c.fillStyle = '#fff';
+      c.beginPath(); c.arc(p.x, p.y, p.r, 0, Math.PI * 2); c.fill();
+    }
+    if (!document.hidden) requestAnimationFrame(loop);
+  };
+  requestAnimationFrame(loop);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) requestAnimationFrame(loop); });
+}
+
 /* ───────── Nav: solid after hero, hides on scroll down. Floating book button ───────── */
 const nav = $('[data-nav]');
 const fab = $('[data-fab]');
@@ -373,6 +415,7 @@ if (seq) {
   });
   transport.onStop = () => {
     playBtn.setAttribute('aria-pressed', 'false'); label.textContent = 'Play';
+    const e = playBtn.querySelector('.b__e'); if (e) e.textContent = '▶';
     if (prev >= 0) VOICES.forEach(({ v }) => cells[v][prev].classList.remove('is-now'));
     prev = -1;
   };
@@ -381,6 +424,7 @@ if (seq) {
     transport.bpm = +bpm.value;
     transport.start();
     playBtn.setAttribute('aria-pressed', 'true'); label.textContent = 'Stop';
+    const e = playBtn.querySelector('.b__e'); if (e) e.textContent = '■';
   });
   bpm.addEventListener('input', () => { transport.bpm = +bpm.value; bpmOut.textContent = bpm.value; });
   $('[data-seq-clear]', seq)?.addEventListener('click', () => { VOICES.forEach(({ v }) => pattern[v].fill(false)); sync(); });
@@ -408,11 +452,13 @@ if (mini) {
     if (s === 15) loops = (loops + 1) % 4;
   });
   let loops = 0;
-  t.onStop = () => { btn.textContent = '▶'; section?.classList.remove('is-playing'); mini.classList.remove('is-playing'); };
+  const PLAY = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+  const PAUSE = '<svg viewBox="0 0 24 24"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>';
+  t.onStop = () => { btn.innerHTML = PLAY; section?.classList.remove('is-playing'); mini.classList.remove('is-playing'); };
   btn.addEventListener('click', () => {
     if (t.playing) return t.stop();
     loops = 0; t.bpm = 124; t.start();
-    btn.textContent = '❚❚'; section?.classList.add('is-playing'); mini.classList.add('is-playing');
+    btn.innerHTML = PAUSE; section?.classList.add('is-playing'); mini.classList.add('is-playing');
   });
 }
 
