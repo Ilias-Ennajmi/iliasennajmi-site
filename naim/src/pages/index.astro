@@ -29,8 +29,20 @@ const fmt = (iso: string) => {
   };
 };
 
-const tickerWords = ['Clubs', 'Festival', 'Release', 'Events', 'Radio'];
-const tickerIcons = ['globe', 'sun', 'vinyl', 'phone', 'boombox'];
+// The icon sheet as a system: five categories, three marks each.
+const alphabet = [
+  { label: 'Clubs', icons: ['globe', 'diver', 'cocktail'] },
+  { label: 'Festival', icons: ['sun', 'tent', 'crowd'] },
+  { label: 'Release', icons: ['vinyl', 'angel', 'tape'] },
+  { label: 'Events', icons: ['phone', 'runner', 'calendar'] },
+  { label: 'Radio', icons: ['boombox', 'alien', 'moon'] },
+];
+const sections = [
+  ['about', '01', 'About'], ['live', '02', 'Live'], ['journey', '03', 'Journey'], ['venues', '04', 'Played at'],
+  ['booking', '05', 'Booking'], ['sets', '06', 'Sets'], ['release', '07', 'Paraiso'], ['dates', '08', 'Dates'],
+  ['booth', '09', 'The booth'], ['press', '10', 'Press kit'],
+];
+const typesPresent = (['club', 'festival', 'release', 'event', 'radio'] as const).filter((t) => upcoming.some((d) => d.type === t));
 const venueRows = [venues, [...venues].reverse()];
 const pad = (n: number) => String(n).padStart(2, '0');
 
@@ -91,8 +103,27 @@ const jsonLd = {
           <li><a href="#press"><i>10</i>Press</a></li>
         </ul>
       </nav>
-      <Btn href="#booking" variant="red" size="sm" end="→">Booking</Btn>
+      <div class="nav__end">
+        <Btn href="#booking" variant="red" size="sm" end="→">Booking</Btn>
+        <button class="key key--text nav__menu" data-menu-open aria-expanded="false" aria-controls="menu">Menu</button>
+      </div>
     </header>
+
+    <div class="menu" id="menu" data-menu hidden>
+      <div class="menu__top">
+        <span class="logo-mask menu__logo" aria-hidden="true"></span>
+        <button class="key key--text" data-menu-close>Close</button>
+      </div>
+      <nav aria-label="Sections">
+        <ol class="menu__list">
+          {sections.map(([id, n, label]) => <li><a href={`#${id}`} data-menu-link><i>{n}</i>{label}</a></li>)}
+        </ol>
+      </nav>
+      <div class="menu__foot">
+        <a class="lnk" href={`mailto:${artist.bookingEmail}`}>{artist.bookingEmail}</a>
+        <ul class="links">{socials.map((s) => <li><a class="lnk" href={s.href} target="_blank" rel="noopener">{s.short}<span aria-hidden="true">↗</span></a></li>)}</ul>
+      </div>
+    </div>
 
     <main id="main">
       <!-- ───────── COVER ───────── -->
@@ -113,16 +144,6 @@ const jsonLd = {
         <p class="hero__line mono" aria-hidden="true"><span>Selector</span><span>{artist.origin} ⇄ France</span></p>
       </section>
 
-      <!-- ───────── TICKER ───────── -->
-      <div class="ticker" aria-hidden="true">
-        <div class="ticker__track">
-          {[0, 1].map(() => (
-            <div class="ticker__group">
-              {[...tickerWords, ...tickerWords].map((w, i) => (<><span>{w}</span><img src={icon(tickerIcons[i % 5])} alt="" width="40" height="40" /></>))}
-            </div>
-          ))}
-        </div>
-      </div>
 
       <!-- ───────── NAME + BIO ───────── -->
       <section class="intro sec" id="about">
@@ -143,7 +164,7 @@ const jsonLd = {
       </section>
 
       <!-- ───────── LIVE CAROUSEL ───────── -->
-      <section class="live sec" aria-labelledby="live-title">
+      <section class="live sec" id="live" aria-labelledby="live-title">
         <div class="wrap row-head">
           <header class="sh reveal">
             <span class="sh__n">02</span><span class="sh__k">Live</span>
@@ -162,7 +183,7 @@ const jsonLd = {
                 <img src={p.src} alt={p.alt} loading="lazy" />
               ) : (
                 <div class={`slide__ph slide__ph--${i % 3}`}>
-                  <img src={icon(p.icon)} alt="" width="200" height="200" />
+                  <span class="mono">Photo {pad(i + 1)} — soon</span>
                 </div>
               )}
               <figcaption class="mono"><span>{pad(i + 1)}</span>{p.caption}</figcaption>
@@ -173,7 +194,7 @@ const jsonLd = {
       </section>
 
       <!-- ───────── JOURNEY ───────── -->
-      <section class="journey sec" aria-labelledby="journey-title">
+      <section class="journey sec" id="journey" aria-labelledby="journey-title">
         <div class="wrap">
           <header class="sh reveal"><span class="sh__n">03</span><span class="sh__k">{journey.kicker}</span></header>
           <h2 id="journey-title" class="journey__title">
@@ -191,7 +212,7 @@ const jsonLd = {
       </section>
 
       <!-- ───────── VENUES (horizontal) ───────── -->
-      <section class="venues sec sec--ink" aria-labelledby="venues-title">
+      <section class="venues sec sec--ink" id="venues" aria-labelledby="venues-title">
         <div class="wrap">
           <header class="sh reveal">
             <span class="sh__n">04</span><span class="sh__k">Played at</span>
@@ -218,11 +239,15 @@ const jsonLd = {
       <section class="booking sec" id="booking" aria-labelledby="booking-title">
         <div class="gradient gradient--hot" aria-hidden="true"><i></i><i></i><i></i></div>
         <div class="wrap booking__inner">
-          <div class="booking__lead">
+          <div class="booking__lead" data-ring>
+            <img class="booking__phone" src={icon('phone')} alt="" width="256" height="256" />
             <header class="sh reveal"><span class="sh__n">05</span><span class="sh__k">Booking — worldwide</span></header>
             <h2 id="booking-title" class="booking__title reveal">Pick up<br />the phone.</h2>
             <p class="booking__sub reveal">Clubs, festivals, private events, radio. Tell us the date and the room — we'll take it from there.</p>
-            <a class="lnk lnk--big booking__mail" href={`mailto:${artist.bookingEmail}`}>{artist.bookingEmail}</a>
+            <div class="booking__contact">
+              <a class="lnk lnk--big booking__mail" href={`mailto:${artist.bookingEmail}`}>{artist.bookingEmail}</a>
+              <button class="key key--text" data-copy={artist.bookingEmail}>Copy</button>
+            </div>
           </div>
           <form class="form reveal" data-booking-form>
             <div class="form__row">
@@ -284,7 +309,7 @@ const jsonLd = {
       </section>
 
       <!-- ───────── RELEASE ───────── -->
-      <section class="release sec" aria-labelledby="release-title">
+      <section class="release sec" id="release" aria-labelledby="release-title">
         <div class="wrap release__inner">
           <div class="release__art reveal" aria-hidden="true">
             <div class="cover">
@@ -333,20 +358,25 @@ const jsonLd = {
               <span class="sh__n">08</span><span class="sh__k">On tour</span>
               <h2 id="dates-title" class="sh__t">Upcoming dates</h2>
             </header>
-            <ul class="legend mono" aria-label="Legend">
-              {Object.keys(typeIcon).map((t) => <li><img src={icon(typeIcon[t])} alt="" width="28" height="28" />{typeLabel[t]}</li>)}
-            </ul>
+            <div class="filters" role="group" aria-label="Filter dates by type" data-filters>
+              <button class="filter is-on" data-filter="all" aria-pressed="true"><span>All</span><b>{upcoming.length}</b></button>
+              {typesPresent.map((t) => (
+                <button class="filter" data-filter={t} aria-pressed="false">
+                  <img src={icon(typeIcon[t])} alt="" width="40" height="40" /><span>{typeLabel[t]}</span><b>{upcoming.filter((d) => d.type === t).length}</b>
+                </button>
+              ))}
+            </div>
           </div>
           {upcoming.length ? (
             <ol class="gigs">
               {upcoming.map((d) => {
                 const f = fmt(d.date);
                 return (
-                  <li class="gig reveal" data-date={d.date}>
+                  <li class="gig reveal" data-date={d.date} data-type={d.type} data-title={`${artist.name} — ${d.venue}`} data-place={`${d.venue}, ${d.city}`}>
                     <time datetime={d.date} class="gig__date"><b>{f.day}</b><span class="mono">{f.month} {f.year}<br />{f.weekday}</span></time>
                     <img class="gig__icon" src={icon(typeIcon[d.type])} alt={typeLabel[d.type]} width="64" height="64" />
                     <div class="gig__where"><b>{d.city}{d.country !== '—' && <span class="mono"> {d.country}</span>}</b><span>{d.venue}</span></div>
-                    <span class="gig__type mono">{typeLabel[d.type]}</span>
+                    <button class="lnk gig__cal" data-ics>Add to calendar<span aria-hidden="true">＋</span></button>
                     <div class="gig__cta">
                       {d.status === 'soldout' ? <span class="tag tag--out mono">Sold out</span>
                         : d.status === 'free' ? <span class="tag mono">Free</span>
@@ -363,7 +393,7 @@ const jsonLd = {
       </section>
 
       <!-- ───────── THE BOOTH ───────── -->
-      <section class="booth sec sec--ink" aria-labelledby="booth-title">
+      <section class="booth sec sec--ink" id="booth" aria-labelledby="booth-title">
         <div class="wrap">
           <div class="row-head">
             <header class="sh reveal">
@@ -413,6 +443,14 @@ const jsonLd = {
         <ul class="links">
           {socials.map((s) => <li><a class="lnk" href={s.href} target="_blank" rel="noopener">{s.label}<span aria-hidden="true">↗</span></a></li>)}
         </ul>
+        <figure class="alphabet" aria-label="The NΛIM icon alphabet">
+          {alphabet.map((g) => (
+            <div class="alphabet__col">
+              <span class="mono">{g.label}</span>
+              <div>{g.icons.map((n) => <img src={icon(n)} alt="" width="72" height="72" loading="lazy" />)}</div>
+            </div>
+          ))}
+        </figure>
         <span class="logo-mask footer__logo" aria-hidden="true"></span>
         <p class="footer__legal mono"><span>© {new Date().getFullYear()} {artist.name}</span><span>Morocco ⇄ France</span><a class="lnk" href="#top">Back to top ↑</a></p>
       </div>
@@ -422,7 +460,7 @@ const jsonLd = {
 
     <dialog class="modal" data-press-modal aria-labelledby="pk-title">
       <form method="dialog" class="modal__close"><button class="key" aria-label="Close">✕</button></form>
-      <img src={icon('alien')} alt="" width="96" height="96" class="modal__icon" />
+      <span class="modal__lock mono" aria-hidden="true">10 — Press</span>
       <h3 id="pk-title">Members only</h3>
       <p>Enter the password to download the press kit.</p>
       <form class="modal__form" data-press-form>
@@ -436,6 +474,7 @@ const jsonLd = {
     <script type="application/json" id="presskit-data" set:html={JSON.stringify(presskit)} />
     <script>
       import '../scripts/main.ts';
+      import '../scripts/ux.ts';
     </script>
   </body>
 </html>
