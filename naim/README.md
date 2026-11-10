@@ -9,7 +9,9 @@ npm run dev        # http://localhost:4321
 npm run build      # → naim/dist
 ```
 
-**Deploy (Vercel or Netlify):** new project from this repo, set **Root directory** to `naim`. Framework preset: Astro. Set `SITE_URL` to the real domain.
+**Live:** https://naim-dj.vercel.app (Vercel project `naim-dj`, root directory `naim`).
+
+The project isn't linked to Git yet, so pushes don't redeploy it. To make it update automatically, open the project in Vercel → Settings → Git, connect this repo, and set the production branch to the one holding `naim/`. When he has a domain, add it under Settings → Domains. Links and share previews follow the Vercel production URL automatically, or set `SITE_URL`.
 
 ## Editing content
 
