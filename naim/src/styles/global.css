@@ -279,6 +279,15 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .stats span { font-size: .8rem; text-transform: uppercase; letter-spacing: .14em; color: var(--smoke); }
 
 /* ───────── Venues — horizontal logo rows ───────── */
+.venues { overflow: hidden; }
+.venues__bg {
+  position: absolute; inset: 0 0 auto; height: min(70vh, 640px); z-index: -1;
+  background: url('/img/crowd-1000.webp') 50% 50% / cover no-repeat; opacity: .5;
+  -webkit-mask-image: linear-gradient(to bottom, #000 30%, transparent); mask-image: linear-gradient(to bottom, #000 30%, transparent);
+}
+@media (min-width: 900px) { .venues__bg { background-image: url('/img/crowd-2000.webp'); } }
+.venues__bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to right, rgb(18 17 16 / .85), rgb(18 17 16 / .2) 70%); }
+.venues .sh, .venues__rows { position: relative; }
 .venues__rows { display: grid; gap: 0; border-block: 1px solid rgb(255 255 255 / .1); }
 .vrow { display: grid; grid-template-columns: auto 1fr; align-items: center; }
 .vrow + .vrow { border-top: 1px solid rgb(255 255 255 / .1); }

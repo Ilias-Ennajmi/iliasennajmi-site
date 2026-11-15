@@ -5,33 +5,37 @@
 export const artist = {
   name: 'Naïm',
   stylised: 'NΛIM',
-  tagline: 'DJ · Morocco / France',
+  tagline: 'DJ and producer · Morocco / Paris',
   origin: 'Morocco',
-  bookingEmail: 'booking@naim.example.com', // PLACEHOLDER
-  managementEmail: 'hello@naim.example.com', // PLACEHOLDER
+  bookingEmail: 'n.oumounah@gmail.com', // from his bio doc
+  managementEmail: 'n.oumounah@gmail.com',
 };
 
-export const socials: { label: string; href: string; icon: 'instagram' | 'soundcloud' | 'spotify' | 'ra' }[] = [
+export const socials: { label: string; href: string; icon: 'instagram' | 'soundcloud' | 'spotify' | 'linktree' }[] = [
   { label: 'Instagram', href: 'https://www.instagram.com/naim_wav/', icon: 'instagram' },
   { label: 'SoundCloud', href: 'https://soundcloud.com/naim_wav', icon: 'soundcloud' },
-  { label: 'Spotify', href: 'https://open.spotify.com/search/Paraiso%20Naim', icon: 'spotify' }, // PLACEHOLDER artist link
-  { label: 'Resident Advisor', href: 'https://ra.co/', icon: 'ra' }, // PLACEHOLDER
+  { label: 'Spotify', href: 'https://open.spotify.com/artist/5GOJpvP4TY4WHmY2eyf08j', icon: 'spotify' },
+  { label: 'Linktree', href: 'https://linktr.ee/naim_wav', icon: 'linktree' },
 ];
 
 export const bio = [
-  `Naïm is a DJ from Morocco, playing between Morocco and France. House music with a lot of percussion, long blends, and records you won't hear twice in the same week.`,
-  `Clubs, festivals, rooftops, radio. He reads the dancefloor first, then plays for it.`,
+  `NΛIM is a Moroccan and Parisian DJ and producer. He lives where indie dance, ethnic house and techno meet, and turns it into one sound that is his.`,
+  `High energy, wide range. US rap beats, Berlin house and Moroccan gnawa can all land in the same set. No borders, just the dancefloor. Hear it in his podcast series, Harmony Somewhere.`,
 ];
+// One-line version, used for search results and share previews.
+export const bioShort = 'Moroccan and Parisian DJ and producer. Indie dance, ethnic house and techno, played as one sound.';
 
 // Performance photos. Drop files in /public/img/live/ and set src
 // (e.g. '/img/live/01.jpg'). Empty src shows a placeholder.
 export const photos: { src: string; alt: string; caption: string }[] = [
-  { src: '', alt: 'Naïm behind the decks', caption: 'Club night' },
-  { src: '', alt: 'Festival crowd at sunset', caption: 'Sunset slot' },
-  { src: '', alt: 'Hands on the mixer', caption: 'In the booth' },
-  { src: '', alt: 'Dancefloor in red light', caption: '4 AM' },
-  { src: '', alt: 'Naïm on an open air stage', caption: 'Open air' },
-  { src: '', alt: 'Crowd with hands up', caption: 'Closing set' },
+  { src: '/img/live/01-1000.webp', alt: 'Open air crowd dancing, hands up, warm lights over the booth', caption: 'Open air' },
+  { src: '/img/live/02-1000.webp', alt: 'Arm up behind the decks under red lasers', caption: 'Lasers on' },
+  { src: '/img/live/03-1000.webp', alt: 'Naïm with headphones and tinted glasses, lit gold', caption: 'In the mix' },
+  { src: '/img/live/04-1000.webp', alt: 'A packed dancefloor in red light, the booth in the distance', caption: 'Hands up' },
+  { src: '/img/live/05-1000.webp', alt: 'Playing at golden hour under a Sunset Ritual neon sign', caption: 'Sunset Ritual' },
+  { src: '/img/live/06-1000.webp', alt: 'The booth through red haze, a hand raised in the crowd', caption: 'Red room' },
+  { src: '/img/live/07-1000.webp', alt: 'Back to back at the CDJs under a laser and a chandelier', caption: 'Back to back' },
+  { src: '/img/live/08-1000.webp', alt: 'The booth seen through the crowd, headphones on', caption: 'From the floor' },
 ];
 
 // Venue rows. kind picks the row: festivals on top, clubs below.
@@ -96,7 +100,8 @@ export const release = {
   year: '2026',
   blurb: 'New single. Warm, percussive, built for late. Out now.',
   spotifyTrackId: '', // PLACEHOLDER
-  spotifyUrl: 'https://open.spotify.com/search/Paraiso%20Naim',
+  spotifyUrl: 'https://open.spotify.com/artist/5GOJpvP4TY4WHmY2eyf08j',
+  spotifyArtistId: '5GOJpvP4TY4WHmY2eyf08j',
   bpm: 124,
   key: 'A min',
 };

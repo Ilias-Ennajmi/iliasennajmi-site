@@ -6,13 +6,13 @@ import '../styles/global.css';
 import Btn from '../components/Btn.astro';
 import Socials from '../components/Socials.astro';
 import {
-  artist, socials, bio, photos, venues, dates, videos, release, pressKitIncludes,
+  artist, socials, bio, bioShort, photos, venues, dates, videos, release, pressKitIncludes,
 } from '../data/naim';
 import presskit from '../data/presskit.json';
 
 const site = Astro.site?.href ?? '/';
-const title = `${artist.name} | DJ, Morocco and France`;
-const description = `${artist.name} is a DJ from Morocco, playing between Morocco and France. Dates, sets, the single ${release.title}, booking and press kit.`;
+const title = `${artist.stylised} | DJ and producer, Morocco / Paris`;
+const description = `${artist.stylised}: ${bioShort} Dates, sets, booking and press kit.`;
 
 const icon = (n: string) => `/img/icons/${n}.png`;
 const typeIcon: Record<string, string> = { club: 'cocktail', festival: 'tent', release: 'vinyl', event: 'calendar', radio: 'boombox' };
@@ -47,7 +47,7 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
     {
-      '@type': 'MusicGroup', name: artist.name, alternateName: artist.stylised, genre: ['House', 'Electronic'],
+      '@type': 'MusicGroup', name: artist.name, alternateName: artist.stylised, genre: ['Indie dance', 'Ethnic house', 'Techno'], description: bioShort,
       url: site, image: new URL('/img/og.jpg', site).href, sameAs: socials.map((s) => s.href),
     },
     ...upcoming.filter((d) => d.type !== 'release').map((d) => ({
@@ -134,7 +134,7 @@ const jsonLd = {
           <span class="visually-hidden">{artist.name}</span>
           <span class="logo-mask logo-mask--hero" aria-hidden="true"></span>
         </h1>
-        <p class="hero__line mono" aria-hidden="true"><span>DJ</span><span>Morocco / France</span></p>
+        <p class="hero__line mono" aria-hidden="true"><span>Indie dance</span><span>Ethnic house</span><span>Techno</span></p>
       </section>
 
       <!-- 01 LIVE -->
@@ -153,7 +153,7 @@ const jsonLd = {
         <div class="carousel" data-carousel tabindex="0" aria-roledescription="carousel" aria-label="Performance photos">
           {photos.map((p, i) => (
             <figure class="slide" aria-roledescription="slide" aria-label={`${i + 1} of ${photos.length}`}>
-              {p.src ? <img src={p.src} alt={p.alt} loading="lazy" /> : (
+              {p.src ? <img src={p.src} srcset={`${p.src.replace('-1000', '-600')} 600w, ${p.src} 1000w`} sizes="(min-width: 760px) 290px, 58vw" alt={p.alt} loading="lazy" width="1000" height="1250" /> : (
                 <div class={`slide__ph slide__ph--${i % 3}`}><span class="mono">Photo {pad(i + 1)}</span></div>
               )}
               <figcaption class="mono"><span>{pad(i + 1)}</span>{p.caption}</figcaption>
@@ -196,6 +196,7 @@ const jsonLd = {
 
       <!-- 04 VENUES -->
       <section class="venues sec sec--ink" id="venues" aria-labelledby="venues-title">
+        <div class="venues__bg" aria-hidden="true"></div>
         <div class="wrap">
           <header class="sh reveal">
             <span class="sh__n">04</span><span class="sh__k">Played at</span>
@@ -267,10 +268,10 @@ const jsonLd = {
             <header class="sh reveal"><span class="sh__n">06</span><span class="sh__k">New single</span></header>
             <h2 id="release-title" class="release__title reveal">{release.title}</h2>
             <p class="reveal">{release.blurb}</p>
-            {release.spotifyTrackId ? (
+            {(release.spotifyTrackId || release.spotifyArtistId) ? (
               <iframe class="spotify" title={`${release.title} on Spotify`}
-                src={`https://open.spotify.com/embed/track/${release.spotifyTrackId}?utm_source=generator&theme=0`}
-                width="100%" height="152" loading="lazy"
+                src={release.spotifyTrackId ? `https://open.spotify.com/embed/track/${release.spotifyTrackId}?utm_source=generator&theme=0` : `https://open.spotify.com/embed/artist/${release.spotifyArtistId}?utm_source=generator&theme=0`}
+                width="100%" height={release.spotifyTrackId ? 152 : 352} loading="lazy"
                 allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
             ) : (
               <div class="deck reveal" data-mini>
@@ -395,7 +396,7 @@ const jsonLd = {
           <Socials />
         </div>
         <span class="logo-mask footer__logo" aria-hidden="true"></span>
-        <p class="footer__legal mono"><span>© {new Date().getFullYear()} {artist.name}</span><span>Morocco / France</span><a class="lnk" href="#top">Back to top ↑</a></p>
+        <p class="footer__legal mono"><span>© {new Date().getFullYear()} {artist.name}</span><span>Morocco / Paris</span><a class="lnk" href="#top">Back to top ↑</a></p>
       </div>
     </footer>
 
