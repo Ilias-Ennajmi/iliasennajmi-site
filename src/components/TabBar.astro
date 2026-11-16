@@ -3,8 +3,7 @@
 // links collapse). A burger in the top corner hid every section behind an
 // icon nobody was told to press; a labelled bar under the thumb shows the
 // four places that matter, and "More" opens a sheet with everything else.
-// The bar slides away while scrolling down (reading) and comes back on any
-// scroll up, or at the end of the page.
+// It stays put while you scroll, so the way out of any page is always there.
 import { SITE } from '../lib/site';
 
 interface Props {
@@ -100,7 +99,6 @@ const moreActive = more.some((m) => m.key === current) || current === 'colophon'
   #tb, #tb-sheet, #tb-scrim { display: none; }
   @media (max-width: 860px) {
     :root { --tb-h: 62px; --tb-space: calc(var(--tb-h) + env(safe-area-inset-bottom, 0px)); }
-    :root[data-tb-hidden] { --tb-space: 0px; }
     body { padding-bottom: calc(var(--tb-h) + env(safe-area-inset-bottom, 0px)); }
     #tb {
       position: fixed; left: 0; right: 0; bottom: 0; z-index: 7050;
@@ -112,7 +110,6 @@ const moreActive = more.some((m) => m.key === current) || current === 'colophon'
       border-top: 1px solid var(--coal-line);
       transition: transform .32s cubic-bezier(.2, .7, .2, 1);
     }
-    :root[data-tb-hidden] #tb { transform: translateY(100%); }
 
     /* the sheet rises out of the bar; the bar stays put so More can close it */
     #tb-scrim:not([hidden]) {
@@ -221,31 +218,12 @@ const moreActive = more.some((m) => m.key === current) || current === 'colophon'
   function initTabBar() {
     if (teardown) { teardown(); teardown = null; }
     const root = document.documentElement;
-    root.removeAttribute('data-tb-hidden');
     root.removeAttribute('data-sheet');
     const more = document.getElementById('tb-more');
     const sheet = document.getElementById('tb-sheet');
     const scrim = document.getElementById('tb-scrim');
     if (!more || !sheet || !scrim) return;
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    // ---- hide on scroll down, show on scroll up ----
-    // Small jitters are ignored, the bar never hides near the top, and it
-    // returns at the bottom of the page, where the next place to go matters.
-    let lastY = window.scrollY;
-    let ticking = false;
-    const update = () => {
-      ticking = false;
-      if (root.hasAttribute('data-sheet')) return;
-      const y = window.scrollY;
-      const dy = y - lastY;
-      const atEnd = window.innerHeight + y >= document.documentElement.scrollHeight - 80;
-      if (y < 120 || atEnd || dy < -8) root.removeAttribute('data-tb-hidden');
-      else if (dy > 8) root.setAttribute('data-tb-hidden', '');
-      if (Math.abs(dy) > 8) lastY = y;
-    };
-    const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
-    window.addEventListener('scroll', onScroll, { passive: true });
 
     // ---- the More sheet ----
     const themeLabel = sheet.querySelector<HTMLElement>('[data-theme-label]');
@@ -258,7 +236,6 @@ const moreActive = more.some((m) => m.key === current) || current === 'colophon'
     const openSheet = () => {
       clearTimeout(closeTimer);
       paintTheme();
-      root.removeAttribute('data-tb-hidden');
       sheet.hidden = false;
       scrim.hidden = false;
       sheet.style.removeProperty('--drag');
@@ -337,7 +314,6 @@ const moreActive = more.some((m) => m.key === current) || current === 'colophon'
     document.addEventListener('keydown', onKey);
 
     teardown = () => {
-      window.removeEventListener('scroll', onScroll);
       document.removeEventListener('keydown', onKey);
       document.body.style.overflow = '';
     };

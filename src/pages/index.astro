@@ -103,66 +103,10 @@ const jsonLd = {
   <SectionPath />
   <HeroTitlePage />
 
-  <!-- ============ LATEST (straight after the hero) ============ -->
-  <section id="latest" class="hl-latest" aria-labelledby="hl-latest-title">
-    <div class="hl-inner">
-      <h2 id="hl-latest-title" class="hl-kicker"><span class="hl-diamond" aria-hidden="true"></span>Latest essay</h2>
-      <a href={`/essays/${lead.data.id}/`} class="hl-lead charge" style={`--acc:${leadStrand.acc};`}>
-        <Illustration id={lead.data.id} class="hl-art" size={340} />
-        <span class="hl-meta">{leadStrand.label} · {lead.data.tag} · {readMinutesOf(lead)} min</span>
-        <span class="hl-title">{lead.data.title}</span>
-        <span class="hl-stand">{lead.data.standfirst}</span>
-        <span class="hl-cta">Read it →</span>
-      </a>
-      <ul class="hl-recent">
-        {recent.slice(0, 3).map((e, i) => (
-          <li class={i === 2 ? 'ph-hide' : undefined}>
-            <a href={`/essays/${e.data.id}/`} class="hl-row charge" style={`--acc:${strandOf(e.data.id).acc};`}>
-              <Illustration id={e.data.id} class="hl-thumb" thumb />
-              <span class="hl-row-text">
-                <span class="hl-meta">{strandOf(e.data.id).label} · {e.data.tag}</span>
-                <span class="hl-row-title">{e.data.title}</span>
-              </span>
-            </a>
-          </li>
-        ))}
-      </ul>
-      <div class="hl-more">
-        <a href="/topics/" class="charge">All {allEssays.length} essays →</a>
-        <a href="/effects/" class="charge">The effects, explained →</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ 01 — ABOUT (grounding band) ============ -->
-  <section id="about" class="ph-hide" style="position:relative;border-top:1px solid var(--coal-line);background:var(--coal-soft);">
-    <div style="max-width:1180px;margin:0 auto;padding:clamp(4.5rem,9vw,7.5rem) clamp(22px,6vw,64px);">
-      <div data-reveal style="display:flex;align-items:center;gap:16px;margin-bottom:clamp(1.3rem,2.5vw,1.9rem);font-family:var(--mono);font-size:var(--fs-2xs);letter-spacing:0.22em;text-transform:uppercase;color:var(--ash);">
-        <span><span class="cc-num" data-to="1">01</span></span>
-        <span class="cc-rule"></span>
-        <span>The person behind it</span>
-      </div>
-      <h2 data-reveal style="font-family:var(--display);font-weight:500;font-size:clamp(2.6rem,6.2vw,4.8rem);line-height:0.96;letter-spacing:-0.015em;margin:0 0 clamp(2.6rem,4.5vw,3.8rem);text-wrap:balance;">Who's speaking<span style="font-style:italic;color:var(--ember-vivid);">?</span></h2>
-      <div style="display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(2.4rem,5vw,4.5rem);align-items:start;">
-        <div data-reveal>
-          <p style="font-family:var(--display);font-weight:400;font-size:clamp(1.5rem,3.2vw,2.4rem);line-height:1.22;margin:0 0 1.6rem;letter-spacing:-0.005em;text-wrap:pretty;">I'm <span style="font-style:italic;">Ilias</span>. I work in <span style="position:relative;white-space:nowrap;">marketing strategy<span class="cc-uline" style="position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--ember);transform:scaleX(0);transform-origin:left center;transition:transform .85s cubic-bezier(.2,.7,.2,1);"></span></span> and write, on the side, about why people choose what they choose.</p>
-          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:clamp(14px,2vw,26px);margin-top:2.2rem;font-family:var(--mono);font-size:var(--fs-sm);letter-spacing:0.18em;text-transform:uppercase;color:var(--ash);">
-            <span>Strategy</span>
-            <span style="width:3px;height:3px;border-radius:50%;background:var(--ember);flex:none;"></span>
-            <span>Behavioral psych</span>
-            <span style="width:3px;height:3px;border-radius:50%;background:var(--ember);flex:none;"></span>
-            <span>Writing</span>
-          </div>
-          <a href="/about/" class="charge more-link" style="display:inline-flex;align-items:center;gap:10px;margin-top:clamp(1.8rem,3vw,2.6rem);font-family:var(--mono);font-size:var(--fs-2xs);letter-spacing:0.16em;text-transform:uppercase;color:var(--ember);transition:gap .3s;">More about me <span class="m-arrow" style="font-family:var(--display);font-size:1.1em;line-height:0;">→</span></a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ 02 — THE FORK ============ -->
+  <!-- ============ 01 — THE FORK ============ -->
   <section id="fork" tabindex="-1" class="hp-fork" style="max-width:1180px;margin:0 auto;padding:clamp(4.5rem,9vw,7.5rem) clamp(22px,6vw,64px);">
     <div data-reveal class="eyebrow-row" style="margin:0 0 clamp(1.6rem,3vw,2.4rem);display:flex;align-items:baseline;gap:16px;font-family:var(--mono);font-weight:400;font-size:var(--fs-xs);letter-spacing:0.2em;text-transform:uppercase;color:var(--ash);">
-      <h2 style="display:inline;margin:0;font:inherit;color:inherit;letter-spacing:inherit;"><span class="cc-num" data-to="2">02</span> · The Fork</h2>
+      <h2 style="display:inline;margin:0;font:inherit;color:inherit;letter-spacing:inherit;"><span class="cc-num" data-to="1">01</span> · The Fork</h2>
       <span class="cc-rule"></span>
       <span class="eyebrow-tag" style="color:var(--ash);">Two ways down the same hole</span>
     </div>
@@ -246,6 +190,63 @@ const jsonLd = {
     }
     window.__life.onReady(personalizeNextStep);
   </script>
+
+  <!-- ============ LATEST (third: after the hero and the two strands) ============ -->
+  <section id="latest" class="hl-latest" aria-labelledby="hl-latest-title">
+    <div class="hl-inner">
+      <h2 id="hl-latest-title" class="hl-kicker"><span class="hl-diamond" aria-hidden="true"></span>Latest essay</h2>
+      <a href={`/essays/${lead.data.id}/`} class="hl-lead charge" style={`--acc:${leadStrand.acc};`}>
+        <Illustration id={lead.data.id} class="hl-art" size={340} />
+        <span class="hl-meta">{leadStrand.label} · {lead.data.tag} · {readMinutesOf(lead)} min</span>
+        <span class="hl-title">{lead.data.title}</span>
+        <span class="hl-stand">{lead.data.standfirst}</span>
+        <span class="hl-cta">Read it →</span>
+      </a>
+      <ul class="hl-recent">
+        {recent.slice(0, 3).map((e, i) => (
+          <li class={i === 2 ? 'ph-hide' : undefined}>
+            <a href={`/essays/${e.data.id}/`} class="hl-row charge" style={`--acc:${strandOf(e.data.id).acc};`}>
+              <Illustration id={e.data.id} class="hl-thumb" thumb />
+              <span class="hl-row-text">
+                <span class="hl-meta">{strandOf(e.data.id).label} · {e.data.tag}</span>
+                <span class="hl-row-title">{e.data.title}</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <div class="hl-more">
+        <a href="/topics/" class="charge">All {allEssays.length} essays →</a>
+        <a href="/effects/" class="charge">The effects, explained →</a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============ 02 — ABOUT (grounding band) ============ -->
+  <section id="about" class="ph-hide" style="position:relative;border-top:1px solid var(--coal-line);background:var(--coal-soft);">
+    <div style="max-width:1180px;margin:0 auto;padding:clamp(4.5rem,9vw,7.5rem) clamp(22px,6vw,64px);">
+      <div data-reveal style="display:flex;align-items:center;gap:16px;margin-bottom:clamp(1.3rem,2.5vw,1.9rem);font-family:var(--mono);font-size:var(--fs-2xs);letter-spacing:0.22em;text-transform:uppercase;color:var(--ash);">
+        <span><span class="cc-num" data-to="2">02</span></span>
+        <span class="cc-rule"></span>
+        <span>The person behind it</span>
+      </div>
+      <h2 data-reveal style="font-family:var(--display);font-weight:500;font-size:clamp(2.6rem,6.2vw,4.8rem);line-height:0.96;letter-spacing:-0.015em;margin:0 0 clamp(2.6rem,4.5vw,3.8rem);text-wrap:balance;">Who's speaking<span style="font-style:italic;color:var(--ember-vivid);">?</span></h2>
+      <div style="display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(2.4rem,5vw,4.5rem);align-items:start;">
+        <div data-reveal>
+          <p style="font-family:var(--display);font-weight:400;font-size:clamp(1.5rem,3.2vw,2.4rem);line-height:1.22;margin:0 0 1.6rem;letter-spacing:-0.005em;text-wrap:pretty;">I'm <span style="font-style:italic;">Ilias</span>. I work in <span style="position:relative;white-space:nowrap;">marketing strategy<span class="cc-uline" style="position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--ember);transform:scaleX(0);transform-origin:left center;transition:transform .85s cubic-bezier(.2,.7,.2,1);"></span></span> and write, on the side, about why people choose what they choose.</p>
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:clamp(14px,2vw,26px);margin-top:2.2rem;font-family:var(--mono);font-size:var(--fs-sm);letter-spacing:0.18em;text-transform:uppercase;color:var(--ash);">
+            <span>Strategy</span>
+            <span style="width:3px;height:3px;border-radius:50%;background:var(--ember);flex:none;"></span>
+            <span>Behavioral psych</span>
+            <span style="width:3px;height:3px;border-radius:50%;background:var(--ember);flex:none;"></span>
+            <span>Writing</span>
+          </div>
+          <a href="/about/" class="charge more-link" style="display:inline-flex;align-items:center;gap:10px;margin-top:clamp(1.8rem,3vw,2.6rem);font-family:var(--mono);font-size:var(--fs-2xs);letter-spacing:0.16em;text-transform:uppercase;color:var(--ember);transition:gap .3s;">More about me <span class="m-arrow" style="font-family:var(--display);font-size:1.1em;line-height:0;">→</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- ============ 03 — LOOSE THREADS (marquee) ============ -->
   <section class="cv ph-hide" style="padding:clamp(4.5rem,9vw,7.5rem) 0;border-top:1px solid var(--coal-line);overflow:hidden;">
@@ -347,7 +348,7 @@ const jsonLd = {
   @media (max-width: 640px) {
     .ph-hide { display: none !important; }
     .ph-only { display: block; }
-    .hp-fork { padding-top: 0 !important; padding-bottom: clamp(2.4rem, 8vw, 3rem) !important; }
+    .hp-fork { padding-top: 0.6rem !important; padding-bottom: 0.4rem !important; }
     .hp-fork .eyebrow-row { margin-bottom: 1rem !important; }
     .hp-fork .cc-fork a { min-height: 0 !important; gap: 1.2rem !important; padding: 22px 22px 24px !important; }
     .hp-fork .cc-fork .fork-title, .hp-fork .cc-fork .fork-title-ember { font-size: 2.1rem !important; }
