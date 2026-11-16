@@ -225,14 +225,14 @@ const tilt = (id: string) => ([...id].reduce((h, c) => (h * 31 + c.charCodeAt(0)
   .pp-slot { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; text-decoration: none; color: var(--ash); -webkit-tap-highlight-color: transparent; }
   .pp-ring { position: relative; display: grid; place-items: center; width: 78px; height: 78px; border-radius: 50%; border: 1.5px dashed var(--coal-line); transform: rotate(var(--r)); transition: transform .3s; }
   .pp-art { width: 46px; height: 46px; object-fit: contain; opacity: 0.13; filter: grayscale(1); }
-  .pp-name { font-family: var(--display); font-weight: 500; font-size: 0.86rem; line-height: 1.15; color: var(--ash); opacity: 0.7; text-wrap: balance; }
-  .pp-date { font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ash); opacity: 0.6; }
+  .pp-name { font-family: var(--display); font-weight: 500; font-size: 0.86rem; line-height: 1.15; color: var(--ash); text-wrap: balance; }
+  .pp-date { font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ash); }
   /* stamped: a double ring in red ink, the engraving pressed in */
   .pp-slot[data-stamped] .pp-ring { border: 2.5px solid var(--ember); box-shadow: inset 0 0 0 3px var(--card), inset 0 0 0 4.5px var(--ember); }
   .pp-slot[data-stamped] .pp-art { opacity: 0.92; filter: none; mix-blend-mode: multiply; }
   :root[data-theme="ink"] .pp-slot[data-stamped] .pp-art { mix-blend-mode: normal; filter: invert(1) hue-rotate(180deg) saturate(1.4); }
-  .pp-slot[data-stamped] .pp-name { color: var(--bone); opacity: 1; }
-  .pp-slot[data-stamped] .pp-date { color: var(--ember); opacity: 1; }
+  .pp-slot[data-stamped] .pp-name { color: var(--bone); }
+  .pp-slot[data-stamped] .pp-date { color: var(--ember); }
   .pp-slot:hover .pp-ring { transform: rotate(var(--r)) scale(1.05); }
   .pp-fresh .pp-ring { animation: pp-stamp .7s cubic-bezier(.2, .9, .3, 1.2) .25s both; }
   @keyframes pp-stamp {

@@ -22,7 +22,7 @@ const lines = [
       the page from its own x-ray labels, so it can't drift from the truth. */}
   <div class="wp-sub" data-wp-sub hidden>Tricks this page used on you</div>
   <dl class="wp-lines" data-wp-tricks hidden></dl>
-  <div class="wp-line wp-total" data-wp-paid hidden><dt>Paid in attention</dt><dd data-wp-time>—</dd></div>
+  <dl class="wp-paid" data-wp-paid hidden><div class="wp-line wp-total"><dt>Paid in attention</dt><dd data-wp-time>—</dd></div></dl>
   <p class="wp-foot">I do marketing for a living, somewhere else. This is the one place I don't.</p>
 </aside>
 
@@ -105,6 +105,7 @@ const lines = [
   .wp-lines:not([data-wp-tricks]) .wp-line:last-child { margin-top: 6px; padding-top: 8px; border-top: 1px dashed var(--coal-line); }
   .wp-lines:not([data-wp-tricks]) .wp-line:last-child dd { color: var(--ember); font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; }
   .wp-sub { margin: 14px 0 6px; padding-top: 10px; border-top: 1px dashed var(--coal-line); font-size: var(--fs-2xs); font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--bone); }
+  .wp-paid { margin: 0; }
   .wp-total { margin-top: 6px; padding-top: 8px; border-top: 1px dashed var(--coal-line); }
   .wp-total dd { color: var(--ember) !important; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; }
   .wp-foot { margin: 12px 0 0; font-family: var(--body); font-style: italic; font-size: 0.92rem; line-height: 1.45; color: var(--ash); letter-spacing: normal; }
