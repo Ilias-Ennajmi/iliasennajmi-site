@@ -18,8 +18,58 @@ const lines = [
       <div class="wp-line"><dt>{k}</dt><dd>{v}</dd></div>
     ))}
   </dl>
+  {/* The other side of the bill: what this page did to you. Filled in on
+      the page from its own x-ray labels, so it can't drift from the truth. */}
+  <div class="wp-sub" data-wp-sub hidden>Tricks this page used on you</div>
+  <dl class="wp-lines" data-wp-tricks hidden></dl>
+  <div class="wp-line wp-total" data-wp-paid hidden><dt>Paid in attention</dt><dd data-wp-time>—</dd></div>
   <p class="wp-foot">I do marketing for a living, somewhere else. This is the one place I don't.</p>
 </aside>
+
+<script>
+  // Lists the persuasion devices this page carries (every element with an
+  // x-ray label, the same ones "See the tricks" outlines) and keeps a
+  // running count of the minutes you've actually had it on screen.
+  function initReceipt() {
+    const list = document.querySelector<HTMLElement>('[data-wp-tricks]');
+    if (!list) return;
+    const names = new Set<string>();
+    document.querySelectorAll<HTMLElement>('[data-xray]').forEach((el) => {
+      const raw = (el.dataset.xray || '').trim();
+      if (!raw) return;
+      // "Progress: unfinished things itch" -> "Progress"; "The author, watching you. Literally." -> "The author, watching you"
+      const name = raw.split(/[:.]/)[0].trim();
+      if (name) names.add(name);
+    });
+    if (!names.size) return;
+    list.innerHTML = [...names].map((n) => `<div class="wp-line"><dt>${n.replace(/</g, '&lt;')}</dt><dd>1</dd></div>`).join('');
+    list.hidden = false;
+    document.querySelector<HTMLElement>('[data-wp-sub]')!.hidden = false;
+    const paid = document.querySelector<HTMLElement>('[data-wp-paid]')!;
+    const out = document.querySelector<HTMLElement>('[data-wp-time]')!;
+    paid.hidden = false;
+
+    // only time the page was visible counts
+    let seen = 0, since = document.visibilityState === 'visible' ? Date.now() : 0;
+    const total = () => seen + (since ? Date.now() - since : 0);
+    const paint = () => {
+      const m = Math.round(total() / 60000);
+      out.textContent = m < 1 ? 'under a minute' : `${m} min`;
+    };
+    const onVis = () => {
+      if (document.visibilityState === 'visible') since = Date.now();
+      else if (since) { seen += Date.now() - since; since = 0; }
+    };
+    document.addEventListener('visibilitychange', onVis);
+    const timer = window.setInterval(paint, 15000);
+    paint();
+    (window as unknown as { __life?: { onLeave: (fn: () => void) => void } }).__life?.onLeave(() => {
+      document.removeEventListener('visibilitychange', onVis);
+      clearInterval(timer);
+    });
+  }
+  document.addEventListener('site:ready', initReceipt);
+</script>
 
 <style>
   .wp {
@@ -52,7 +102,19 @@ const lines = [
   .wp-line dt { flex: none; }
   .wp-line::after { content: ''; order: 1; flex: 1; border-bottom: 1px dotted var(--coal-line); transform: translateY(-3px); }
   .wp-line dd { order: 2; margin: 0; color: var(--bone); font-variant-numeric: tabular-nums; }
-  .wp-line:last-child { margin-top: 6px; padding-top: 8px; border-top: 1px dashed var(--coal-line); }
-  .wp-line:last-child dd { color: var(--ember); font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; }
+  .wp-lines:not([data-wp-tricks]) .wp-line:last-child { margin-top: 6px; padding-top: 8px; border-top: 1px dashed var(--coal-line); }
+  .wp-lines:not([data-wp-tricks]) .wp-line:last-child dd { color: var(--ember); font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; }
+  .wp-sub { margin: 14px 0 6px; padding-top: 10px; border-top: 1px dashed var(--coal-line); font-size: var(--fs-2xs); font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--bone); }
+  .wp-total { margin-top: 6px; padding-top: 8px; border-top: 1px dashed var(--coal-line); }
+  .wp-total dd { color: var(--ember) !important; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; }
   .wp-foot { margin: 12px 0 0; font-family: var(--body); font-style: italic; font-size: 0.92rem; line-height: 1.45; color: var(--ash); letter-spacing: normal; }
+</style>
+
+<style is:global>
+  /* lines written by the script above never get the scoped attribute */
+  [data-wp-paid][hidden], [data-wp-sub][hidden] { display: none !important; }
+  [data-wp-tricks] .wp-line { display: flex; align-items: baseline; gap: 8px; font-size: var(--fs-2xs); letter-spacing: 0.06em; padding: 3px 0; }
+  [data-wp-tricks] .wp-line dt { flex: none; }
+  [data-wp-tricks] .wp-line::after { content: ''; order: 1; flex: 1; border-bottom: 1px dotted var(--coal-line); transform: translateY(-3px); }
+  [data-wp-tricks] .wp-line dd { order: 2; margin: 0; color: var(--bone); font-variant-numeric: tabular-nums; }
 </style>

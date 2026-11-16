@@ -107,7 +107,7 @@ const epistemicLabel: Record<string, string> = {
   fxStrand={strand}
   fxProgress="article"
 >
-<div style={`--acc:${accentVar};`} data-essay-share data-title={entry.data.title} data-strand={strandLabel} data-url={canonicalUrl}>
+<div style={`--acc:${accentVar};`} data-essay-share data-id={entry.data.id} data-title={entry.data.title} data-strand={strandLabel} data-url={canonicalUrl}>
   <div data-reading-meter data-minutes={readMinutes} data-xray="Progress: unfinished things itch (Zeigarnik)" style="position:fixed;left:clamp(14px,2vw,26px);bottom:clamp(14px,2.4vh,24px);z-index:7200;opacity:0;transition:opacity .5s ease;pointer-events:none;font-family:var(--mono);font-size:var(--fs-2xs);letter-spacing:0.14em;text-transform:uppercase;color:var(--acc);display:flex;align-items:center;gap:9px;">
     <span style="width:5px;height:5px;background:var(--acc);transform:rotate(45deg);"></span>
     <span data-meter-label>—</span>
@@ -989,4 +989,63 @@ const epistemicLabel: Record<string, string> = {
     (window as unknown as { __life?: { onLeave: (fn: () => void) => void } }).__life?.onLeave(() => { document.removeEventListener('click', onClick); document.removeEventListener('click', onPageClick); });
   }
   document.addEventListener('site:ready', initQuoteShare);
+
+  // The portrait in the top bar reads along: it narrows its eyes when an
+  // experiment comes into view, reacts to your result the way the Lab's
+  // observer does, and nods when you finish. Finishing also stamps the
+  // essay into your passport (on the Saved page), with a short note here.
+  function initReadingReactions() {
+    const meta = document.querySelector<HTMLElement>('[data-essay-share]');
+    const id = meta?.dataset.id;
+    if (!id) return;
+    const face = document.querySelector<HTMLElement>('#sn-wordmark .face');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let moodTimer = 0;
+    const mood = (m: 'surprised' | 'suspicious', ms = 2600) => {
+      if (!face) return;
+      face.setAttribute('data-mood', m);
+      clearTimeout(moodTimer);
+      moodTimer = window.setTimeout(() => face.removeAttribute('data-mood'), ms);
+    };
+    const cleanups: Array<() => void> = [];
+
+    const box = document.querySelector('.essay-body .lab-box, .essay-body .anchor-demo');
+    if (box && 'IntersectionObserver' in window) {
+      const io = new IntersectionObserver((ents) => {
+        if (ents.some((e) => e.isIntersecting)) { mood('suspicious'); io.disconnect(); }
+      }, { threshold: 0.5 });
+      io.observe(box);
+      cleanups.push(() => io.disconnect());
+    }
+    const onResult = (e: Event) => {
+      const d = (e as CustomEvent).detail || {};
+      if (d.got === true) mood('surprised');
+      else if (d.got === false) mood('suspicious');
+    };
+    document.addEventListener('lab:result', onResult);
+    cleanups.push(() => document.removeEventListener('lab:result', onResult));
+
+    let already = false;
+    try { already = (JSON.parse(localStorage.getItem('reading-log') || '[]') as Array<{ id: string }>).some((r) => r && r.id === id); } catch { /* private mode */ }
+    const onComplete = (e: Event) => {
+      if ((e as CustomEvent).detail?.essay !== id) return;
+      if (face && !reduce) { face.classList.remove('f-nod'); void face.offsetWidth; face.classList.add('f-nod'); }
+      mood('surprised', 1800);
+      if (already) return;
+      already = true;
+      const note = document.createElement('a');
+      note.className = 'stamp-note';
+      note.href = `/saved/?stamp=${encodeURIComponent(id)}#passport`;
+      note.innerHTML = `<span class="stamp-note-ring"><img src="/illus/${id}-92.png" alt="" width="30" height="30"></span><span><b>Stamped in your passport</b><span>See it →</span></span>`;
+      document.body.appendChild(note);
+      requestAnimationFrame(() => note.classList.add('is-in'));
+      const hide = window.setTimeout(() => { note.classList.remove('is-in'); window.setTimeout(() => note.remove(), 500); }, 6500);
+      cleanups.push(() => { clearTimeout(hide); note.remove(); });
+    };
+    window.addEventListener('cc:essay-complete', onComplete);
+    cleanups.push(() => window.removeEventListener('cc:essay-complete', onComplete));
+    cleanups.push(() => { clearTimeout(moodTimer); face?.removeAttribute('data-mood'); });
+    (window as unknown as { __life?: { onLeave: (fn: () => void) => void } }).__life?.onLeave(() => cleanups.forEach((fn) => fn()));
+  }
+  document.addEventListener('site:ready', initReadingReactions);
 </script>

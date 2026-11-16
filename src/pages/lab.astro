@@ -80,6 +80,11 @@ const shareUrl = new URL('/lab/', Astro.site).toString();
   </header>
 
   <div class="lab-wrap">
+    {/* Phones: one clear way in. The label follows your progress (script). */}
+    <div class="lab-start-row">
+      <button type="button" class="lab-start" data-lab-start>Start the first experiment <span aria-hidden="true">→</span></button>
+      <span class="lab-start-meta">About five minutes · nothing leaves this browser</span>
+    </div>
     <div class="lab-intro-note">
       <span>About five minutes</span>
       <span>Nothing you do here leaves this browser</span>
@@ -87,13 +92,24 @@ const shareUrl = new URL('/lab/', Astro.site).toString();
     </div>
 
     <nav class="lab-rail" aria-label="Experiments" data-rail>
-      {experiments.map((x, i) => (
-        <a href={`#exp-${x.id}`} class="lab-rail-item" data-rail-for={x.id} data-exp={x.id}>
-          <span class="lab-rail-dot" aria-hidden="true"></span>
-          <span class="lab-rail-no">{String(i + 1).padStart(2, '0')}</span>
-          <span class="lab-rail-name">{x.effect}</span>
-        </a>
-      ))}
+      <button type="button" class="lab-step lab-step-prev" data-step-go="-1" aria-label="Previous experiment">‹</button>
+      <div class="lab-rail-items">
+        {experiments.map((x, i) => {
+          const fx = effectByLab(x.id);
+          return (
+            <a href={`#exp-${x.id}`} class="lab-rail-item" data-rail-for={x.id} data-exp={x.id} aria-label={`${String(i + 1).padStart(2, '0')}: ${x.effect}`}
+              data-name={x.effect}
+              data-effect-href={fx ? `/effects/${fx.slug}/` : undefined}
+              data-essay-href={x.essay?.href} data-essay-title={x.essay?.title}>
+              <span class="lab-rail-dot" aria-hidden="true"></span>
+              <span class="lab-rail-no">{String(i + 1).padStart(2, '0')}</span>
+              <span class="lab-rail-name">{x.effect}</span>
+            </a>
+          );
+        })}
+        <span class="lab-step-label" data-step-label aria-live="polite"></span>
+      </div>
+      <button type="button" class="lab-step lab-step-next" data-step-go="1" aria-label="Next experiment">›</button>
     </nav>
 
     {experiments.map((x, i) => (
@@ -143,6 +159,10 @@ const shareUrl = new URL('/lab/', Astro.site).toString();
         <p class="lab-file-note" data-note>
           No reader statistics anywhere on this page, because I don't collect any. Your results sit in your own browser, and the button below deletes them.
         </p>
+        <div class="lab-readback" data-readback hidden>
+          <p class="lab-readback-head">What got you, and where to read about it</p>
+          <ul data-readback-list></ul>
+        </div>
         <p class="lab-file-note" data-itch hidden>
           Feeling a small itch to finish the rest? That's the Zeigarnik effect: unfinished things stick in the mind more than finished ones.{openTab && <> I wrote about it in <a href={openTab.href}>{openTab.title}</a>.</>}
         </p>
@@ -204,6 +224,33 @@ const shareUrl = new URL('/lab/', Astro.site).toString();
         shareText = `The Lab got me ${got} out of ${scored.length} times. ${file.dataset.shareUrl}`;
       }
       itch.hidden = !(done.length > 0 && done.length < LAB_ORDER.length);
+
+      // The Lab reads you back: each trick that got you, with its page and essay.
+      const rb = file.querySelector<HTMLElement>('[data-readback]');
+      const rbList = file.querySelector<HTMLElement>('[data-readback-list]');
+      if (rb && rbList) {
+        const items = LAB_ORDER.filter((x) => r[x.id]?.got === true).map((x) => {
+          const el = document.querySelector<HTMLElement>(`[data-rail-for="${x.id}"]`);
+          const d = el?.dataset || {};
+          const effect = d.effectHref ? `<a href="${d.effectHref}">${d.name} →</a>` : (d.name || x.name);
+          const essay = d.essayHref ? `<span>Then read <a href="${d.essayHref}">${d.essayTitle}</a></span>` : '';
+          return `<li>${effect}${essay}</li>`;
+        });
+        rbList.innerHTML = items.join('');
+        rb.hidden = items.length === 0;
+      }
+      // phones: the case file waits until there's something in it
+      document.querySelector('.lab-wrap')?.toggleAttribute('data-none', done.length === 0);
+      // the start button follows you
+      const startBtn = document.querySelector<HTMLElement>('[data-lab-start]');
+      if (startBtn) {
+        startBtn.innerHTML = done.length === 0
+          ? 'Start the first experiment <span aria-hidden="true">→</span>'
+          : done.length < LAB_ORDER.length
+            ? `Continue · ${done.length} of ${LAB_ORDER.length} done <span aria-hidden="true">→</span>`
+            : 'See your results <span aria-hidden="true">→</span>';
+        startBtn.dataset.target = done.length >= LAB_ORDER.length ? 'file' : '';
+      }
       copyBtn.disabled = !shareText;
       shareBtn.disabled = !shareText;
     };
@@ -284,7 +331,15 @@ const shareUrl = new URL('/lab/', Astro.site).toString();
         el.toggleAttribute('data-current', k === cur);
         if (k === cur) el.setAttribute('aria-current', 'step'); else el.removeAttribute('aria-current');
       });
-      history.replaceState(history.state, '', `#${sections[cur].id}`);
+      // Only when you move: writing the fragment on first load made the
+      // router scroll the page past the intro to that bench.
+      if (scroll) history.replaceState(history.state, '', `#${sections[cur].id}`);
+      // phone stepper: the current experiment's name, and the arrows' limits
+      const lbl = document.querySelector<HTMLElement>('[data-step-label]');
+      if (lbl) lbl.textContent = `${String(cur + 1).padStart(2, '0')} · ${railItems[cur]?.dataset.name ?? ''}`;
+      document.querySelectorAll<HTMLButtonElement>('[data-step-go]').forEach((b) => {
+        b.disabled = (b.dataset.stepGo === '-1' && cur === 0) || (b.dataset.stepGo === '1' && cur === sections.length - 1);
+      });
       // only move the page if the new bench's top is out of sight
       if (scroll && sections[cur].getBoundingClientRect().top < 0) {
         sections[cur].scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
@@ -310,7 +365,21 @@ const shareUrl = new URL('/lab/', Astro.site).toString();
       e.preventDefault();
       show(i, true);
     };
+    const onStep = (e: MouseEvent) => {
+      const t = e.target as HTMLElement;
+      const step = t.closest<HTMLElement>('[data-step-go]');
+      if (step) { show(cur + Number(step.dataset.stepGo), true); return; }
+      const start = t.closest<HTMLElement>('[data-lab-start]');
+      if (start) {
+        if (start.dataset.target === 'file') { document.getElementById('lab-file-title')?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }); return; }
+        const res = readResults();
+        const open = LAB_ORDER.findIndex((x) => !res[x.id]);
+        show(open < 0 ? 0 : open, false);
+        document.querySelector('[data-rail]')?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      }
+    };
     wrap.addEventListener('click', onClick);
+    wrap.addEventListener('click', onStep);
     const fromHash = () => sections.findIndex((s) => `#${s.id}` === location.hash);
     const onHash = () => { const i = fromHash(); if (i >= 0) show(i, true); };
     window.addEventListener('hashchange', onHash);
@@ -352,6 +421,7 @@ const shareUrl = new URL('/lab/', Astro.site).toString();
       document.removeEventListener('lab:result', onNext);
       document.removeEventListener('keydown', onKey);
       wrap.removeEventListener('click', onClick);
+      wrap.removeEventListener('click', onStep);
       window.removeEventListener('hashchange', onHash);
       copyBtn.removeEventListener('click', onCopy);
       shareBtn.removeEventListener('click', onShare);
