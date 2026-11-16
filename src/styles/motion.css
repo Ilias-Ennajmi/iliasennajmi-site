@@ -203,3 +203,5 @@ html[data-xray-on] .xr-toggle::before { transform: rotate(45deg) scale(1.5); }
 .nl-envelope { position: absolute; right: clamp(22px, 6vw, 64px); top: clamp(1.6rem, 3vw, 2.4rem); width: clamp(64px, 8vw, 104px); height: auto; transform: rotate(6deg); transition: transform var(--dur-slow) var(--ease-out); }
 section:hover .nl-envelope, .nl-envelope:focus-within { transform: rotate(0deg) translateY(-3px); }
 @media (max-width: 640px) { .nl-envelope { width: 56px; top: 1.2rem; } }
+/* phones: a smaller engraving so the essay starts sooner */
+@media (max-width: 640px) { .illus--essay { width: 84px; max-height: 96px; margin-bottom: 1rem; } }

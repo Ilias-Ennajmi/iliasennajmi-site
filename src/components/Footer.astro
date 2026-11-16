@@ -24,8 +24,12 @@ const year = new Date().getFullYear();
   .footer-link { transition: color .3s; }
   /* eight links on one line ran ~110px past a phone's edge */
   .footer-nav { flex-wrap: wrap; row-gap: 0 !important; }
+  /* Phones: the tab bar already does navigation, so the footer is one quiet
+     line. The watermark and the link row stay on bigger screens. */
   @media (max-width: 640px) {
-    .footer-nav { gap: 0 20px !important; }
+    .footer-wm, .footer-nav a { display: none !important; }
+    footer > div:last-child { padding-top: 1.2rem !important; padding-bottom: 1.4rem !important; gap: 4px 16px !important; }
+    footer > div:last-child > span { font-size: var(--fs-3xs) !important; }
   }
   .footer-link[data-hover="bone"]:hover { color: var(--bone); }
   .footer-link[data-hover="tide"]:hover { color: var(--tide); }

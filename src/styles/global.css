@@ -40,6 +40,10 @@
   --fs-2xs: 0.66rem;
   --fs-xs: 0.68rem;
   --fs-sm: 0.7rem;
+  /* Premium paper: cards are a lighter sheet laid on the page, lifted by a
+     soft shadow and a top highlight, instead of a box drawn in hairline. */
+  --card: #f1ece3;
+  --press: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 1px 2px rgba(41, 28, 15, 0.06), 0 10px 26px -14px rgba(41, 28, 15, 0.22);
   /* page titles (Lab, Shelf, Topics, Saved...) */
   --fs-title: clamp(3rem, 9vw, 6.5rem);
 }
@@ -76,6 +80,8 @@
   --nav-scrim-a: rgba(30, 26, 21, 0.95);
   --nav-scrim-b: rgba(30, 26, 21, 0);
   --overlay: rgba(0, 0, 0, 0.6);
+  --card: #27211a;
+  --press: inset 0 1px 0 rgba(255, 255, 255, 0.045), 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 30px -14px rgba(0, 0, 0, 0.65);
 }
 :root[data-theme="ink"] ::selection { background: rgba(255, 90, 60, 0.30); color: var(--bone); }
 /* Symbol glyphs the three text faces don't have (arrows, diamonds, the
@@ -117,6 +123,9 @@ html, body {
 }
 
 body { overflow-x: hidden; }
+/* light falls on the sheet from above: the top of every page is a shade
+   brighter, the way paper under a lamp is */
+body { background-image: radial-gradient(130% 55% at 50% 0%, var(--paper-hi), transparent 70%) !important; background-repeat: no-repeat !important; }
 
 ::selection { background: rgba(217, 46, 28, 0.20); color: var(--bone); }
 
@@ -538,4 +547,27 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     letter-spacing: 0.12em !important;
   }
 
+}
+
+/* ---------- paper: cards laid on the sheet ----------
+   One treatment for every card you tap or read in: lighter stock, soft
+   lift, a 3px corner. Hairline boxes stay only where they mean a form. */
+.hl-lead, .gd-card, .fxi-card, .fx-more-link, .steal-item, .sp-submit, .tbs-tile, .fx-card, .fx-study, .hp-lab-card, .lab-file {
+  background: var(--card) !important;
+  box-shadow: var(--press);
+  border-radius: 3px;
+  border-top-color: transparent !important;
+  border-right-color: transparent !important;
+  border-bottom-color: transparent !important;
+}
+.gd-card, .fxi-card, .fx-more-link, .sp-submit, .tbs-tile, .fx-card, .lab-file { border-left-color: transparent !important; }
+.gd-card:hover, .fxi-card:hover, .fx-more-link:hover { box-shadow: var(--press), 0 0 0 1px var(--acc, var(--ember)); }
+.tbs-tile[aria-current="page"] { box-shadow: var(--press), 0 0 0 1px var(--ember); }
+
+/* ---------- phones: less on the page ---------- */
+@media (max-width: 640px) {
+  /* the "min left" counter already says where you are */
+  .scroll-progress-rail { display: none !important; }
+  /* one label per section: drop the second taglines and the section numbers' rows */
+  .eyebrow-tag, .hp-fork .eyebrow-row { display: none !important; }
 }
