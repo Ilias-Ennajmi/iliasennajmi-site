@@ -4,7 +4,7 @@
   "description": "Essays on the hidden mechanics of choice: what makes people act, and who profits when they do.",
   "start_url": "/",
   "scope": "/",
-  "display": "standalone",
+  "display": "browser",
   "background_color": "#ebe5db",
   "theme_color": "#ebe5db",
   "lang": "en",
