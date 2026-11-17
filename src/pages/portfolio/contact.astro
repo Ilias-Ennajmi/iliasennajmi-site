@@ -1,0 +1,54 @@
+---
+import PortfolioLayout from '../../layouts/PortfolioLayout.astro';
+import { SITE } from '../../lib/site';
+
+// Same rule as the essay site: an account that isn't configured renders nothing.
+const handle = (url: string) => new URL(url).pathname.replace(/\/$/, '');
+const doors = [
+  SITE.social.linkedin && { label: 'LinkedIn', href: SITE.social.linkedin, handle: handle(SITE.social.linkedin) },
+  SITE.social.instagram && { label: 'Instagram', href: SITE.social.instagram, handle: handle(SITE.social.instagram).replace('/', '@') },
+  SITE.social.substack && { label: 'Substack', href: SITE.social.substack, handle: handle(SITE.social.substack).replace('/', '') },
+  { label: 'Essays', href: '/', handle: 'ennajmi.space' },
+].filter((d): d is { label: string; href: string; handle: string } => Boolean(d));
+---
+<PortfolioLayout view="contact" title="Contact · Ilias Ennajmi" description="Five ways to reach me, or write the brief on the page.">
+  <div class="gut"><div class="wrap">
+    <div class="contact-body">
+      <span class="eyebrow">Contact · bring the problem, skip the deck</span>
+      <ul class="links">
+        <li><a href={`mailto:${SITE.email}`}><sup>(1)</sup>Email <small>{SITE.email}</small></a><button class="btn sm ghost" type="button" data-copy={SITE.email}>Copy address</button></li>
+        {doors.map((d, i) => (
+          <li><a href={d.href}><sup>({i + 2})</sup>{d.label} <small>{d.handle}</small></a></li>
+        ))}
+      </ul>
+      <span class="label drag-hint">↑ These move. Drag them.</span>
+      <img class="sticker s-compass" src="/portfolio/img/compass.webp" alt="" draggable="false" loading="lazy">
+      <img class="sticker s-magnet" src="/portfolio/img/magnet.webp" alt="" draggable="false" loading="lazy">
+      <img class="sticker s-hook" src="/portfolio/img/hook.webp" alt="" draggable="false" loading="lazy">
+      <img class="sticker s-gears" src="/portfolio/img/gears.webp" alt="" draggable="false" loading="lazy">
+      <img class="sticker s-dice" src="/portfolio/img/dice.webp" alt="" draggable="false" loading="lazy">
+    </div>
+    <div class="sec">
+      <div class="sec-head"><span class="label">Or write the brief here</span><span class="label">Five questions · about two minutes</span></div>
+      <div class="brief-grid">
+        <form class="bform" id="briefForm" novalidate>
+          <fieldset><legend>What do you need?</legend><div class="chips">
+            <label><input type="radio" name="need" id="need1" value="Launch something" checked><span>Launch something</span></label>
+            <label><input type="radio" name="need" id="need2" value="Grow something"><span>Grow something</span></label>
+            <label><input type="radio" name="need" id="need3" value="Fix the message"><span>Fix the message</span></label>
+            <label><input type="radio" name="need" id="need4" value="Not sure yet"><span>Not sure yet</span></label>
+          </div></fieldset>
+          <div class="field"><label for="bBrand">Company or brand</label><input id="bBrand" type="text" autocomplete="organization" placeholder="Name"></div>
+          <div class="field"><label for="bWhen">When does it need to happen?</label><select id="bWhen"><option>This month</option><option>Next quarter</option><option>Later this year</option><option>No deadline yet</option></select></div>
+          <div class="field wide"><label for="bProblem">The problem, in a sentence or two</label><textarea id="bProblem" rows="3" placeholder="What isn't working, or what has to happen?"></textarea></div>
+          <div class="field wide"><label for="bReply">Where should I reply?</label><input id="bReply" type="email" autocomplete="email" placeholder="you@company.com"></div>
+        </form>
+        <div class="bout">
+          <span class="label">Your brief</span>
+          <pre id="briefOut" tabindex="0" aria-live="polite"></pre>
+          <div class="bact"><button class="btn" id="briefCopy" type="button">Copy the brief</button><span class="bhint">Then paste it into an email to <b>{SITE.email}</b></span></div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+</PortfolioLayout>

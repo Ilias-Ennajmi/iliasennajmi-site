@@ -1,0 +1,89 @@
+---
+import PortfolioLayout from '../../../layouts/PortfolioLayout.astro';
+import { CASES, type PortfolioCase } from '../../../lib/portfolio';
+
+export function getStaticPaths() {
+  return CASES.map((c, i) => ({
+    params: { slug: c.slug },
+    props: {
+      c,
+      prev: CASES[(i - 1 + CASES.length) % CASES.length],
+      next: CASES[(i + 1) % CASES.length],
+    },
+  }));
+}
+
+interface Props { c: PortfolioCase; prev: PortfolioCase; next: PortfolioCase }
+const { c, prev, next } = Astro.props;
+const oneLine = (title: string) => title.replace('<br>', ' ');
+const plain = (title: string) => oneLine(title).replace(/<[^>]+>/g, '');
+---
+<PortfolioLayout view="case" title={`${plain(c.title)} · Ilias Ennajmi`} description={c.summary}>
+  <div class="gut"><div class="wrap">
+    <div class="runhead">
+      <a class="label" href="/portfolio/work/">← All work</a>
+      <span class="label">Case <b>{c.n}</b> · {c.sector}</span>
+      <span class="label">{c.year}</span>
+    </div>
+
+    <header class="grid case-head">
+      <img class="stamp case-stamp" src="/portfolio/img/stamp_sample.webp" alt="Stamp: sample case" width="700" height="187" />
+      <h1 class="display" set:html={c.title} />
+      <dl class="ledger">
+        {c.ledger.map(([label, value]) => (
+          <div><dt class="label">{label}</dt><dd>{value}</dd></div>
+        ))}
+      </dl>
+    </header>
+
+    <figure class="plate">
+      <img src={c.hero.src} alt={c.hero.alt} width="2000" height="1131" fetchpriority="high" />
+      <figcaption><span class="label">Fig. <b>01</b> · {c.hero.kind}</span>{c.hero.note && <span class="label">{c.hero.note}</span>}</figcaption>
+    </figure>
+
+    <div class="grid spread">
+      <div class="col-a">
+        {c.beats.map(([label, text]) => (
+          <div class="beat"><span class="label">{label}</span><p>{text}</p></div>
+        ))}
+        <div class="aside"><span class="label">What I was thinking</span><p>{c.note}</p></div>
+      </div>
+      <figure class="plate col-b">
+        <img src={c.fig2.src} alt={c.fig2.alt} loading="lazy" />
+        <figcaption><span class="label">Fig. <b>02</b> · {c.fig2.kind}</span>{c.fig2.note && <span class="label">{c.fig2.note}</span>}</figcaption>
+      </figure>
+      {c.fig3 && (
+        <figure class="plate col-full">
+          <img src={c.fig3.src} alt={c.fig3.alt} loading="lazy" />
+          <figcaption><span class="label">Fig. <b>03</b> · {c.fig3.kind}</span>{c.fig3.note && <span class="label">{c.fig3.note}</span>}</figcaption>
+        </figure>
+      )}
+    </div>
+
+    <div class="grid result">
+      <span class="label">Result</span>
+      <div class="nums">
+        <div><b>—</b><span class="label">Reach</span></div>
+        <div><b>—</b><span class="label">Sign-ups</span></div>
+        <div><b>—</b><span class="label">Cost per lead</span></div>
+      </div>
+      <p class="rnote">Three real figures go here, each with its source.</p>
+      <dl class="credits">
+        <dt class="label">Strategy</dt><dd>Ilias Ennajmi</dd>
+        <dt class="label">Creative</dt><dd>Agency team, named with consent</dd>
+        <dt class="label">Client</dt><dd>Named, or described by sector</dd>
+      </dl>
+      {c.process && (
+        <figure class="plate process">
+          <img src={c.process.src} alt={c.process.alt} loading="lazy" />
+          <figcaption><span class="label">Fig. <b>04</b> · {c.process.kind}</span></figcaption>
+        </figure>
+      )}
+    </div>
+
+    <nav class="pager" aria-label="More cases">
+      <a href={`/portfolio/work/${prev.slug}/`}><span class="label">Previous case</span><p>← <Fragment set:html={oneLine(prev.title)} /></p></a>
+      <a href={`/portfolio/work/${next.slug}/`}><span class="label">Next case</span><p><Fragment set:html={oneLine(next.title)} /> →</p></a>
+    </nav>
+  </div></div>
+</PortfolioLayout>
