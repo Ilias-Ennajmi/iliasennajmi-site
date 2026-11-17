@@ -1,0 +1,220 @@
+---
+/**
+ * Layout for the unlisted portfolio at /portfolio/. It shares nothing with
+ * BaseLayout on purpose: different fonts, palette and navigation, and no
+ * <ClientRouter />, so each page is a plain document load.
+ *
+ * Unlisted means: noindex here, an X-Robots-Tag in vercel.json, filtered
+ * out of the sitemap in astro.config.mjs, and never linked from the essay
+ * site's nav, footer, search index, RSS or llms.txt.
+ */
+import '@fontsource-variable/instrument-sans';
+import '@fontsource/instrument-serif/400.css';
+import '@fontsource/instrument-serif/400-italic.css';
+import '../styles/portfolio.css';
+import sansUrl from '@fontsource-variable/instrument-sans/files/instrument-sans-latin-wght-normal.woff2?url';
+import serifUrl from '@fontsource/instrument-serif/files/instrument-serif-latin-400-normal.woff2?url';
+import serifItalicUrl from '@fontsource/instrument-serif/files/instrument-serif-latin-400-italic.woff2?url';
+import Analytics from '../components/Analytics.astro';
+import { SITE } from '../lib/site';
+
+type View = 'home' | 'work' | 'case' | 'what-i-do' | 'about' | 'contact';
+interface Props {
+  title: string;
+  description: string;
+  view: View;
+}
+const { title, description, view } = Astro.props;
+const active = view === 'case' ? 'work' : view;
+
+const tabs = [
+  { key: 'home', href: '/portfolio/', label: 'Home', icon: '<path d="M4 11.5 12 5l8 6.5V20h-5.5v-5h-5v5H4z"/>' },
+  { key: 'work', href: '/portfolio/work/', label: 'Work', icon: '<path d="M3.5 7.5a1.5 1.5 0 0 1 1.5-1.5h4l2 2.2h8a1.5 1.5 0 0 1 1.5 1.5v8.3a1.5 1.5 0 0 1-1.5 1.5H5a1.5 1.5 0 0 1-1.5-1.5z"/>' },
+  { key: 'what-i-do', href: '/portfolio/what-i-do/', label: 'What I do', icon: '<circle cx="12" cy="12" r="8.5"/><path d="m15.5 8.5-2 5-5 2 2-5z"/>' },
+  { key: 'about', href: '/portfolio/about/', label: 'About', icon: '<circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c.6-3.6 3.4-5.5 7-5.5s6.4 1.9 7 5.5"/>' },
+  { key: 'contact', href: '/portfolio/contact/', label: 'Contact', icon: '<rect x="3.5" y="6" width="17" height="12.5" rx="1.5"/><path d="m4 7.5 8 6 8-6"/>' },
+];
+const ogImage = new URL('/portfolio/og.png', Astro.site).toString();
+// The serif is an accent: upright only in the cover wordmark, italic for the
+// emphasised word of a page title. Contact has neither, so it preloads none.
+const serifUpright = view === 'home';
+const serifItalic = view !== 'contact';
+---
+
+<!DOCTYPE html>
+<html lang="en" data-view={view}>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <meta name="theme-color" content="#f3f0e8" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preload" href={sansUrl} as="font" type="font/woff2" crossorigin />
+  {serifUpright && <link rel="preload" href={serifUrl} as="font" type="font/woff2" crossorigin />}
+  {serifItalic && <link rel="preload" href={serifItalicUrl} as="font" type="font/woff2" crossorigin />}
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={ogImage} />
+  <meta name="twitter:card" content="summary_large_image" />
+  {/* Apply saved display options before first paint so nothing flashes. */}
+  <script is:inline>
+    try {
+      var o = JSON.parse(localStorage.getItem('ie-display') || '{}') || {};
+      var m = { optLarge: 'opt-large', optContrast: 'opt-contrast', optMotion: 'opt-motion' };
+      for (var k in m) if (o[k]) document.documentElement.classList.add(m[k]);
+    } catch (e) {}
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="nav gut"><div class="wrap">
+    <a class="name" href="/portfolio/">Ilias Ennajmi</a>
+    <div class="hd-tools">
+      <button class="icon-btn" id="a11yBtn" type="button" aria-expanded="false" aria-controls="a11yPanel"><span aria-hidden="true">Aa</span><span class="sr">Display options</span></button>
+      <a class="btn sm ghost" href="/portfolio/contact/">Start a brief <span>→</span></a>
+    </div>
+    <div class="a11y" id="a11yPanel" hidden>
+      <p class="label">Display options</p>
+      <label class="sw"><input type="checkbox" id="optLarge" /><span class="tr"></span>Larger text</label>
+      <label class="sw"><input type="checkbox" id="optContrast" /><span class="tr"></span>Higher contrast</label>
+      <label class="sw"><input type="checkbox" id="optMotion" /><span class="tr"></span>Less motion</label>
+    </div>
+  </div></header>
+
+  <nav class="dock" aria-label="Pages">
+    {tabs.map((t) => (
+      <a href={t.href} class={active === t.key ? 'on' : undefined} aria-current={active === t.key ? 'page' : undefined}>
+        <svg viewBox="0 0 24 24" aria-hidden="true" set:html={t.icon} /><span>{t.label}</span>
+      </a>
+    ))}
+  </nav>
+
+  <main id="main" tabindex="-1">
+    <section class="view"><slot /></section>
+  </main>
+
+  <footer class="gut"><div class="wrap foot">
+    <p class="q">Have a brief, or half of one?</p>
+    <div class="fa">
+      <a class="btn" href="/portfolio/contact/">Start a brief <span>→</span></a>
+      <button class="btn ghost" type="button" data-copy={SITE.email}>Copy email address</button>
+    </div>
+    <div class="fm"><span class="label">{SITE.email}</span><span class="label">Ilias Ennajmi · Portfolio Vol. 01 · Casablanca</span></div>
+  </div></footer>
+  <button class="totop" id="toTop" type="button" tabindex="-1" aria-label="Back to top"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5.5 11.5 12 5l6.5 6.5"/></svg></button>
+
+  <Analytics />
+
+  <script>
+    const root = document.documentElement;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const noMotion = () => reduce || root.classList.contains('opt-motion');
+    const byId = (id: string) => document.getElementById(id);
+
+    /* ---- display options (applied before paint by the inline script in <head>) ---- */
+    const OPTS: Record<string, string> = { optLarge: 'opt-large', optContrast: 'opt-contrast', optMotion: 'opt-motion' };
+    let saved: Record<string, boolean> = {};
+    try { saved = JSON.parse(localStorage.getItem('ie-display') || '{}') || {}; } catch { saved = {}; }
+    for (const [id, cls] of Object.entries(OPTS)) {
+      const el = byId(id) as HTMLInputElement | null;
+      if (!el) continue;
+      el.checked = !!saved[id];
+      el.addEventListener('change', () => {
+        root.classList.toggle(cls, el.checked);
+        saved[id] = el.checked;
+        try { localStorage.setItem('ie-display', JSON.stringify(saved)); } catch { /* private mode: applies for this page only */ }
+      });
+    }
+    const aBtn = byId('a11yBtn'), aPanel = byId('a11yPanel');
+    if (aBtn && aPanel) {
+      const setPanel = (open: boolean) => { aPanel.hidden = !open; aBtn.setAttribute('aria-expanded', String(open)); };
+      aBtn.addEventListener('click', (e) => { e.stopPropagation(); setPanel(aPanel.hidden); });
+      document.addEventListener('click', (e) => { if (!aPanel.hidden && !aPanel.contains(e.target as Node)) setPanel(false); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !aPanel.hidden) { setPanel(false); aBtn.focus(); } });
+    }
+
+    /* ---- back to top, and the dock shrinking to icons while reading ---- */
+    const toTop = byId('toTop') as HTMLButtonElement | null;
+    const dock = document.querySelector('.dock');
+    let lastY = 0;
+    toTop?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: noMotion() ? 'auto' : 'smooth' }));
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY, show = y > 700;
+      if (toTop) { toTop.classList.toggle('show', show); toTop.tabIndex = show ? 0 : -1; }
+      if (dock) {
+        if (y > lastY + 6 && y > 240) dock.classList.add('compact');
+        else if (y < lastY - 6 || y <= 240) dock.classList.remove('compact');
+      }
+      lastY = y;
+    }, { passive: true });
+
+    /* ---- copy buttons ---- */
+    function copyText(text: string, btn: HTMLElement) {
+      const label = btn.dataset.label || btn.textContent || '';
+      btn.dataset.label = label;
+      const done = () => { btn.textContent = 'Copied'; setTimeout(() => { btn.textContent = label; }, 1600); };
+      const fallback = () => {
+        const ta = document.createElement('textarea');
+        ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } catch { /* leave the label alone: nothing was copied */ }
+        ta.remove();
+      };
+      if (navigator.clipboard?.writeText) navigator.clipboard.writeText(text).then(done, fallback);
+      else fallback();
+    }
+    document.querySelectorAll<HTMLElement>('[data-copy]').forEach((b) => b.addEventListener('click', () => copyText(b.dataset.copy || '', b)));
+
+    /* ---- what I do: one service open at a time ---- */
+    const svcs = [...document.querySelectorAll<HTMLDetailsElement>('.svc')];
+    svcs.forEach((d) => d.addEventListener('toggle', () => { if (d.open) svcs.forEach((o) => { if (o !== d) o.open = false; }); }));
+
+    /* ---- what I do: the badge swings when pushed ---- */
+    const lan = byId('lanyard');
+    if (lan) {
+      let ang = 0, vel = 0, drag = false, lastX = 0, raf: number | null = null;
+      const step = () => {
+        vel += -ang * 0.02; vel *= 0.94; ang += vel;
+        lan.style.transform = `rotate(${ang}deg)`;
+        if (Math.abs(vel) > 0.01 || Math.abs(ang) > 0.05) raf = requestAnimationFrame(step);
+        else { lan.style.transform = ''; lan.style.animation = ''; raf = null; }
+      };
+      const kick = (v: number) => { if (noMotion()) return; lan.style.animation = 'none'; vel += v; if (!raf) raf = requestAnimationFrame(step); };
+      lan.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') kick((e.movementX || 4) > 0 ? 2 : -2); });
+      lan.addEventListener('pointerdown', (e) => { drag = true; lastX = e.clientX; lan.setPointerCapture(e.pointerId); });
+      lan.addEventListener('pointermove', (e) => { if (!drag) return; kick((e.clientX - lastX) * 0.06); lastX = e.clientX; });
+      lan.addEventListener('pointerup', () => { drag = false; });
+    }
+
+    /* ---- contact: draggable objects ---- */
+    document.querySelectorAll<HTMLElement>('.sticker').forEach((s) => {
+      const base = (getComputedStyle(s).getPropertyValue('--r') || '0deg').trim();
+      let sx = 0, sy = 0, ox = 0, oy = 0, d = false;
+      const place = (extra = '') => { s.style.transform = `translate(${ox}px,${oy}px) rotate(calc(${base} + ${ox * 0.04}deg))${extra}`; };
+      s.addEventListener('pointerdown', (e) => { d = true; sx = e.clientX - ox; sy = e.clientY - oy; s.setPointerCapture(e.pointerId); s.classList.add('grab'); });
+      s.addEventListener('pointermove', (e) => { if (!d) return; ox = e.clientX - sx; oy = e.clientY - sy; place(' scale(1.06)'); });
+      s.addEventListener('pointerup', () => { d = false; s.classList.remove('grab'); place(); });
+    });
+
+    /* ---- contact: the brief writes itself as the form is filled ---- */
+    const form = byId('briefForm') as HTMLFormElement | null;
+    const out = byId('briefOut');
+    if (form && out) {
+      const val = (id: string) => ((byId(id) as HTMLInputElement | null)?.value || '').trim();
+      const build = () => {
+        const need = (form.querySelector('input[name="need"]:checked') as HTMLInputElement | null)?.value || '';
+        out.textContent = `BRIEF FOR ILIAS ENNAJMI\n\nNeed: ${need}\nBrand: ${val('bBrand') || '(to add)'}\nTiming: ${val('bWhen')}\n\nThe problem:\n${val('bProblem') || '(to add)'}\n\nReply to: ${val('bReply') || '(to add)'}`;
+      };
+      form.addEventListener('input', build);
+      form.addEventListener('change', build);
+      form.addEventListener('submit', (e) => e.preventDefault());
+      build();
+      const copyBtn = byId('briefCopy');
+      copyBtn?.addEventListener('click', () => copyText(out.textContent || '', copyBtn));
+    }
+  </script>
+</body>
+</html>

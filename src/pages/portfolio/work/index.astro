@@ -1,0 +1,30 @@
+---
+import PortfolioLayout from '../../../layouts/PortfolioLayout.astro';
+import { CASES } from '../../../lib/portfolio';
+---
+<PortfolioLayout view="work" title="Work · Ilias Ennajmi" description="Selected campaigns, each with its own page.">
+  <div class="gut"><div class="wrap">
+    <header class="grid page-head">
+      <span class="eyebrow">Work · three cases</span>
+      <h1 class="display">Selected <em>work</em></h1>
+      <p class="lede">Three campaigns, each with its own page. These are sample cases that show the format. Your real work replaces them.</p>
+    </header>
+    <div class="cases">
+      {CASES.map((c) => (
+        <a class="case-row" href={`/portfolio/work/${c.slug}/`}>
+          <div class="pic"><img src={c.hero.src} alt={c.hero.alt} loading="lazy" width="2000" height="1131" /></div>
+          <div class="txt">
+            <span class="label">Case <b>{c.n}</b> · {c.sector} · {c.year}</span>
+            <h3 set:html={c.title.replace('<br>', ' ')} />
+            <p>{c.summary}</p>
+            <span class="btn sm ghost">Open the case <span>→</span></span>
+          </div>
+        </a>
+      ))}
+    </div>
+    <div class="grid yours sec">
+      <img class="yfolder" src="/portfolio/img/folder4.webp" alt="Folder labelled Case 04, yours?" loading="lazy" width="900" height="723">
+      <div class="ytxt"><span class="label">Case <b>04</b> · Open</span><p class="big">The next one could be <em>yours.</em></p><a class="btn" href="/portfolio/contact/">Start a brief <span>→</span></a></div>
+    </div>
+  </div></div>
+</PortfolioLayout>

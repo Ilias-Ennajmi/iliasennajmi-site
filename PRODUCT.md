@@ -22,6 +22,14 @@ Two things reinforce each other, roughly equally, and neither alone is the real 
 
 Astro static site + Decap CMS (git-backed, DecapBridge auth) for essay authoring, deployed to Vercel (`www.ennajmi.space`, auto-deploy on push to `main`; the apex redirects to www, and the retired Netlify project 301s everything here). Content lives as markdown in `src/content/{ulysses,ilias}/` with a `draft` flag and a `pairsWith` field linking cross-strand essays. Reader-facing tools: ⌘K command palette, sidenotes, cite/highlight-share, TTS read-aloud, save-for-later + honest reading-log stats, ink/paper theme toggle, OG image generation, RSS/llms.txt.
 
+## The portfolio (`/portfolio/`)
+
+A separate, unlisted section for showing work to people Ilias sends the link to. It is deliberately not part of the essay site's experience: its own layout (`src/layouts/PortfolioLayout.astro`), stylesheet (`src/styles/portfolio.css`), fonts (Instrument Sans + Instrument Serif) and bottom dock navigation, and none of the essay site's design rules in DESIGN.md apply to it.
+
+- Unlisted means: `noindex` meta, an `X-Robots-Tag` header in `vercel.json`, filtered out of the sitemap in `astro.config.mjs`, and never linked from the essay site's nav, footer, tab bar, search index, RSS or `llms.txt`. Do not add it to `robots.txt` (that would advertise the path and stop crawlers from seeing the noindex).
+- Pages: home, `work/` (index + one page per case from `src/lib/portfolio.ts`), `what-i-do/`, `about/`, `contact/`. Images live in `public/portfolio/img/` and were generated for the design; nothing there is a third-party asset.
+- **Everything factual on it is still a placeholder** (as of November 2026): the three cases are samples stamped "Sample case", the portrait is a generated stand-in labelled as such, and the client names, experience rows and result figures are empty slots. The "never overstate what's real" principle below applies here too: swap in real content, never dress the samples up as real.
+
 ## Capabilities and Constraints
 
 - Content is intentionally thin right now: only 6 of 12 originally-drafted essays are published (3 per strand); the other 6 are `draft: true` after a mid-2026 audit found them to be AI-template filler with fabricated read times. Re-publishing any of them requires it to actually be rewritten, not just un-flagged.
