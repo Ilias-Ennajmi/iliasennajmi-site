@@ -36,10 +36,10 @@
   /* The small uppercase mono labels (eyebrows, meta, chips, buttons, nav).
      Sized for a desk at arm's length; on a phone held closer they read at
      10-11px, so they step up below 640px (see the media query below). */
-  --fs-3xs: 0.62rem;
-  --fs-2xs: 0.66rem;
-  --fs-xs: 0.68rem;
-  --fs-sm: 0.7rem;
+  --fs-3xs: 0.66rem;
+  --fs-2xs: 0.72rem;
+  --fs-xs: 0.74rem;
+  --fs-sm: 0.76rem;
   /* Premium paper: cards are a lighter sheet laid on the page, lifted by a
      soft shadow and a top highlight, instead of a box drawn in hairline. */
   --card: #f1ece3;
@@ -49,10 +49,10 @@
 }
 @media (max-width: 640px) {
   :root {
-    --fs-3xs: 0.74rem;
-    --fs-2xs: 0.78rem;
-    --fs-xs: 0.8rem;
-    --fs-sm: 0.82rem;
+    --fs-3xs: 0.8rem;
+    --fs-2xs: 0.84rem;
+    --fs-xs: 0.86rem;
+    --fs-sm: 0.88rem;
     --fs-title: clamp(3rem, 15vw, 4.2rem);
   }
 }
@@ -570,4 +570,37 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
   .scroll-progress-rail { display: none !important; }
   /* one label per section: drop the second taglines and the section numbers' rows */
   .eyebrow-tag, .hp-fork .eyebrow-row { display: none !important; }
+}
+
+/* ---------- filter rows: one swipeable line on phones ----------
+   Wrapped, the strand and topic filters took a third of the screen. One
+   line that scrolls sideways, with outlined chips and a fade at the edge
+   to say there's more. */
+@media (max-width: 640px) {
+  #tag-bar, .tx-chips {
+    flex-wrap: nowrap !important; overflow-x: auto; scroll-snap-type: x proximity; scroll-padding-inline: 22px; scrollbar-width: none;
+    gap: 8px !important; margin-left: -22px !important; margin-right: -22px !important; padding: 2px 22px !important;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 22px, #000 calc(100% - 36px), transparent);
+            mask-image: linear-gradient(90deg, transparent 0, #000 22px, #000 calc(100% - 36px), transparent);
+  }
+  #tag-bar::-webkit-scrollbar, .tx-chips::-webkit-scrollbar { display: none; }
+  #tag-bar button, .tx-chip { flex: none; scroll-snap-align: start; white-space: nowrap; }
+  #tag-bar button[aria-pressed="false"] { box-shadow: inset 0 0 0 1px var(--coal-line); }
+  #tag-bar { margin-bottom: 1.8rem !important; }
+}
+
+/* pressing a row says so */
+.js-row, .lead-card, .hl-row, .fx-more-link, .cmdk-item { -webkit-tap-highlight-color: transparent; }
+@media (hover: none) {
+  .js-row:active, .hl-row:active { background: color-mix(in srgb, var(--acc, var(--ember)) 6%, transparent); }
+}
+
+/* Between the phone layout (<=860px) and a wide screen, the full nav row
+   ran past the right edge: tighter spacing and tracking there, and the
+   search button drops its ⌘K label. */
+@media (min-width: 861px) and (max-width: 1140px) {
+  #sn-bar { gap: 14px !important; padding-left: 22px !important; padding-right: 22px !important; }
+  #sn-links { gap: 14px !important; letter-spacing: 0.1em !important; }
+  #sn-bar .sn-search-label { display: none !important; }
+  #sn-wordmark { font-size: 1.25rem !important; }
 }

@@ -33,7 +33,7 @@ const [lead, ...rest] = posts;
 <main id="main-content" style={`--acc:${accentVar};`}>
 
   <!-- HEADER -->
-  <header data-cursor-light style="position:relative;overflow:hidden;padding:clamp(8rem,16vh,12rem) clamp(22px,6vw,64px) clamp(3.5rem,7vw,6rem);">
+  <header data-cursor-light class="strand-head" style="position:relative;overflow:hidden;padding:clamp(8rem,16vh,12rem) clamp(22px,6vw,64px) clamp(3.5rem,7vw,6rem);">
     <div style="position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,var(--paper-hi) 0%,var(--paper-mid) 60%,var(--coal) 100%);"></div>
     <div style="position:absolute;inset:-12%;z-index:0;background:radial-gradient(60% 50% at 24% 18%, rgba(117,89,56,0.10), transparent 60%);animation:cc-drift1 22s ease-in-out infinite;"></div>
     <div style="position:relative;z-index:1;max-width:1180px;margin:0 auto;animation:cc-rise .9s ease both;">
@@ -98,7 +98,7 @@ const [lead, ...rest] = posts;
       ))}
     </div>
 
-    <div data-reveal style="margin-top:clamp(3rem,6vw,5rem);padding:clamp(2rem,4vw,3rem);border:1px solid var(--coal-line);background:var(--coal-soft);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px;">
+    <div data-reveal class={`other-card other-card-${otherCard.ctaAccent}`} style="margin-top:clamp(3rem,6vw,5rem);padding:clamp(2rem,4vw,3rem);background:var(--coal-soft);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px;">
       <div>
         <div style="font-family:var(--display);font-weight:500;font-size:clamp(1.4rem,2.6vw,2rem);line-height:1.1;">{otherCard.heading}</div>
         <p style="font-family:var(--body);font-weight:300;font-style:italic;color:var(--ash);margin:0.6rem 0 0;font-size:1.05rem;">{otherCard.blurb}</p>
@@ -131,7 +131,11 @@ function boot() {
       // tag doesn't reflow neighboring chips.
       btn.style.cssText = 'font-family:var(--mono);font-size:var(--fs-xs);font-weight:500;letter-spacing:0.16em;text-transform:uppercase;background:none;border:none;cursor:pointer;display:inline-flex;align-items:center;min-height:44px;padding:0 15px;border-radius:40px;transition:color .25s,background .25s;'
         + (active ? `color:var(--coal);background:${accentVar};` : 'color:var(--ash);');
-      btn.addEventListener('click', () => { activeTag = name; renderTags(); renderList(); });
+      btn.addEventListener('click', () => {
+        activeTag = name; renderTags(); renderList();
+        const on = bar.querySelector('[aria-pressed="true"]');
+        if (on && on.scrollIntoView) on.scrollIntoView({ inline: 'nearest', block: 'nearest' });
+      });
       bar.appendChild(btn);
     });
   }
@@ -219,10 +223,20 @@ window.__life.onReady(boot);
     padding: 0.26rem 0.55rem 0 0;
     color: var(--acc);
   }
+  /* "The other half is louder": a thin frame in the other strand's colour
+     that breathes, slowly, so the way across is hard to miss. */
+  .other-card { position: relative; border: 1px solid var(--oc); border-radius: 3px; --oc: var(--ember); }
+  .other-card-tide { --oc: var(--tide); }
+  .other-card::after { content: ''; position: absolute; inset: -1px; border-radius: 4px; pointer-events: none; box-shadow: 0 0 0 4px color-mix(in srgb, var(--oc) 22%, transparent), 0 0 22px 2px color-mix(in srgb, var(--oc) 20%, transparent); opacity: 0; animation: oc-breathe 3.6s ease-in-out infinite; }
+  @keyframes oc-breathe { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .other-card::after { animation: none; opacity: .5; } }
   .other-cta-tide { color: var(--tide); }
   .other-cta-ember { color: var(--ember); }
   .other-cta-tide:hover { border-color: var(--tide); letter-spacing: 0.24em; }
   .other-cta-ember:hover { border-color: var(--ember); letter-spacing: 0.24em; }
+  @media (max-width: 640px) {
+    .strand-head { padding-bottom: 2.4rem !important; }
+  }
   @media (max-width: 680px) {
     .js-row { grid-template-columns: 44px 1fr !important; }
     .js-row > span:last-child { display: none !important; }
