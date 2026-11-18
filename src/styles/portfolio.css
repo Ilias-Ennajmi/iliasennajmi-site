@@ -723,3 +723,20 @@ html[data-view="contact"] .foot .q,html[data-view="contact"] .foot .fa{display:n
   .nav .name{gap:8px}
   .q-face{width:44px}
 }
+
+/* ---------- cover: a larger signed print ---------- */
+.c-me{left:59%;top:2.5%;width:13.8%}
+.print .sig{position:absolute;left:11%;top:81.5%;width:78%;height:auto;transform:rotate(-3deg)}
+.clients li{color:var(--ink)}
+@media (max-width:700px){
+  .c-me{left:47%;top:1.5%;width:31%}
+  .c-round{left:25%;top:78.5%}
+  /* solid, so page text never ghosts through the tab bar */
+  .dock{background:#1b1614;backdrop-filter:none;-webkit-backdrop-filter:none}
+}
+
+/* ---------- about: experience points to LinkedIn until there are real rows ---------- */
+.exp-link{display:flex;align-items:center;justify-content:space-between;gap:16px 32px;flex-wrap:wrap;text-decoration:none;border-top:1px solid var(--ink);border-bottom:1px solid var(--rule);padding:22px 0}
+.exp-link .t{font-size:clamp(22px,2.4vw,34px);font-weight:600;letter-spacing:-.03em;line-height:1.1;transition:color .25s}
+.exp-link:hover .t{color:var(--oxblood)}
+.exp-link:hover .btn.ghost{background:var(--ink);color:var(--ground);box-shadow:none}

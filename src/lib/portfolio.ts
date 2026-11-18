@@ -8,6 +8,25 @@
  */
 const IMG = '/portfolio/img';
 
+/**
+ * Names for the "Worked with" row on the portfolio home page. Real names
+ * only, and only with permission; while this is empty the row is not shown.
+ */
+export const CLIENTS: string[] = [];
+
+/**
+ * Rows for the Experience table on the portfolio About page. Real roles only.
+ * While this is empty the page points to LinkedIn instead of showing a table.
+ */
+export interface Job {
+  role: string;
+  /** Company, and one line on what the job was. */
+  detail: string;
+  /** e.g. "2021 – 2024" */
+  years: string;
+}
+export const EXPERIENCE: Job[] = [];
+
 export interface Figure {
   src: string;
   alt: string;
