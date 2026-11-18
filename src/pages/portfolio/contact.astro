@@ -14,7 +14,7 @@ const doors = [
 <PortfolioLayout view="contact" title="Contact · Ilias Ennajmi" description="Five ways to reach me, or write the brief on the page.">
   <div class="gut"><div class="wrap">
     <div class="contact-body">
-      <span class="eyebrow">Contact · bring the problem, skip the deck</span>
+      <h1 class="eyebrow">Contact · bring the problem, skip the deck</h1>
       <ul class="links">
         <li><a href={`mailto:${SITE.email}`}><sup>(1)</sup>Email <small>{SITE.email}</small></a><button class="btn sm ghost" type="button" data-copy={SITE.email}>Copy address</button></li>
         {doors.map((d, i) => (
@@ -22,14 +22,14 @@ const doors = [
         ))}
       </ul>
       <span class="label drag-hint">↑ These move. Drag them.</span>
-      <img class="sticker s-compass" src="/portfolio/img/compass.webp" alt="" draggable="false" loading="lazy">
-      <img class="sticker s-magnet" src="/portfolio/img/magnet.webp" alt="" draggable="false" loading="lazy">
-      <img class="sticker s-hook" src="/portfolio/img/hook.webp" alt="" draggable="false" loading="lazy">
-      <img class="sticker s-gears" src="/portfolio/img/gears.webp" alt="" draggable="false" loading="lazy">
-      <img class="sticker s-dice" src="/portfolio/img/dice.webp" alt="" draggable="false" loading="lazy">
+      <img class="sticker s-compass" src="/portfolio/img/compass.webp" alt="" draggable="false" width="340" height="387">
+      <img class="sticker s-magnet" src="/portfolio/img/magnet.webp" alt="" draggable="false" width="400" height="403">
+      <img class="sticker s-hook" src="/portfolio/img/hook.webp" alt="" draggable="false" width="280" height="401">
+      <img class="sticker s-gears" src="/portfolio/img/gears.webp" alt="" draggable="false" width="360" height="345">
+      <img class="sticker s-dice" src="/portfolio/img/dice.webp" alt="" draggable="false" width="340" height="335">
     </div>
     <div class="sec">
-      <div class="sec-head"><span class="label">Or write the brief here</span><span class="label">Five questions · about two minutes</span></div>
+      <div class="sec-head"><h2 class="label">Or write the brief here</h2><span class="label">Five questions · about two minutes</span></div>
       <div class="brief-grid">
         <form class="bform" id="briefForm" novalidate>
           <fieldset><legend>What do you need?</legend><div class="chips">

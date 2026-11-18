@@ -1,6 +1,6 @@
 ---
 import PortfolioLayout from '../../../layouts/PortfolioLayout.astro';
-import { CASES, type PortfolioCase } from '../../../lib/portfolio';
+import { CASES, type PortfolioCase, photo } from '../../../lib/portfolio';
 
 export function getStaticPaths() {
   return CASES.map((c, i) => ({
@@ -27,7 +27,7 @@ const plain = (title: string) => oneLine(title).replace(/<[^>]+>/g, '');
     </div>
 
     <header class="grid case-head">
-      <img class="stamp case-stamp" src="/portfolio/img/stamp_sample.webp" alt="Stamp: sample case" width="700" height="187" />
+      <img class="stamp case-stamp" src="/portfolio/img/stamp_sample.webp" alt="Stamp: sample case" width="480" height="128" />
       <h1 class="display" set:html={c.title} />
       <dl class="ledger">
         {c.ledger.map(([label, value]) => (
@@ -37,7 +37,7 @@ const plain = (title: string) => oneLine(title).replace(/<[^>]+>/g, '');
     </header>
 
     <figure class="plate">
-      <img src={c.hero.src} alt={c.hero.alt} width="2000" height="1131" fetchpriority="high" />
+      <img {...photo(c.hero.src)} sizes="(max-width: 1320px) 92vw, 1240px" alt={c.hero.alt} fetchpriority="high" />
       <figcaption><span class="label">Fig. <b>01</b> · {c.hero.kind}</span>{c.hero.note && <span class="label">{c.hero.note}</span>}</figcaption>
     </figure>
 
@@ -46,15 +46,15 @@ const plain = (title: string) => oneLine(title).replace(/<[^>]+>/g, '');
         {c.beats.map(([label, text]) => (
           <div class="beat"><span class="label">{label}</span><p>{text}</p></div>
         ))}
-        <div class="aside"><img class="aside-face" src="/portfolio/img/face-thinking.webp" alt="" width="704" height="890" loading="lazy" /><span class="label">What I was thinking</span><p>{c.note}</p></div>
+        <div class="aside"><img class="aside-face" src="/portfolio/img/face-thinking.webp" alt="" loading="lazy" width="200" height="253" /><span class="label">What I was thinking</span><p>{c.note}</p></div>
       </div>
       <figure class="plate col-b">
-        <img src={c.fig2.src} alt={c.fig2.alt} loading="lazy" />
+        <img {...photo(c.fig2.src)} sizes="(max-width: 900px) 92vw, 608px" alt={c.fig2.alt} loading="lazy" />
         <figcaption><span class="label">Fig. <b>02</b> · {c.fig2.kind}</span>{c.fig2.note && <span class="label">{c.fig2.note}</span>}</figcaption>
       </figure>
       {c.fig3 && (
         <figure class="plate col-full">
-          <img src={c.fig3.src} alt={c.fig3.alt} loading="lazy" />
+          <img {...photo(c.fig3.src)} sizes="(max-width: 1320px) 92vw, 1240px" alt={c.fig3.alt} loading="lazy" />
           <figcaption><span class="label">Fig. <b>03</b> · {c.fig3.kind}</span>{c.fig3.note && <span class="label">{c.fig3.note}</span>}</figcaption>
         </figure>
       )}
@@ -75,7 +75,7 @@ const plain = (title: string) => oneLine(title).replace(/<[^>]+>/g, '');
       </dl>
       {c.process && (
         <figure class="plate process">
-          <img src={c.process.src} alt={c.process.alt} loading="lazy" />
+          <img {...photo(c.process.src)} sizes="(max-width: 900px) 92vw, 608px" alt={c.process.alt} loading="lazy" />
           <figcaption><span class="label">Fig. <b>04</b> · {c.process.kind}</span></figcaption>
         </figure>
       )}

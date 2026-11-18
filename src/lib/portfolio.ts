@@ -9,6 +9,43 @@
 const IMG = '/portfolio/img';
 
 /**
+ * Photos that ship smaller copies next to the full file (name-<width>.webp),
+ * so a phone does not download the desktop image.
+ * name: [full width, full height, smaller widths]
+ */
+const PHOTOS: Record<string, [number, number, number[]]> = {
+  binder: [2000, 1117, [900, 1520]],
+  ooh: [2000, 1131, [480, 900, 1280]],
+  cup: [2000, 1131, [480, 900, 1280]],
+  stay: [2000, 1131, [480, 900, 1280]],
+  film: [1600, 905, [900, 1280]],
+  phone: [1200, 1490, [600]],
+  tram: [900, 900, [480]],
+  workshop: [900, 900, [480]],
+};
+
+/**
+ * Attributes for a responsive <img>: spread the result and add `sizes`.
+ * A file that has no smaller copies gets its plain `src` back.
+ */
+export function photo(src: string): { src: string; srcset?: string; width?: number; height?: number } {
+  const name = src.slice(src.lastIndexOf('/') + 1).replace(/\.webp$/, '');
+  const entry = PHOTOS[name];
+  if (!entry) return { src };
+  const [width, height, smaller] = entry;
+  const base = src.replace(/\.webp$/, '');
+  const srcset = [...smaller.map((w) => `${base}-${w}.webp ${w}w`), `${src} ${width}w`].join(', ');
+  return { src, srcset, width, height };
+}
+
+/** The smallest copy of a photo, for thumbnails. */
+export function thumb(src: string): string {
+  const name = src.slice(src.lastIndexOf('/') + 1).replace(/\.webp$/, '');
+  const entry = PHOTOS[name];
+  return entry ? src.replace(/\.webp$/, `-${entry[2][0]}.webp`) : src;
+}
+
+/**
  * Names for the "Worked with" row on the portfolio home page. Real names
  * only, and only with permission; while this is empty the row is not shown.
  */

@@ -7,9 +7,9 @@ import { SITE } from '../../lib/site';
   <div class="gut"><div class="wrap">
     <div class="grid about-top">
       <div class="face">
-        <img class="portrait" src="/portfolio/img/face-warm.webp" alt="Engraved portrait of Ilias, smiling" width="705" height="890">
-        <img class="stamp face-round" src="/portfolio/img/stamp_round.webp" alt="" loading="lazy">
-        <img class="stamp face-post" style="opacity:1" src="/portfolio/img/postage.webp" alt="A Casablanca postage stamp" loading="lazy">
+        <img class="portrait" src="/portfolio/img/face-warm.webp" fetchpriority="high" alt="Engraved portrait of Ilias, smiling" width="705" height="890">
+        <img class="stamp face-round" fetchpriority="low" src="/portfolio/img/stamp_round.webp" alt="" loading="lazy" width="340" height="336">
+        <img class="stamp face-post" fetchpriority="low" style="opacity:1" src="/portfolio/img/postage.webp" alt="A Casablanca postage stamp" loading="lazy" width="240" height="309">
       </div>
       <div class="txt">
         <span class="eyebrow">About · Casablanca</span>
@@ -21,7 +21,7 @@ import { SITE } from '../../lib/site';
     </div>
 
     <div class="sec">
-      <div class="sec-head"><span class="label">Experience</span>{EXPERIENCE.length > 0 && SITE.social.linkedin && <a class="label more" href={SITE.social.linkedin}>Full history on LinkedIn →</a>}</div>
+      <div class="sec-head"><h2 class="label">Experience</h2>{EXPERIENCE.length > 0 && SITE.social.linkedin && <a class="label more" href={SITE.social.linkedin}>Full history on LinkedIn →</a>}</div>
       {EXPERIENCE.length > 0 ? (
         <div class="rows">
           {EXPERIENCE.map((job) => (
@@ -37,7 +37,7 @@ import { SITE } from '../../lib/site';
     </div>
 
     <div class="sec band">
-      <div class="sec-head"><span class="label">Four working beliefs</span><span class="label">How I think about it</span></div>
+      <div class="sec-head"><h2 class="label">Four working beliefs</h2><span class="label">How I think about it</span></div>
       <ol class="beliefs">
         <li><span class="label"><b>01</b></span><h3>The default is the decision.</h3><p>Most choices get settled by whatever didn't need choosing. Understand the defaults and you understand most of the behaviour.</p></li>
         <li><span class="label"><b>02</b></span><h3>Follow the money, then follow the attention.</h3><p>Every nudge has someone on the other end who benefits. Asking who isn't cynical. It's just reading the incentives.</p></li>
@@ -47,7 +47,7 @@ import { SITE } from '../../lib/site';
     </div>
 
     <div class="sec">
-      <div class="sec-head"><span class="label">Now</span><span class="label">Casablanca → wherever the work is</span></div>
+      <div class="sec-head"><h2 class="label">Now</h2><span class="label">Casablanca → wherever the work is</span></div>
       <div class="grid now">
         <div class="rows list">
           <div><span class="a">Reading</span><span class="b">Seeing Like a State. Scott on how plans flatten what made them work.</span><span class="label c"></span></div>
@@ -56,8 +56,8 @@ import { SITE } from '../../lib/site';
           <div><span class="a">Stuck on</span><span class="b">One Nina Simone record. Pastel Blues, side A, on repeat.</span><span class="label c"></span></div>
         </div>
         <div class="pics">
-          <figure class="print loose" style="--r:-5deg"><img class="fr" src="/portfolio/img/frame.webp" alt="" loading="lazy"><img class="ph" src="/portfolio/img/casa.webp" alt="An art deco building in Casablanca" loading="lazy"><img class="pin" src="/portfolio/img/pin.webp" alt=""><figcaption>Home</figcaption></figure>
-          <figure class="print loose" style="--r:4deg"><img class="fr" src="/portfolio/img/frame.webp" alt="" loading="lazy"><img class="ph" src="/portfolio/img/tram.webp" alt="A phone held inside a tram at night" loading="lazy"><img class="pin" src="/portfolio/img/pin.webp" alt=""><figcaption>Field research</figcaption></figure>
+          <figure class="print loose" style="--r:-5deg"><img class="fr" src="/portfolio/img/frame.webp" alt="" loading="lazy" width="600" height="744"><img class="ph" src="/portfolio/img/casa.webp" alt="An art deco building in Casablanca" loading="lazy" width="540" height="540"><img class="pin" src="/portfolio/img/pin.webp" alt="" width="80" height="81"><figcaption>Home</figcaption></figure>
+          <figure class="print loose" style="--r:4deg"><img class="fr" src="/portfolio/img/frame.webp" alt="" loading="lazy" width="600" height="744"><img class="ph" src="/portfolio/img/tram-480.webp" alt="A phone held inside a tram at night" loading="lazy" width="480" height="480"><img class="pin" src="/portfolio/img/pin.webp" alt="" width="80" height="81"><figcaption>Field research</figcaption></figure>
         </div>
       </div>
     </div>
