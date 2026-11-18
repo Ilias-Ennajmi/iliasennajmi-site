@@ -695,3 +695,31 @@ html[data-view="contact"] .foot .q,html[data-view="contact"] .foot .fa{display:n
   .totop{bottom:calc(76px + env(safe-area-inset-bottom,0px));right:max(14px,calc(env(safe-area-inset-right,0px) + 14px));width:44px;height:44px}
   .links li .btn{margin-bottom:8px}
 }
+
+/* ---------- the face: the essay site's engraving, redrawn calm ----------
+   One character, a different expression per context: confident on the
+   cover and as the mark, sharp in "Who I am", warm on About and in the
+   footer, composed on the badge, thinking beside the case notes. */
+.nav .name{display:inline-flex;align-items:center;gap:10px}
+.nav .name .mark{width:36px;height:36px;flex:none;transition:transform .5s var(--ease)}
+.nav .name:hover .mark{transform:rotate(-8deg) scale(1.08)}
+.print .ph.face-ph{object-fit:contain;padding:6% 8% 0;background:#fbfaf6}
+.v-face{width:21%;transform:translate(-50%,-50%);mix-blend-mode:normal;filter:drop-shadow(0 10px 14px rgba(40,5,8,.35))}
+.about-top .face>img.portrait{width:86%;margin-inline:auto;mix-blend-mode:normal;filter:none}
+.face-round{left:-2%;top:auto;bottom:2%;width:28%}
+.face-post{right:2%;top:2%}
+.idcard .ph{background:#fbfaf6}
+.idcard .ph img{object-fit:contain;object-position:50% 60%;padding:8% 6% 0}
+.aside{position:relative}
+.aside-face{position:absolute;right:0;top:-34px;width:64px;height:auto;transform:rotate(6deg)}
+.foot .q{display:flex;align-items:center;gap:16px}
+.q-face{width:54px;height:auto;flex:none}
+@media (max-width:900px){
+  .face-round{left:0;top:auto;bottom:0;width:26%}
+  .v-face{width:30%;top:47%}
+}
+@media (max-width:700px){
+  .nav .name .mark{width:30px;height:30px}
+  .nav .name{gap:8px}
+  .q-face{width:44px}
+}

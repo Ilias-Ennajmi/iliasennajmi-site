@@ -46,7 +46,7 @@ const plain = (title: string) => oneLine(title).replace(/<[^>]+>/g, '');
         {c.beats.map(([label, text]) => (
           <div class="beat"><span class="label">{label}</span><p>{text}</p></div>
         ))}
-        <div class="aside"><span class="label">What I was thinking</span><p>{c.note}</p></div>
+        <div class="aside"><img class="aside-face" src="/portfolio/img/face-thinking.webp" alt="" width="704" height="890" loading="lazy" /><span class="label">What I was thinking</span><p>{c.note}</p></div>
       </div>
       <figure class="plate col-b">
         <img src={c.fig2.src} alt={c.fig2.alt} loading="lazy" />

@@ -28,7 +28,7 @@ A separate, unlisted section for showing work to people Ilias sends the link to.
 
 - Unlisted means: `noindex` meta, an `X-Robots-Tag` header in `vercel.json`, filtered out of the sitemap in `astro.config.mjs`, and never linked from the essay site's nav, footer, tab bar, search index, RSS or `llms.txt`. Do not add it to `robots.txt` (that would advertise the path and stop crawlers from seeing the noindex).
 - Pages: home, `work/` (index + one page per case from `src/lib/portfolio.ts`), `what-i-do/`, `about/`, `contact/`. Images live in `public/portfolio/img/` and were generated for the design; nothing there is a third-party asset.
-- **Everything factual on it is still a placeholder** (as of November 2026): the three cases are samples stamped "Sample case", the portrait is a generated stand-in labelled as such, and the client names, experience rows and result figures are empty slots. The "never overstate what's real" principle below applies here too: swap in real content, never dress the samples up as real.
+- **Everything factual on it is still a placeholder** (as of November 2026): the three cases are samples stamped "Sample case", the portrait is the essay site's engraved face redrawn with calm expressions (`face-*.webp`, generated from `public/logo-mark.svg`; a real photo may replace it later), and the client names, experience rows and result figures are empty slots. The "never overstate what's real" principle below applies here too: swap in real content, never dress the samples up as real.
 
 ## Capabilities and Constraints
 
