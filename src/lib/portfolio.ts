@@ -14,6 +14,19 @@ const IMG = '/portfolio/img';
  */
 export const CLIENTS: string[] = [];
 
+/**
+ * Rows for the Experience table on the portfolio About page. Real roles only.
+ * While this is empty the page points to LinkedIn instead of showing a table.
+ */
+export interface Job {
+  role: string;
+  /** Company, and one line on what the job was. */
+  detail: string;
+  /** e.g. "2021 – 2024" */
+  years: string;
+}
+export const EXPERIENCE: Job[] = [];
+
 export interface Figure {
   src: string;
   alt: string;

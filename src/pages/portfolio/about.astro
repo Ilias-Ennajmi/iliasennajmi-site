@@ -1,5 +1,7 @@
 ---
 import PortfolioLayout from '../../layouts/PortfolioLayout.astro';
+import { EXPERIENCE } from '../../lib/portfolio';
+import { SITE } from '../../lib/site';
 ---
 <PortfolioLayout view="about" title="About · Ilias Ennajmi" description="Who I am, what I believe about persuasion, and what I am working on now.">
   <div class="gut"><div class="wrap">
@@ -19,12 +21,19 @@ import PortfolioLayout from '../../layouts/PortfolioLayout.astro';
     </div>
 
     <div class="sec">
-      <div class="sec-head"><span class="label">Experience</span><span class="label">Sample lines · your CV goes here</span></div>
-      <div class="rows">
-        <div><span class="a">Brand strategy lead</span><span class="b">Company name. What you owned and the one result worth naming.</span><span class="label c">2024 – now</span></div>
-        <div><span class="a">Strategy &amp; planning</span><span class="b">Agency name. The accounts you ran and the work you're proud of.</span><span class="label c">2021 – 2024</span></div>
-        <div><span class="a">Marketing &amp; content</span><span class="b">Company name. Where you learned what customers actually read.</span><span class="label c">2019 – 2021</span></div>
-      </div>
+      <div class="sec-head"><span class="label">Experience</span>{EXPERIENCE.length > 0 && SITE.social.linkedin && <a class="label more" href={SITE.social.linkedin}>Full history on LinkedIn →</a>}</div>
+      {EXPERIENCE.length > 0 ? (
+        <div class="rows">
+          {EXPERIENCE.map((job) => (
+            <div><span class="a">{job.role}</span><span class="b">{job.detail}</span><span class="label c">{job.years}</span></div>
+          ))}
+        </div>
+      ) : SITE.social.linkedin && (
+        <a class="exp-link" href={SITE.social.linkedin}>
+          <span class="t">My roles, companies and dates are on LinkedIn.</span>
+          <span class="btn sm ghost">Open my LinkedIn <span>→</span></span>
+        </a>
+      )}
     </div>
 
     <div class="sec band">
