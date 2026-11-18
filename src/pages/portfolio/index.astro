@@ -1,5 +1,6 @@
 ---
 import PortfolioLayout from '../../layouts/PortfolioLayout.astro';
+import { CLIENTS } from '../../lib/portfolio';
 ---
 <PortfolioLayout view="home" title="Ilias Ennajmi · Portfolio" description="Marketing strategist from Casablanca. Selected campaigns, what I do, and how I work.">
   <div class="cover gut">
@@ -14,11 +15,13 @@ import PortfolioLayout from '../../layouts/PortfolioLayout.astro';
       <img class="ov c-post rise" style="--r:8deg;animation-delay:1.4s" src="/portfolio/img/postage.webp" alt="A Casablanca postage stamp" width="460" height="593">
       <img class="ov c-note rise" style="--r:-4deg;animation-delay:1.1s" src="/portfolio/img/note.webp" alt="A handwritten note: Read the brief twice. Then ask why it exists." width="760" height="413">
       <figure class="ov print loose c-casa rise" style="--r:-7deg;animation-delay:.8s"><img class="fr" src="/portfolio/img/frame.webp" alt=""><img class="ph" src="/portfolio/img/casa.webp" alt="An art deco building in Casablanca at dusk"><img class="pin" src="/portfolio/img/pin.webp" alt=""><figcaption>Casa, dusk</figcaption></figure>
-      <figure class="ov print loose c-me rise" style="--r:5deg;animation-delay:.95s"><img class="fr" src="/portfolio/img/frame.webp" alt=""><img class="ph bw face-ph" src="/portfolio/img/face-confident.webp" alt="Engraved portrait of Ilias, looking confident" width="704" height="890"><img class="pin" src="/portfolio/img/pin.webp" alt=""><figcaption>The strategist</figcaption></figure>
+      <figure class="ov print loose c-me rise" style="--r:5deg;animation-delay:.95s"><img class="fr" src="/portfolio/img/frame.webp" alt=""><img class="ph bw face-ph" src="/portfolio/img/face-confident.webp" alt="Engraved portrait of Ilias, looking confident" width="704" height="890"><img class="pin" src="/portfolio/img/pin.webp" alt=""><img class="sig" src="/portfolio/img/signature.webp" alt="Ilias Ennajmi, handwritten" width="900" height="183"></figure>
     </div>
   </div>
   <div class="gut"><div class="wrap">
-    <div class="clients"><span class="label">Worked with</span><ul><li>Client name</li><li>Client name</li><li>Client name</li><li>Client name</li><li>Client name</li></ul><span class="label tag">Placeholder · your real names go here</span></div>
+    {CLIENTS.length > 0 && (
+      <div class="clients"><span class="label">Worked with</span><ul>{CLIENTS.map((name) => <li>{name}</li>)}</ul></div>
+    )}
 
     <div class="who">
       <div class="who-head">

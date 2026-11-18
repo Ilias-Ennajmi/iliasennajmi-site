@@ -8,6 +8,12 @@
  */
 const IMG = '/portfolio/img';
 
+/**
+ * Names for the "Worked with" row on the portfolio home page. Real names
+ * only, and only with permission; while this is empty the row is not shown.
+ */
+export const CLIENTS: string[] = [];
+
 export interface Figure {
   src: string;
   alt: string;
